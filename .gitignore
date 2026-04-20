@@ -1,8 +1,47 @@
-.worktrees/
-*fix
-*.log
+# Dependencies
 node_modules/
-data/*.db
+
+# Build output
 dist/
+
+# Database
+data/*.db
+data/*.db-journal
+
+# Environment
 .env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Electron
+*.asar
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Worktrees (from parent)
+.worktrees/
+
+# Misc
 *.local
