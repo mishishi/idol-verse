@@ -1,0 +1,1916 @@
+/* ========================================
+   星光社交大厅 - Starlight Social Hub
+   Deep Cosmic + Constellation Network
+   ======================================== */
+
+/* ============ Starfield Keyframes ============ */
+@media (prefers-reduced-motion: no-preference) {
+@keyframes starFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-35px) translateX(-5px) scale(0.9);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-15px) translateX(-15px) scale(1.05);
+    opacity: 0.9;
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes dropdownReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.8);
+    transform-origin: top;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes onlineGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px 2px rgba(0, 255, 200, 0.6),
+                0 0 20px 4px rgba(0, 255, 200, 0.3),
+                inset 0 0 10px rgba(0, 255, 200, 0.2);
+    border-color: rgba(0, 255, 200, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 15px 4px rgba(0, 255, 200, 0.8),
+                0 0 35px 8px rgba(0, 255, 200, 0.4),
+                inset 0 0 15px rgba(0, 255, 200, 0.3);
+    border-color: rgba(0, 255, 200, 1);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  60% {
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes starlightTitleShine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes starPulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.5); opacity: 0.8; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes intimacyShimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes tabActivePulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(138, 180, 248, 0.5),
+                0 0 24px rgba(138, 180, 248, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(138, 180, 248, 0.7),
+                0 0 40px rgba(138, 180, 248, 0.3);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes acceptBtnPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 160, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(0, 255, 160, 0.7), 0 0 40px rgba(0, 255, 160, 0.3); }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes rejectBtnPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 100, 130, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(255, 100, 130, 0.6); }
+}}
+
+/* ============ Starfield Background ============ */
+.friends-page {
+  min-height: 100vh;
+  padding-bottom: 100px;
+  background: #020008;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Nebula cloud layers */
+.friends-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180, 40, 180, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0, 80, 200, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 10%, rgba(255, 60, 160, 0.12) 0%, transparent 55%);
+  z-index: 0;
+  animation: nebulaDrift 20s ease-in-out infinite;
+}
+
+.friends-page::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.friends-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes nebulaDrift {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.08) rotate(3deg); opacity: 0.85; }
+}}
+
+/* ============ Star Particles ============ */
+.star-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(200,220,255,0.6) 40%, transparent 70%);
+  animation: starFloat var(--duration, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.star-twinkle {
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(200,220,255,0.7) 40%, transparent 70%);
+  animation: starTwinkle var(--duration, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}}
+
+/* ============ Friends Hero ============ */
+.friends-hero {
+  text-align: center;
+  padding: 40px 20px 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.friends-hero-title {
+  font-family: 'Orbitron', 'Rajdhani', 'Exo 2', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #a8c8ff 20%,
+    #8ab8f8 40%,
+    #c8e0ff 60%,
+    #a8c8ff 80%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: starlightTitleShine 4s linear infinite;
+  text-shadow: 0 0 40px rgba(138, 180, 248, 0.5);
+  filter: drop-shadow(0 0 20px rgba(138, 180, 248, 0.3));
+  margin-bottom: 8px;
+}
+
+.friends-hero-subtitle {
+  font-size: 0.85rem;
+  color: rgba(200, 210, 230, 0.7);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.friends-hero-subtitle span {
+  background: linear-gradient(90deg, #8ab8f8, #c8e0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============ Stamina Banner ============ */
+.stamina-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 20px 20px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(255, 180, 100, 0.12) 0%, rgba(255, 140, 80, 0.08) 100%);
+  border: 1px solid rgba(255, 180, 100, 0.25);
+  border-radius: 14px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+}
+
+.stamina-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stamina-banner-icon {
+  font-size: 1.3rem;
+}
+
+.stamina-banner-text {
+  font-size: 0.85rem;
+  color: rgba(255, 220, 180, 0.9);
+}
+
+.stamina-banner-text strong {
+  color: #ffd580;
+  font-weight: 700;
+}
+
+.stamina-banner-btn {
+  padding: 8px 18px;
+  background: linear-gradient(135deg, #ffb460, #ff8c30);
+  border: none;
+  border-radius: 20px;
+  color: #1a0a00;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 140, 48, 0.3);
+}
+
+.stamina-banner-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 140, 48, 0.5);
+}
+
+.stamina-banner-btn:active {
+  transform: translateY(0);
+}
+
+.stamina-banner.hiding {
+  animation: bannerFadeOut 0.3s ease-out forwards;
+}
+
+@keyframes bannerFadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+.stamina-status-bar {
+  padding: 0 20px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.stamina-status-text {
+  font-size: 0.78rem;
+  color: rgba(180, 190, 220, 0.55);
+}
+
+.stamina-status-count {
+  color: #ffd080;
+}
+
+.request-section-header {
+  padding: 0 20px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.request-section-header.sent {
+  padding: 16px 20px 8px;
+}
+
+.request-section-header::after {
+  content: '▼';
+  font-size: 0.55rem;
+  color: rgba(180, 190, 220, 0.35);
+  transition: transform 0.25s ease;
+  margin-left: auto;
+}
+
+.request-section-header.collapsed::after {
+  transform: rotate(-90deg);
+}
+
+.request-section-label {
+  font-size: 0.78rem;
+  color: rgba(180, 190, 220, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ============ Starlight Search ============ */
+.starlight-search {
+  padding: 0 20px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.star-catalog-input {
+  width: 100%;
+  padding: 14px 18px 14px 46px;
+  background: rgba(15, 18, 40, 0.7);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: 14px;
+  color: #e8eaf6;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+.star-catalog-input::placeholder {
+  color: rgba(180, 190, 220, 0.45);
+  letter-spacing: 0.05em;
+}
+
+.star-catalog-input:focus {
+  outline: none;
+  border-color: rgba(138, 180, 248, 0.5);
+  box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.1),
+              0 0 25px rgba(138, 180, 248, 0.15),
+              inset 0 0 20px rgba(138, 180, 248, 0.05);
+  background: rgba(20, 25, 50, 0.8);
+}
+
+.star-catalog-search-wrapper {
+  position: relative;
+}
+
+.star-catalog-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.star-catalog-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(100, 120, 160, 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  color: rgba(180, 200, 220, 0.7);
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.star-catalog-clear:hover {
+  background: rgba(160, 100, 100, 0.5);
+  color: #fff;
+}
+
+.star-catalog-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(10, 12, 30, 0.95);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: 14px;
+  max-height: 320px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+              0 0 30px rgba(138, 180, 248, 0.1);
+  animation: dropdownReveal 0.25s ease-out;
+  z-index: 100;
+}
+
+.star-catalog-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.star-catalog-results::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+}
+
+.star-catalog-results::-webkit-scrollbar-thumb {
+  background: rgba(138, 180, 248, 0.3);
+  border-radius: 3px;
+}
+
+.star-catalog-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.star-catalog-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, rgba(138, 180, 248, 0.6) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.star-catalog-item:last-child {
+  border-bottom: none;
+}
+
+.star-catalog-item:hover {
+  background: rgba(138, 180, 248, 0.1);
+}
+
+.star-catalog-item:hover::before {
+  opacity: 1;
+}
+
+.star-catalog-item.active {
+  background: rgba(138, 180, 248, 0.18);
+  outline: 1px solid rgba(138, 180, 248, 0.35);
+}
+
+.star-catalog-item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(138, 180, 248, 0.3);
+}
+
+.star-catalog-item-info {
+  flex: 1;
+}
+
+.star-catalog-item-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c8d8f0;
+  margin-bottom: 2px;
+}
+
+.star-catalog-item-level {
+  font-size: 0.75rem;
+  color: rgba(180, 190, 220, 0.6);
+}
+
+.star-catalog-item-add {
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(0, 200, 130, 0.2), rgba(0, 180, 110, 0.15));
+  border: 1px solid rgba(0, 200, 130, 0.3);
+  border-radius: 20px;
+  color: #00e090;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.star-catalog-item-add:hover {
+  background: linear-gradient(135deg, rgba(0, 200, 130, 0.35), rgba(0, 180, 110, 0.25));
+  box-shadow: 0 0 15px rgba(0, 200, 130, 0.3);
+  transform: scale(1.05);
+}
+
+.star-catalog-item-add.friend {
+  background: rgba(138, 160, 248, 0.08);
+  border: 1px solid rgba(138, 160, 248, 0.15);
+  color: rgba(160, 180, 248, 0.6);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.star-catalog-empty {
+  padding: 30px 16px;
+  text-align: center;
+  color: rgba(180, 190, 220, 0.5);
+  font-size: 0.85rem;
+}
+
+.star-catalog-empty-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  opacity: 0.4;
+}
+
+.search-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 0 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.search-pagination-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.search-pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.search-pagination-info {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ============ Starlight Tabs ============ */
+.starlight-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-pill {
+  flex: 1;
+  padding: 12px 16px;
+  background: rgba(15, 18, 40, 0.5);
+  border: 1px solid rgba(138, 180, 248, 0.1);
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(180, 190, 220, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(8px);
+}
+
+.tab-pill:hover {
+  background: rgba(25, 30, 60, 0.6);
+  border-color: rgba(138, 180, 248, 0.2);
+  color: rgba(200, 210, 235, 0.8);
+}
+
+.tab-pill.active {
+  background: linear-gradient(135deg, rgba(88, 120, 180, 0.25) 0%, rgba(68, 95, 150, 0.2) 100%);
+  border-color: rgba(138, 180, 248, 0.4);
+  color: #c8e0ff;
+  box-shadow: 0 0 20px rgba(138, 180, 248, 0.15),
+              inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: tabActivePulse 2.5s ease-in-out infinite;
+}
+
+.tab-pill.active .tab-icon {
+  filter: drop-shadow(0 0 6px rgba(138, 180, 248, 0.8));
+}
+
+.tab-pill .tab-count {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 7px;
+  background: rgba(138, 180, 248, 0.2);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.tab-pill.active .tab-count {
+  background: rgba(138, 180, 248, 0.35);
+}
+
+/* ============ Tab Content Transition ============ */
+.tab-content-wrapper {
+  animation: tabContentFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tabContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ Constellation Nodes (Friend Cards) ============ */
+.constellation-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: rgba(180, 190, 220, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.empty-state:hover {
+  color: rgba(180, 190, 220, 0.7);
+}
+
+.empty-state-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Nebula core */
+.empty-state-icon::before {
+  content: '';
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle, rgba(138, 180, 248, 0.7) 0%, rgba(180, 140, 255, 0.3) 60%, transparent 100%);
+  border-radius: 50%;
+  animation: nebulaPulse 3s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(138, 180, 248, 0.3);
+}
+
+/* Orbiting dots */
+.empty-state-icon::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(138, 180, 248, 0.2);
+  animation: orbitSpin 12s linear infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes nebulaPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+}
+
+.empty-state-text {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: rgba(180, 190, 220, 0.7);
+}
+
+.empty-state-hint {
+  font-size: 0.85rem;
+  color: rgba(138, 180, 248, 0.6);
+}
+
+@keyframes floatIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.constellation-node {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
+  animation: cardEntrance 0.5s ease-out backwards;
+}
+
+/* Star map card — left accent bar + content panel */
+.constellation-node {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  align-items: stretch;
+  gap: 0;
+  background: rgba(8, 10, 22, 0.75);
+  border: 1px solid rgba(138, 180, 248, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(16px);
+}
+
+.constellation-node::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(138, 180, 248, 0.06) 0%, rgba(180, 140, 255, 0.04) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.constellation-node:hover {
+  border-color: rgba(138, 180, 248, 0.22);
+  box-shadow: 0 0 40px rgba(138, 180, 248, 0.08), 0 4px 20px rgba(0, 0, 0, 0.4);
+  transform: translateX(3px);
+}
+
+.constellation-node:hover::before {
+  opacity: 1;
+}
+
+/* Left accent bar — constellation line */
+.constellation-line {
+  width: 4px;
+  background: linear-gradient(180deg, rgba(138, 180, 248, 0.5) 0%, rgba(180, 140, 255, 0.3) 50%, rgba(138, 180, 248, 0.5) 100%);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.constellation-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(138, 180, 248, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Avatar section */
+.constellation-avatar-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 14px 16px 16px;
+  position: relative;
+}
+
+/* Star core — glowing avatar circle */
+.constellation-avatar-ring {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.constellation-avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(138, 180, 248, 0.4), rgba(180, 140, 255, 0.3), rgba(100, 200, 255, 0.4), rgba(138, 180, 248, 0.4));
+  animation: orbitalSpin 8s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.constellation-node:hover .constellation-avatar-ring::before,
+.node-avatar-wrapper.online .constellation-avatar-ring::before {
+  opacity: 1;
+}
+
+.constellation-avatar-ring::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 180, 248, 0.08);
+  animation: orbitalPulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes orbitalSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes orbitalPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+}
+
+.node-avatar-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.node-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(138, 180, 248, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.node-avatar-wrapper.online .node-avatar {
+  border-color: rgba(0, 255, 200, 0.7);
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+}
+
+/* Online indicator — star pulse */
+.online-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 40% 40%, #00ffc8 0%, #00c88a 100%);
+  border: 2px solid #080c18;
+  border-radius: 50%;
+  animation: onlineGlow 2s ease-in-out infinite;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes onlineGlow {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(0, 255, 200, 0.7), 0 0 2px rgba(0, 255, 200, 0.4) inset;
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(0, 255, 200, 1), 0 0 4px rgba(0, 255, 200, 0.6) inset;
+  }
+}
+}
+
+.constellation-node:hover {
+  border-color: rgba(138, 180, 248, 0.22);
+  box-shadow: 0 0 40px rgba(138, 180, 248, 0.1), 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.constellation-node:hover::before {
+  opacity: 1;
+}
+
+.constellation-node:focus-visible {
+  outline: none;
+  border-color: rgba(138, 180, 248, 0.5);
+  box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.15), 0 0 40px rgba(138, 180, 248, 0.12);
+}
+
+.constellation-node:active {
+  transform: translateX(1px);
+}
+
+/* Info panel — holographic data readout */
+.node-info {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 12px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+}
+
+/* Scan line overlay on info */
+.node-info::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(138, 180, 248, 0.015) 3px,
+    rgba(138, 180, 248, 0.015) 4px
+  );
+  pointer-events: none;
+  border-radius: 0;
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.node-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #d0dcf0;
+  font-family: 'Orbitron', 'Rajdhani', monospace;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 12px rgba(138, 180, 248, 0.4);
+}
+
+.node-level {
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  background: rgba(138, 180, 248, 0.1);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: 4px;
+  color: rgba(180, 200, 240, 0.8);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Status row */
+.node-status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.node-status {
+  font-size: 0.7rem;
+  color: rgba(160, 170, 195, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.node-status.online {
+  color: rgba(0, 255, 200, 0.75);
+  text-shadow: 0 0 8px rgba(0, 255, 200, 0.4);
+}
+
+.node-status-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(160, 170, 195, 0.4);
+}
+
+.node-status-dot.online {
+  background: #00ffc8;
+  box-shadow: 0 0 6px rgba(0, 255, 200, 0.8);
+  animation: starPulse 2s ease-in-out infinite;
+}
+
+/* Intimacy — star row (replaces bar) */
+.intimacy-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  max-width: 180px;
+}
+
+.intimacy-star {
+  font-size: 0.65rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 0 2px rgba(138, 180, 248, 0.3));
+}
+
+.intimacy-star.filled {
+  color: #ffd580;
+  filter: drop-shadow(0 0 4px rgba(255, 215, 100, 0.6));
+}
+
+.intimacy-star.high {
+  color: #00ffc8;
+  filter: drop-shadow(0 0 5px rgba(0, 255, 200, 0.7));
+}
+
+.intimacy-star.max {
+  color: #fff0a0;
+  filter: drop-shadow(0 0 6px rgba(255, 240, 150, 0.8));
+  animation: starTwinkle 1.5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes starTwinkle {
+  from { opacity: 0.7; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+}
+
+/* Command dock — HUD panel */
+.node-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 10px 8px;
+  position: relative;
+  min-width: 76px;
+}
+
+/* HUD corner brackets */
+.node-actions::before,
+.node-actions::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(138, 180, 248, 0.25);
+  border-style: solid;
+  transition: border-color 0.25s ease;
+}
+
+.node-actions::before {
+  top: 6px;
+  left: 4px;
+  border-width: 1px 0 0 1px;
+}
+
+.node-actions::after {
+  bottom: 6px;
+  right: 4px;
+  border-width: 0 1px 1px 0;
+}
+
+.constellation-node:hover .node-actions::before,
+.constellation-node:hover .node-actions::after {
+  border-color: rgba(138, 180, 248, 0.45);
+}
+
+/* Primary action — send stamina */
+.node-btn.send-stamina {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  background: rgba(255, 180, 60, 0.06);
+  border: 1px solid rgba(255, 180, 60, 0.12);
+  border-radius: 10px;
+  color: #ffc060;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animated energy field background */
+.node-btn.send-stamina::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 120%, rgba(255, 180, 60, 0.18) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.node-btn.send-stamina:not(.sent):hover::before {
+  opacity: 1;
+}
+
+/* Glow pulse ring */
+.node-btn.send-stamina::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 180, 60, 0);
+  transition: all 0.3s ease;
+}
+
+.node-btn.send-stamina:not(.sent):hover::after {
+  border-color: rgba(255, 180, 60, 0.35);
+  box-shadow: 0 0 16px rgba(255, 180, 60, 0.2), inset 0 0 10px rgba(255, 180, 60, 0.05);
+  inset: -3px;
+}
+
+/* Stamina — lightning bolt SVG icon */
+.stamina-btn-icon {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  z-index: 1;
+  color: #ffc060;
+  filter: drop-shadow(0 0 5px rgba(255, 200, 80, 0.55));
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease;
+}
+
+.stamina-btn-icon .bolt-core {
+  color: #ffc060;
+  transition: color 0.25s ease;
+}
+
+.stamina-btn-icon .bolt-glow {
+  color: #00e5ff;
+  transition: opacity 0.25s ease;
+}
+
+.node-btn.send-stamina:not(.sent):hover .stamina-btn-icon {
+  transform: scale(1.18) rotate(-6deg);
+  filter: drop-shadow(0 0 10px rgba(255, 200, 80, 0.85)) drop-shadow(0 0 3px rgba(0, 229, 255, 0.6));
+  animation: boltPulse 0.7s ease-in-out infinite alternate;
+}
+
+.node-btn.send-stamina:not(.sent):hover .bolt-glow {
+  opacity: 0.5;
+}
+
+/* Lightning pulse animation on hover */
+@media (prefers-reduced-motion: no-preference) {
+@keyframes boltPulse {
+  from { filter: drop-shadow(0 0 6px rgba(255,200,80,0.7)) drop-shadow(0 0 2px rgba(0,229,255,0.4)); }
+  to { filter: drop-shadow(0 0 14px rgba(255,200,80,1)) drop-shadow(0 0 5px rgba(0,229,255,0.7)); }
+}
+}
+
+.stamina-btn-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.2s ease;
+}
+
+.node-btn.send-stamina:hover .stamina-btn-label {
+  opacity: 1;
+}
+
+.node-btn.send-stamina.sent {
+  opacity: 0.55;
+  cursor: not-allowed;
+  border-color: rgba(255, 180, 60, 0.06);
+}
+
+.node-btn.send-stamina.sent .stamina-btn-icon {
+  filter: drop-shadow(0 0 2px rgba(255, 200, 80, 0.2));
+  color: rgba(255, 200, 80, 0.3);
+}
+
+.node-btn.send-stamina.sent .stamina-btn-label {
+  opacity: 0.7;
+}
+
+/* Stamina count flip animation */
+@keyframes countFlip {
+  0% { transform: translateY(0); opacity: 1; }
+  40% { transform: translateY(-8px); opacity: 0; }
+  60% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.stamina-btn-label.flip {
+  animation: countFlip 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* All actions dimmed when daily stamina exhausted */
+.node-actions.exhausted {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.node-actions.exhausted::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 10, 22, 0.45);
+  border-radius: 8px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.node-btn.send-stamina:active:not(.sent) {
+  transform: scale(0.94);
+  filter: brightness(0.85);
+}
+
+/* Secondary action — remove friend */
+.node-btn.remove {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 70, 90, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  color: rgba(255, 110, 130, 0.5);
+}
+
+/* Hexagonal frame SVG icon */
+.remove-icon {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease;
+}
+
+.remove-icon .hex-frame {
+  color: rgba(255, 80, 100, 0.35);
+  transition: color 0.25s ease, stroke-width 0.2s ease;
+}
+
+.remove-icon .x-line {
+  color: rgba(255, 110, 130, 0.55);
+  transition: color 0.25s ease;
+}
+
+.node-btn.remove:hover {
+  background: rgba(255, 70, 90, 0.1);
+  border-color: rgba(255, 70, 90, 0.3);
+  color: rgba(255, 140, 160, 0.85);
+  box-shadow: 0 0 14px rgba(255, 70, 90, 0.2);
+  transform: scale(1.06);
+}
+
+.node-btn.remove:hover .remove-icon .hex-frame {
+  color: rgba(255, 80, 100, 0.7);
+  stroke-width: 1.6;
+}
+
+.node-btn.remove:hover .remove-icon .x-line {
+  color: #ff8090;
+}
+
+.node-btn.remove:hover .remove-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 80, 100, 0.55));
+  transform: rotate(90deg);
+}
+
+.node-btn.remove:active {
+  transform: scale(0.93);
+  filter: brightness(0.82);
+}
+
+/* Inline confirm — expands inline */
+.node-confirm-remove {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  background: rgba(8, 10, 22, 0.9);
+  border: 1px solid rgba(255, 70, 90, 0.2);
+  border-radius: 8px;
+  padding: 5px 7px;
+  animation: confirmSlideIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes confirmSlideIn {
+  from { opacity: 0; transform: scale(0.9) translateX(-4px); }
+  to { opacity: 1; transform: scale(1) translateX(0); }
+}
+
+.node-btn.confirm-yes {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  background: rgba(255, 60, 80, 0.85);
+  color: #fff;
+  border: 1px solid rgba(255, 80, 100, 0.5);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.node-btn.confirm-yes:hover {
+  background: rgba(255, 60, 80, 1);
+  box-shadow: 0 0 12px rgba(255, 60, 80, 0.45);
+  transform: scale(1.04);
+}
+
+.node-btn.confirm-yes:active {
+  transform: scale(0.95);
+  filter: brightness(0.88);
+}
+
+.node-btn.confirm-no {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  background: rgba(100, 120, 160, 0.2);
+  color: rgba(200, 215, 230, 0.75);
+  border: 1px solid rgba(100, 120, 160, 0.25);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.node-btn.confirm-no:hover {
+  background: rgba(100, 120, 160, 0.32);
+  color: rgba(220, 230, 245, 0.9);
+  border-color: rgba(120, 140, 175, 0.35);
+  transform: scale(1.04);
+}
+
+.node-btn.confirm-no:active {
+  transform: scale(0.95);
+  filter: brightness(0.85);
+}
+
+/* ============ Request Constellation ============ */
+.request-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.request-empty-hint {
+  text-align: center;
+  padding: 20px;
+  color: rgba(180, 190, 220, 0.4);
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+}
+
+.request-constellation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: rgba(10, 12, 28, 0.55);
+  border: 1px solid rgba(200, 160, 255, 0.12);
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  animation: cardEntrance 0.5s ease-out backwards;
+}
+
+.request-constellation:hover {
+  background: rgba(15, 18, 38, 0.7);
+  border-color: rgba(200, 160, 255, 0.22);
+}
+
+/* Request avatar with optional online dot */
+.request-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.request-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(200, 160, 255, 0.25);
+  display: block;
+}
+
+.request-avatar-wrapper .online-indicator {
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.request-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.request-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c8d0f0;
+  margin-bottom: 3px;
+}
+
+.request-time {
+  font-size: 0.72rem;
+  color: rgba(170, 180, 210, 0.5);
+}
+
+.request-direction {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.request-direction.received {
+  background: rgba(0, 255, 150, 0.1);
+  color: #00ff96;
+  border: 1px solid rgba(0, 255, 150, 0.2);
+}
+
+.request-direction.sent {
+  background: rgba(160, 180, 255, 0.1);
+  color: #a0b4ff;
+  border: 1px solid rgba(160, 180, 255, 0.2);
+}
+
+.request-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.request-btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.request-btn.accept {
+  background: linear-gradient(135deg, rgba(0, 220, 140, 0.2), rgba(0, 190, 120, 0.15));
+  color: #00e890;
+  border: 1px solid rgba(0, 220, 140, 0.3);
+  animation: acceptBtnPulse 2.5s ease-in-out infinite;
+}
+
+.request-btn.accept:hover {
+  background: rgba(0, 220, 140, 0.3);
+  box-shadow: 0 0 20px rgba(0, 220, 140, 0.35);
+  transform: scale(1.05);
+  animation-play-state: paused;
+}
+
+.request-btn.reject {
+  background: rgba(255, 90, 110, 0.1);
+  color: rgba(255, 130, 150, 0.85);
+  border: 1px solid rgba(255, 90, 110, 0.15);
+  animation: rejectBtnPulse 2.5s ease-in-out infinite;
+}
+
+.request-btn.reject:hover {
+  background: rgba(255, 90, 110, 0.2);
+  box-shadow: 0 0 15px rgba(255, 90, 110, 0.25);
+  transform: scale(1.05);
+  animation-play-state: paused;
+}
+
+
+/* ============ Stamina Gifts Grid ============ */
+.stamina-gifts-section {
+  padding: 0 20px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.stamina-gifts-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(180, 190, 220, 0.55);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stamina-gifts-title::before {
+  content: '⚡';
+  font-size: 0.9rem;
+}
+
+.stamina-gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stamina-gift-btn {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: rgba(10, 12, 28, 0.5);
+  border: 1px solid rgba(255, 180, 100, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.stamina-gift-btn:hover:not(.sent) {
+  background: rgba(20, 16, 40, 0.6);
+  border-color: rgba(255, 180, 100, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 140, 48, 0.2);
+}
+
+.stamina-gift-btn.sent {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stamina-gift-btn .gift-icon {
+  font-size: 1.3rem;
+}
+
+.stamina-gift-btn .gift-status {
+  font-size: 0.6rem;
+  color: rgba(180, 190, 220, 0.5);
+  font-weight: 600;
+}
+
+.stamina-gift-btn.sent .gift-status {
+  color: #00c880;
+}
+
+/* ===== 768px Medium Tablet ===== */
+@media (max-width: 768px) {
+  .friends-hero {
+    padding: 20px 16px 16px;
+    gap: 12px;
+  }
+
+  .friends-hero-title {
+    font-size: 1.6rem;
+  }
+
+  .friends-hero-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .starlight-search {
+    margin-bottom: 16px;
+  }
+
+  .star-catalog-input {
+    padding: 10px 14px;
+    font-size: var(--text-sm);
+  }
+
+  .star-catalog-results {
+    max-height: 280px;
+  }
+
+  .star-catalog-item {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .star-catalog-item-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .starlight-tabs {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .tab-pill {
+    padding: 8px 16px;
+    font-size: var(--text-sm);
+  }
+
+  .friends-list {
+    gap: 10px;
+  }
+
+  .constellation-node {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .node-avatar-wrapper {
+    width: 46px;
+    height: 46px;
+  }
+
+  .node-avatar {
+    width: 46px;
+    height: 46px;
+  }
+
+  .online-indicator {
+    width: 12px;
+    height: 12px;
+  }
+
+  .node-name {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .node-level {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+
+  .node-status {
+    font-size: 0.72rem;
+    margin-bottom: 6px;
+  }
+
+  .intimacy-track {
+    height: 5px;
+  }
+
+  .node-actions {
+    gap: 6px;
+  }
+
+  .node-action-btn {
+    padding: 6px 10px;
+    font-size: var(--text-xs);
+  }
+
+  .request-constellation {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .request-avatar-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+
+  .request-actions {
+    gap: 8px;
+  }
+
+  .request-btn {
+    padding: 6px 12px;
+    font-size: var(--text-xs);
+    border-radius: 8px;
+  }
+
+  .request-btn.accept {
+    padding: 6px 12px;
+  }
+
+  .request-btn.reject {
+    padding: 6px 12px;
+  }
+
+  .stamina-gift-btn {
+    padding: 8px 12px;
+    gap: 3px;
+    border-radius: 10px;
+  }
+
+  .stamina-gift-btn .gift-icon {
+    font-size: 1.1rem;
+  }
+
+  .stamina-gift-btn .gift-status {
+    font-size: 0.55rem;
+  }
+}
+
+/* ===== 480px Mobile ===== */
+@media (max-width: 480px) {
+  .friends-hero {
+    padding: 16px 12px 12px;
+    gap: 10px;
+  }
+
+  .friends-hero-title {
+    font-size: 1.3rem;
+  }
+
+  .friends-hero-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .starlight-search {
+    margin-bottom: 12px;
+  }
+
+  .star-catalog-input {
+    padding: 8px 12px;
+    font-size: var(--text-sm);
+  }
+
+  .star-catalog-results {
+    max-height: 220px;
+  }
+
+  .star-catalog-item {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .star-catalog-item-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .starlight-tabs {
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .tab-pill {
+    padding: 6px 12px;
+    font-size: var(--text-xs);
+  }
+
+  .friends-list {
+    gap: 8px;
+  }
+
+  .constellation-node {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .node-avatar-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  .node-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .online-indicator {
+    width: 10px;
+    height: 10px;
+  }
+
+  .node-name {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+  }
+
+  .node-level {
+    font-size: 0.55rem;
+    padding: 1px 5px;
+  }
+
+  .node-status {
+    font-size: 0.65rem;
+    margin-bottom: 4px;
+  }
+
+  .intimacy-track {
+    height: 4px;
+  }
+
+  .node-actions {
+    gap: 4px;
+  }
+
+  .node-action-btn {
+    padding: 5px 8px;
+    font-size: 0.6rem;
+  }
+
+  .request-constellation {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .request-avatar-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+
+  .request-actions {
+    gap: 6px;
+  }
+
+  .request-btn {
+    padding: 5px 10px;
+    font-size: 0.6rem;
+    border-radius: 6px;
+  }
+
+  .request-btn.accept {
+    padding: 5px 10px;
+  }
+
+  .request-btn.reject {
+    padding: 5px 10px;
+  }
+
+  .stamina-gift-btn {
+    padding: 6px 10px;
+    gap: 2px;
+    border-radius: 8px;
+  }
+
+  .stamina-gift-btn .gift-icon {
+    font-size: 0.95rem;
+  }
+
+  .stamina-gift-btn .gift-status {
+    font-size: 0.5rem;
+  }
+}

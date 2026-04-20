@@ -1,0 +1,2852 @@
+/* ========================================
+   偶像收藏集 - Gallery Styles
+   Cyberpunk Holographic Idol Card System
+   ======================================== */
+
+/* ============ Holographic Animations ============ */
+@media (prefers-reduced-motion: no-preference) {
+@keyframes holoBorder {
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(120deg); }
+  100% { filter: hue-rotate(0deg); }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes iridescentShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes glitch {
+  0%   { clip-path: inset(0 0 95% 0); transform: translate(0); }
+  20%  { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+  40%  { clip-path: inset(50% 0 30% 0); transform: translate(2px, -2px); }
+  60%  { clip-path: inset(80% 0 5% 0); transform: translate(-1px, 1px); }
+  80%  { clip-path: inset(95% 0 0 0); transform: translate(1px, -1px); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes urCardPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5),
+                0 0 20px rgba(255,215,0,0.3),
+                0 0 0 1px rgba(255,215,0,0.3),
+                0 0 40px rgba(255,215,0,0.2);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5),
+                0 0 50px rgba(255,215,0,0.5),
+                0 0 0 1px rgba(255,215,0,0.5),
+                0 0 80px rgba(255,215,0,0.4);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes ssrCardPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5),
+                0 0 15px rgba(255,0,255,0.2),
+                0 0 0 1px rgba(255,0,255,0.2);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(0,0,0,0.5),
+                0 0 30px rgba(255,0,255,0.35),
+                0 0 0 1px rgba(255,0,255,0.35),
+                0 0 50px rgba(255,0,255,0.2);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes cardEntrance {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes shimmerSweep {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes synthPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255, 0, 255, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.9); }
+}}
+
+/* ============ Idol Grid & Card (Holographic Base) ============ */
+.idol-grid {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 18px;
+  padding: 10px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.idol-card {
+  --card-rarity: var(--rarity-n);
+  --card-rarity-glow: rgba(160, 160, 160, 0.2);
+  --card-rarity-rgb: 160, 160, 160;
+
+  position: relative;
+  background: linear-gradient(160deg, rgba(20, 20, 45, 0.95) 0%, rgba(10, 8, 28, 0.98) 100%);
+  border-radius: 20px;
+  padding: 20px 16px;
+  min-height: 280px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, filter 0.3s ease;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(var(--card-rarity-rgb), 0.15),
+    inset 0 0 40px rgba(var(--card-rarity-rgb), 0.04);
+}
+
+/* Prismatic holographic border — static, no continuous animation */
+.idol-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(var(--card-rarity-rgb), 0.8),
+    rgba(var(--card-rarity-rgb), 0.2) 40%,
+    rgba(var(--card-rarity-rgb), 0.6)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  filter: hue-rotate(0deg);
+}
+
+/* Diagonal scanline overlay */
+.idol-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transition: left 0.5s ease, width 0.3s ease, background 0.3s ease;
+  pointer-events: none;
+}
+
+.idol-card:hover::after {
+  left: 150%;
+  width: 80%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+}
+
+/* Glitch effect on hover */
+.idol-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(var(--card-rarity-rgb), 0.4),
+    0 0 0 2px rgba(var(--card-rarity-rgb), 0.5),
+    inset 0 0 60px rgba(var(--card-rarity-rgb), 0.1);
+}
+
+.idol-card:hover::before {
+  filter: hue-rotate(60deg) brightness(1.3);
+}
+
+/* Brightness flash on hover for rare cards — replaces starBurst keyframe animation to avoid conflicts with infinite base animations */
+.idol-card.rarity-SR:hover { filter: brightness(1.3); }
+.idol-card.rarity-SSR:hover { filter: brightness(1.35); }
+.idol-card.rarity-UR:hover { filter: brightness(1.4); }
+
+/* Rarity color variants */
+.idol-card.rarity-N  { --card-rarity: var(--rarity-n); --card-rarity-glow: rgba(160,160,160,0.2); --card-rarity-rgb: 160,160,160; }
+.idol-card.rarity-R  { --card-rarity: var(--rarity-r); --card-rarity-glow: rgba(0,255,136,0.25); --card-rarity-rgb: 0,255,136; }
+.idol-card.rarity-SR { --card-rarity: var(--rarity-sr); --card-rarity-glow: rgba(0,204,255,0.3); --card-rarity-rgb: 0,204,255; }
+.idol-card.rarity-SSR { --card-rarity: var(--rarity-ssr-1); --card-rarity-glow: rgba(255,0,255,0.35); --card-rarity-rgb: 255,0,255; }
+.idol-card.rarity-UR {
+  --card-rarity: var(--rarity-ur-1);
+  --card-rarity-glow: rgba(255,215,0,0.4);
+  --card-rarity-rgb: 255,215,0;
+  animation: urCardPulse 2.5s ease-in-out infinite;
+}
+
+/* Avatar orb */
+.idol-card-avatar {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: radial-gradient(circle, rgba(var(--card-rarity-rgb), 0.2) 0%, rgba(var(--card-rarity-rgb), 0.08) 50%, transparent 70%);
+  border: 2.5px solid rgba(var(--card-rarity-rgb), 0.4);
+  box-shadow:
+    0 0 25px rgba(var(--card-rarity-rgb), 0.3),
+    0 0 50px rgba(var(--card-rarity-rgb), 0.15),
+    inset 0 0 20px rgba(var(--card-rarity-rgb), 0.15);
+  position: relative;
+  transition: all 0.35s ease;
+  animation: avatarPulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes avatarPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(var(--card-rarity-rgb), 0.3), 0 0 50px rgba(var(--card-rarity-rgb), 0.15), inset 0 0 20px rgba(var(--card-rarity-rgb), 0.15); }
+  50% { box-shadow: 0 0 35px rgba(var(--card-rarity-rgb), 0.4), 0 0 70px rgba(var(--card-rarity-rgb), 0.2), inset 0 0 30px rgba(var(--card-rarity-rgb), 0.2); }
+}}
+
+.idol-card:hover .idol-card-avatar {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 40px rgba(var(--card-rarity-rgb), 0.5),
+    0 0 80px rgba(var(--card-rarity-rgb), 0.3),
+    inset 0 0 30px rgba(var(--card-rarity-rgb), 0.25);
+}
+
+.idol-card-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--card-rarity-rgb), 0.2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes ringExpand {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.3); opacity: 0; }
+}}
+
+.idol-card-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px dashed rgba(var(--card-rarity-rgb), 0.15);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes ringRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}}
+
+/* Rarity badge - top right corner */
+.idol-card-rarity {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(var(--card-rarity-rgb), 0.9), rgba(var(--card-rarity-rgb), 0.7));
+  border-radius: 20px;
+  box-shadow:
+    0 0 15px rgba(var(--card-rarity-rgb), 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  letter-spacing: 1.5px;
+  animation: badgeGlow 2s ease-in-out infinite;
+  z-index: 5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(var(--card-rarity-rgb), 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(var(--card-rarity-rgb), 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+}}
+
+/* Synthesis badge - top left corner */
+.idol-card-synth-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--rarity-ssr-1), #8800ff);
+  border-radius: 20px;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.6);
+  letter-spacing: 1px;
+  animation: synthPulse 1.5s ease-in-out infinite;
+}
+
+.idol-card.can-synth {
+  box-shadow: 0 0 25px rgba(255, 0, 255, 0.4), inset 0 0 20px rgba(255, 0, 255, 0.1);
+}
+
+/* Character name */
+.idol-card-name {
+  font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--card-rarity, #fff);
+  text-shadow: 0 0 15px rgba(var(--card-rarity-rgb), 0.6);
+  margin: 0 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Info stats row */
+.idol-card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.idol-card-stat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'Orbitron', sans-serif;
+}
+
+.idol-card-stat span:last-child {
+  color: rgba(var(--card-rarity-rgb), 0.9);
+  font-weight: 600;
+}
+
+/* Desc text for gallery */
+.idol-card-desc {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.5;
+  margin-top: 8px;
+  margin-bottom: 40px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+}
+
+/* Obtained mark */
+.idol-card-obtained-mark {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--rarity-r);
+  padding: 2px 10px;
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  animation: obtainedGlow 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes obtainedGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+}}
+
+/* ============ Gallery Card ============ */
+.gallery-card {
+  --holo-color-1: rgba(255, 107, 157, 0.6);
+  --holo-color-2: rgba(0, 204, 255, 0.4);
+  --holo-color-3: rgba(255, 215, 0, 0.3);
+
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Prismatic holographic border */
+.gallery-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    var(--holo-color-1),
+    var(--holo-color-2) 40%,
+    var(--holo-color-3)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorder 3s linear infinite;
+  filter: hue-rotate(0deg);
+}
+
+/* Scanline overlay */
+.gallery-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.gallery-card:hover::after {
+  left: 150%;
+}
+
+.gallery-card:hover {
+  transform: translateY(-4px);
+  animation: glitch 0.3s ease-out;
+  box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3),
+              0 0 20px rgba(255, 107, 157, 0.2);
+}
+
+.gallery-card.owned {
+  --holo-color-1: rgba(0, 255, 136, 0.6);
+  --holo-color-2: rgba(0, 204, 255, 0.5);
+  --holo-color-3: rgba(255, 215, 0, 0.4);
+}
+
+.gallery-card.locked {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+  animation: none;
+}
+
+.gallery-card-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.gallery-card-info {
+  text-align: center;
+}
+
+.gallery-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.gallery-card-rarity {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ============ Gallery Filter Tabs ============ */
+.gallery-filter-tabs {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  margin: 0 20px 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: flex-start;
+  padding-bottom: 4px;
+}
+
+.gallery-filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-filter-tab {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+.gallery-filter-tab {
+  --tab-rarity: var(--accent-pink);
+  --tab-rarity-rgb: 255, 107, 157;
+  --tab-rarity-glow: rgba(255, 107, 157, 0.2);
+
+  position: relative;
+  padding: 10px 20px;
+  background: rgba(20, 20, 45, 0.8);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-family: 'Orbitron', sans-serif;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(var(--tab-rarity-rgb), 0.1),
+    inset 0 0 20px rgba(var(--tab-rarity-rgb), 0.05);
+  z-index: 1;
+}
+
+/* Prismatic holographic border — static, animated on hover */
+.gallery-filter-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(var(--tab-rarity-rgb), 0.7),
+    rgba(var(--tab-rarity-rgb), 0.2) 40%,
+    rgba(var(--tab-rarity-rgb), 0.5)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  filter: hue-rotate(0deg);
+  z-index: -1;
+  transition: filter 0.3s ease;
+}
+
+.gallery-filter-tab.active::before,
+.gallery-filter-tab:hover::before {
+  filter: hue-rotate(60deg) brightness(1.2);
+}
+
+/* Scanline overlay */
+.gallery-filter-tab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.gallery-filter-tab:hover::after {
+  left: 150%;
+}
+
+.gallery-filter-tab:hover {
+  transform: translateY(-3px);
+  color: white;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(var(--tab-rarity-rgb), 0.2),
+    0 0 0 1px rgba(var(--tab-rarity-rgb), 0.3),
+    inset 0 0 30px rgba(var(--tab-rarity-rgb), 0.08);
+}
+
+.gallery-filter-tab:active {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+/* Active state - enhanced glow */
+.gallery-filter-tab.active {
+  color: white;
+  box-shadow:
+    0 0 30px rgba(var(--tab-rarity-rgb), 0.5),
+    0 0 0 2px rgba(var(--tab-rarity-rgb), 0.4),
+    inset 0 0 40px rgba(var(--tab-rarity-rgb), 0.1);
+}
+
+/* Rarity-specific variables */
+.gallery-filter-tab.rarity-N {
+  --tab-rarity: var(--rarity-n);
+  --tab-rarity-rgb: 160, 160, 160;
+  --tab-rarity-glow: rgba(160, 160, 160, 0.2);
+}
+
+.gallery-filter-tab.rarity-R {
+  --tab-rarity: var(--rarity-r);
+  --tab-rarity-rgb: 0, 255, 136;
+  --tab-rarity-glow: rgba(0, 255, 136, 0.25);
+}
+
+.gallery-filter-tab.rarity-SR {
+  --tab-rarity: var(--rarity-sr);
+  --tab-rarity-rgb: 0, 204, 255;
+  --tab-rarity-glow: rgba(0, 204, 255, 0.3);
+}
+
+.gallery-filter-tab.rarity-SSR {
+  --tab-rarity: var(--rarity-ssr-1);
+  --tab-rarity-rgb: 255, 0, 255;
+  --tab-rarity-glow: rgba(255, 0, 255, 0.35);
+}
+
+.gallery-filter-tab.rarity-UR {
+  --tab-rarity: var(--rarity-ur-1);
+  --tab-rarity-rgb: 255, 215, 0;
+  --tab-rarity-glow: rgba(255, 215, 0, 0.4);
+}
+
+/* Enhanced active states with rarity-specific gradients */
+.gallery-filter-tab.active.rarity-N {
+  background: linear-gradient(135deg, rgba(160, 160, 160, 0.9), rgba(128, 128, 128, 0.8));
+}
+
+.gallery-filter-tab.active.rarity-R {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.9), rgba(0, 204, 106, 0.8));
+}
+
+.gallery-filter-tab.active.rarity-SR {
+  background: linear-gradient(135deg, rgba(0, 204, 255, 0.9), rgba(0, 153, 204, 0.8));
+}
+
+.gallery-filter-tab.active.rarity-SSR {
+  background: linear-gradient(135deg, rgba(255, 0, 255, 0.9), rgba(204, 0, 204, 0.8));
+}
+
+.gallery-filter-tab.active.rarity-UR {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 107, 0, 0.8));
+  animation: urCardPulse 2.5s ease-in-out infinite;
+}
+
+/* "全部" tab — white/pink glow for "all" state */
+.gallery-filter-tab:not([class*="rarity-"]) {
+  --tab-rarity: var(--accent-pink);
+  --tab-rarity-rgb: 255, 107, 157;
+  --tab-rarity-glow: rgba(255, 107, 157, 0.2);
+}
+
+.gallery-filter-tab.active:not([class*="rarity-"]) {
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.9), rgba(196, 69, 105, 0.8));
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.4), 0 0 0 2px rgba(255, 107, 157, 0.3);
+}
+
+/* Tab icon styling */
+.gallery-filter-tab .tab-icon {
+  display: inline-block;
+  margin-right: 6px;
+  filter: drop-shadow(0 0 4px rgba(var(--tab-rarity-rgb), 0.6));
+  animation: iconPulse 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.1); opacity: 1; }
+}}
+
+/* ============ Inventory Card ============ */
+.inventory-card {
+  --holo-color-1: rgba(255, 107, 157, 0.5);
+  --holo-color-2: rgba(0, 204, 255, 0.3);
+  --holo-color-3: rgba(255, 215, 0, 0.2);
+
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+/* Prismatic holographic border */
+.inventory-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    var(--holo-color-1),
+    var(--holo-color-2) 40%,
+    var(--holo-color-3)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorder 3s linear infinite;
+  filter: hue-rotate(0deg);
+}
+
+/* Scanline overlay */
+.inventory-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.inventory-card:hover::after {
+  left: 150%;
+}
+
+.inventory-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  animation: glitch 0.3s ease-out;
+  box-shadow: 0 4px 20px rgba(255, 107, 157, 0.2);
+}
+
+.inventory-card.locked {
+  opacity: 0.4;
+  pointer-events: none;
+  animation: none;
+}
+
+.inventory-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.inventory-info {
+  flex: 1;
+}
+
+.inventory-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.inventory-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.inventory-count {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-pink-solid);
+}
+
+/* ============ Gallery Page Enhancements ============ */
+.gallery-page,
+.idol-page {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 80px;
+  padding-top: 68px;
+  background: #020008;
+}
+
+/* Nebula cloud layers — Starlight Gateway shared background */
+.gallery-page::before,
+.idol-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180, 40, 180, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0, 80, 200, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 10%, rgba(255, 60, 160, 0.12) 0%, transparent 55%);
+  z-index: 0;
+  animation: nebulaDrift 20s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes nebulaDrift {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.08) rotate(3deg); opacity: 0.85; }
+}}
+
+/* Star particles layer */
+.gallery-page::after,
+.idol-page::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Floating particles background */
+.gallery-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.gallery-page > *,
+.idol-page > * {
+  position: relative;
+  z-index: 2;
+}
+
+.gallery-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  opacity: 0;
+  animation: galleryParticleFloat 10s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--accent-cyan), 0 0 15px var(--accent-cyan);
+}
+
+.gallery-particle:nth-child(odd) {
+  background: var(--accent-pink);
+  box-shadow: 0 0 8px var(--accent-pink), 0 0 15px var(--accent-pink);
+}
+
+.gallery-particle:nth-child(3n) {
+  background: var(--accent-gold);
+  box-shadow: 0 0 8px var(--accent-gold), 0 0 15px var(--accent-gold);
+}
+
+.gallery-particle:nth-child(1) { left: 5%; animation-delay: 0s; width: 5px; height: 5px; }
+.gallery-particle:nth-child(2) { left: 15%; animation-delay: -1.5s; width: 3px; height: 3px; }
+.gallery-particle:nth-child(3) { left: 25%; animation-delay: -3s; }
+.gallery-particle:nth-child(4) { left: 35%; animation-delay: -4.5s; width: 6px; height: 6px; }
+.gallery-particle:nth-child(5) { left: 45%; animation-delay: -6s; }
+.gallery-particle:nth-child(6) { left: 55%; animation-delay: -7.5s; width: 3px; height: 3px; }
+.gallery-particle:nth-child(7) { left: 65%; animation-delay: -2s; }
+.gallery-particle:nth-child(8) { left: 75%; animation-delay: -3.5s; width: 5px; height: 5px; }
+.gallery-particle:nth-child(9) { left: 85%; animation-delay: -5s; }
+.gallery-particle:nth-child(10) { left: 92%; animation-delay: -8s; width: 4px; height: 4px; }
+.gallery-particle:nth-child(11) { left: 10%; animation-delay: -9s; background: var(--accent-cyan); }
+.gallery-particle:nth-child(12) { left: 50%; animation-delay: -1s; width: 3px; height: 3px; }
+.gallery-particle:nth-child(13) { left: 70%; animation-delay: -6.5s; }
+.gallery-particle:nth-child(14) { left: 30%; animation-delay: -8.5s; width: 5px; height: 5px; }
+.gallery-particle:nth-child(15) { left: 80%; animation-delay: -4s; }
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes galleryParticleFloat {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% { opacity: 0.7; transform: translateY(85vh) scale(1); }
+  50% { opacity: 0.5; transform: translateY(50vh) scale(1); }
+  90% { opacity: 0.3; transform: translateY(15vh) scale(0.8); }
+  100% {
+    transform: translateY(-5vh) scale(0);
+    opacity: 0;
+  }
+}}
+
+.gallery-title {
+  font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent-pink-solid) 0%, #ffb8d0 20%, #ffffff 40%, var(--rarity-sr) 60%, var(--rarity-ur-1) 80%, var(--accent-pink-solid) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.5));
+  position: relative;
+}
+
+@keyframes titleRainbow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.gallery-title {
+  animation: titleRainbow 1s ease-out forwards;
+}
+
+.gallery-title::after {
+  content: '偶像图鉴';
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--accent-pink-solid), var(--rarity-sr));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: blur(10px);
+  opacity: 0.5;
+  z-index: -1;
+  animation: titleRainbow 1s ease-out forwards;
+}
+
+@keyframes subtitleGlow {
+  0%, 100% { opacity: 0.6; text-shadow: 0 0 10px rgba(255, 107, 157, 0.3); }
+  50% { opacity: 1; text-shadow: 0 0 20px rgba(255, 107, 157, 0.6); }
+}
+
+/* Collection progress panel */
+
+/* Locked card overlay */
+.idol-card-locked-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 4, 20, 0.9) 0%, rgba(10, 8, 30, 0.95) 100%);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 10;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.idol-card-locked-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(160, 160, 160, 0.3), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.idol-card-locked-overlay .lock-icon {
+  font-size: 2.8rem;
+  opacity: 0.5;
+  filter: grayscale(0.3);
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes lockPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}}
+
+.idol-card-locked-overlay .lock-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Gallery content layer */
+.gallery-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============ Completion Effects ============ */
+@media (prefers-reduced-motion: no-preference) {
+@keyframes completePulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.5), 0 0 80px rgba(255, 215, 0, 0.2);
+  }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes bannerGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes shimmerMove {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}}
+
+/* Complete page state */
+.idol-page-complete {
+}
+
+/* Gallery page z-index to sit above particles overlay */
+.idol-page {
+  position: relative;
+  z-index: 10;
+}
+
+/* ============ Tablet Responsive (≤768px) ============ */
+@media (max-width: 768px) {
+  .idol-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+    padding: 8px 16px;
+  }
+
+  .idol-card {
+    min-height: 240px;
+    padding: 16px 12px;
+    border-radius: 16px;
+  }
+
+  .idol-card-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  .idol-card-name {
+    font-size: 0.85rem;
+  }
+
+  .idol-card-stats {
+    gap: 3px;
+  }
+
+  .idol-card-stat {
+    font-size: 0.7rem;
+  }
+
+  .idol-card-desc {
+    font-size: 0.7rem;
+    margin-bottom: 36px;
+  }
+
+  .idol-card-rarity {
+    padding: 3px 10px;
+    font-size: 0.6rem;
+  }
+
+  .gallery-card {
+    padding: 16px;
+  }
+
+  .gallery-card-name {
+    font-size: 0.85rem;
+  }
+
+  .gallery-card-rarity {
+    font-size: 0.7rem;
+  }
+
+  .gallery-filter-tabs {
+    margin: 0 16px 16px;
+    gap: 6px;
+  }
+
+  .gallery-filter-tab {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .gallery-title {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+
+  .inventory-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .inventory-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .inventory-name {
+    font-size: 0.85rem;
+  }
+
+  .inventory-type {
+    font-size: 0.7rem;
+  }
+
+  .inventory-count {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== 480px Mobile ===== */
+@media (max-width: 480px) {
+  .idol-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    padding: 6px 12px;
+  }
+
+  .idol-card {
+    min-height: 200px;
+    padding: 12px 8px;
+    border-radius: 14px;
+  }
+
+  .idol-card-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+
+  .idol-card-name {
+    font-size: 0.75rem;
+  }
+
+  .idol-card-stats {
+    gap: 2px;
+  }
+
+  .idol-card-stat {
+    font-size: 0.6rem;
+  }
+
+  .idol-card-desc {
+    font-size: 0.6rem;
+    margin-bottom: 30px;
+  }
+
+  .idol-card-rarity {
+    padding: 2px 8px;
+    font-size: 0.55rem;
+  }
+
+  .gallery-card {
+    padding: 12px;
+  }
+
+  .gallery-card-name {
+    font-size: 0.75rem;
+  }
+
+  .gallery-card-rarity {
+    font-size: 0.6rem;
+  }
+
+  .gallery-filter-tabs {
+    margin: 0 12px 12px;
+    gap: 4px;
+  }
+
+  .gallery-filter-tab {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .gallery-title {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  .inventory-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .inventory-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .inventory-name {
+    font-size: 0.75rem;
+  }
+
+  .inventory-type {
+    font-size: 0.6rem;
+  }
+
+  .inventory-count {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============ Gallery Search ============ */
+.gallery-search-wrapper {
+  position: relative;
+  z-index: 5;
+  margin: 0 20px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.gallery-search-icon {
+  position: absolute;
+  left: 16px;
+  color: rgba(255, 107, 157, 0.6);
+  pointer-events: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.gallery-search-input {
+  width: 100%;
+  padding: 12px 40px 12px 42px;
+  background: rgba(20, 15, 45, 0.85);
+  border: 1.5px solid rgba(255, 107, 157, 0.2);
+  border-radius: 14px;
+  color: #fff;
+  font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 107, 157, 0.03);
+}
+
+.gallery-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.gallery-search-input:focus {
+  border-color: rgba(255, 107, 157, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 107, 157, 0.15), inset 0 0 25px rgba(255, 107, 157, 0.05);
+}
+
+.gallery-search-input:focus ~ .gallery-search-icon,
+.gallery-search-wrapper:focus-within .gallery-search-icon {
+  color: var(--accent-pink-solid);
+}
+
+.gallery-search-clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.gallery-search-clear:hover {
+  color: rgba(255, 107, 157, 0.8);
+}
+
+/* ============ Gallery Empty State ============ */
+.gallery-empty-state {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  text-align: center;
+}
+
+.gallery-empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 107, 157, 0.06);
+  border: 1.5px dashed rgba(255, 107, 157, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: emptyPulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes emptyPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+}}
+
+.gallery-empty-icon svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.4;
+}
+
+.gallery-empty-title {
+  font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+.gallery-empty-text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.3);
+  max-width: 260px;
+  line-height: 1.6;
+}
+
+/* ============ Locked Card Silhouette ============ */
+.idol-card-locked-overlay .lock-silhouette {
+  width: 70px;
+  height: 70px;
+  opacity: 0.25;
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+/* ============ Card Entrance Animation ============ */
+.idol-card.card-enter {
+  animation: cardEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Highlight matched by search */
+.idol-card.card-highlight {
+  animation: highlightPulse 0.6s ease-out;
+}
+
+@keyframes highlightPulse {
+  0%   { box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.7), 0 0 30px rgba(255, 107, 157, 0.4); }
+  100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(var(--card-rarity-rgb), 0.15); }
+}
+
+/* ============ Gallery Complete Toast ============ */
+.gallery-complete-toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 0, 0.1));
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 30px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 30px rgba(255, 215, 0, 0.2), 0 0 0 1px rgba(255, 215, 0, 0.1);
+  font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--rarity-ur-1);
+  white-space: nowrap;
+  animation: toastSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), toastFadeOut 0.5s ease 3.5s forwards;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes toastSlideIn {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(-16px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+@keyframes toastFadeOut {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ============ Gallery Progress Bar ============ */
+.gallery-progress-bar-wrapper {
+  position: relative;
+  z-index: 5;
+  margin: 0 20px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gallery-progress-bar-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gallery-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 8px rgba(255, 107, 157, 0.4);
+}
+
+.gallery-progress-bar-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+/* ============ Gallery Controls Row (Search + Sort) ============ */
+.gallery-controls-row {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 20px 14px;
+}
+
+.gallery-controls-row .gallery-search-wrapper {
+  flex: 1;
+  margin: 0;
+}
+
+/* ============ Gallery Sort Dropdown ============ */
+.gallery-sort-wrapper {
+  position: relative;
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+.gallery-sort-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  background: rgba(20, 15, 45, 0.9);
+  border: 1.5px solid rgba(255, 107, 157, 0.25);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
+.gallery-sort-trigger:hover,
+.gallery-sort-trigger:focus {
+  border-color: rgba(255, 107, 157, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 107, 157, 0.12);
+}
+
+.sort-trigger-icon {
+  color: rgba(255, 107, 157, 0.7);
+  flex-shrink: 0;
+}
+
+.sort-chevron {
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.sort-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.gallery-sort-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: rgba(15, 12, 35, 0.98);
+  border: 1.5px solid rgba(255, 107, 157, 0.3);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 107, 157, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: sortDropdownIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 9999;
+}
+
+@keyframes sortDropdownIn {
+  0%   { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.sort-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.sort-option:hover {
+  background: rgba(255, 107, 157, 0.12);
+  color: #fff;
+}
+
+.sort-option.active {
+  color: var(--accent-pink-solid);
+  background: rgba(255, 107, 157, 0.1);
+}
+
+.sort-check {
+  color: var(--accent-pink-solid);
+  flex-shrink: 0;
+}
+
+/* ============ Tab Count Badge ============ */
+.gallery-filter-tab .tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  font-size: 0.65rem;
+  font-family: 'Orbitron', sans-serif;
+  color: rgba(255, 255, 255, 0.55);
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
+
+.gallery-filter-tab.active .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============ Result Count ============ */
+.gallery-result-count {
+  position: relative;
+  z-index: 5;
+  margin: 0 20px 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.5px;
+}
+
+/* ============ NEW Badge ============ */
+.idol-card-new-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  padding: 2px 7px;
+  background: linear-gradient(135deg, #ff6b9d, #ff8c00);
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.5);
+  animation: newBadgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes newBadgePop {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ============ Lock Hint ============ */
+.lock-hint {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  padding: 0 6px;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+/* ============ Hover Card Preview ============ */
+.gallery-card-preview {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(15, 12, 35, 0.97);
+  border: 1.5px solid rgba(255, 107, 157, 0.3);
+  border-radius: 14px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 107, 157, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+  min-width: 180px;
+  max-width: 240px;
+  animation: previewFadeIn 0.2s ease;
+}
+
+@keyframes previewFadeIn {
+  0%   { opacity: 0; transform: translateY(4px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.preview-avatar {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px currentColor);
+}
+
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.preview-name {
+  font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-rarity {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.preview-desc {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.preview-element {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 2px;
+}
+
+/* ============ Responsive Adjustments ============ */
+@media (max-width: 768px) {
+  .gallery-progress-bar-wrapper {
+    margin: 0 16px 10px;
+  }
+
+  .gallery-controls-row {
+    margin: 0 16px 12px;
+    gap: 8px;
+  }
+
+  .gallery-sort-trigger {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .gallery-sort-dropdown {
+    right: 0;
+    min-width: 140px;
+  }
+
+  .gallery-result-count {
+    margin: 0 16px 8px;
+    font-size: 0.68rem;
+  }
+
+  .gallery-card-preview {
+    display: none; /* Hide preview on mobile to avoid clutter */
+  }
+}
+
+/* ============ Recently Obtained Section ============ */
+.gallery-recent-section {
+  position: relative;
+  z-index: 5;
+  margin: 0 0 16px;
+  padding: 0 20px;
+}
+
+.gallery-recent-section .section-title {
+  font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recent-scroll-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+}
+
+.recent-scroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+.recent-card {
+  --card-rarity-rgb: 255, 107, 157;
+  flex-shrink: 0;
+  width: 90px;
+  scroll-snap-align: start;
+  background: rgba(20, 15, 45, 0.8);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  border: 1px solid rgba(var(--card-rarity-rgb), 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.recent-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(var(--card-rarity-rgb), 0.2);
+}
+
+.recent-card.rarity-N { --card-rarity-rgb: 160, 160, 160; }
+.recent-card.rarity-R { --card-rarity-rgb: 0, 255, 136; }
+.recent-card.rarity-SR { --card-rarity-rgb: 0, 204, 255; }
+.recent-card.rarity-SSR { --card-rarity-rgb: 255, 0, 255; }
+.recent-card.rarity-UR { --card-rarity-rgb: 255, 215, 0; }
+
+.recent-card-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  background: radial-gradient(circle, rgba(var(--card-rarity-rgb), 0.15) 0%, transparent 70%);
+  border: 1.5px solid rgba(var(--card-rarity-rgb), 0.35);
+  box-shadow: 0 0 16px rgba(var(--card-rarity-rgb), 0.2);
+}
+
+.recent-card-name {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.recent-card-rarity {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ============ Idol Card Extra Info ============ */
+.idol-card-extra {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.idol-card-attr {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: rgba(var(--card-rarity-rgb), 0.8);
+  background: rgba(var(--card-rarity-rgb), 0.1);
+  border: 1px solid rgba(var(--card-rarity-rgb), 0.25);
+  border-radius: 6px;
+  padding: 1px 6px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ============ Lock Text Override ============ */
+.idol-card-locked-overlay .lock-text {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ============ Search Wrapper Responsive ============ */
+@media (max-width: 480px) {
+  .gallery-recent-section {
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+
+  .recent-card {
+    width: 76px;
+    padding: 10px 8px;
+  }
+
+  .recent-card-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 1.3rem;
+  }
+
+  .recent-card-name {
+    font-size: 0.62rem;
+  }
+
+  .gallery-recent-section .section-title {
+    font-size: 0.72rem;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-sort-wrapper {
+    display: none; /* Hide sort on very small screens */
+  }
+}
+
+
+/* ================================================
+   GALLERY STARFIELD — 3-LAYER DEEP SPACE BACKGROUND
+   ================================================ */
+.gallery-starfield {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.starfield-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.starfield-distant {
+  /* Distant tiny pinprick stars */
+}
+
+.sf-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: sfTwinkle var(--dur, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes sfTwinkle {
+  0%, 100% { opacity: 0.1; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.2); }
+}
+
+.starfield-mid {
+  /* Shooting star streaks */
+}
+
+.sf-shooting-star {
+  position: absolute;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.9), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  animation: sfShoot var(--dur, 1.5s) ease-out infinite;
+  animation-delay: var(--delay, 0s);
+  transform-origin: left center;
+}
+
+.sf-shooting-star .sf-streak {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
+}
+
+@keyframes sfShoot {
+  0% { opacity: 0; transform: translateX(0) scaleX(0.3); }
+  10% { opacity: 1; transform: translateX(0) scaleX(1); }
+  80% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateX(120px) scaleX(0.5); }
+}
+
+.starfield-foreground {
+  /* Nebula wisps overlay */
+}
+
+.sf-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.12;
+}
+
+.sf-nebula-1 {
+  width: 300px;
+  height: 200px;
+  background: radial-gradient(ellipse, #7b2fff, transparent);
+  left: -5%;
+  top: 10%;
+  animation: nebulaDrift1 18s ease-in-out infinite;
+}
+
+.sf-nebula-2 {
+  width: 250px;
+  height: 180px;
+  background: radial-gradient(ellipse, #ff3a8c, transparent);
+  right: -10%;
+  bottom: 15%;
+  animation: nebulaDrift2 22s ease-in-out infinite;
+}
+
+.sf-nebula-3 {
+  width: 200px;
+  height: 150px;
+  background: radial-gradient(ellipse, #00d4ff, transparent);
+  left: 30%;
+  bottom: 5%;
+  animation: nebulaDrift3 20s ease-in-out infinite;
+}
+
+@keyframes nebulaDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -15px) scale(1.1); }
+}
+
+@keyframes nebulaDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-25px, 20px) scale(1.08); }
+}
+
+@keyframes nebulaDrift3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(15px, -10px); }
+}
+
+/* ================================================
+   GALLERY COMPLETE RIBBON — Holographic Banner
+   ================================================ */
+.gallery-complete-ribbon {
+  position: relative;
+  margin: 0 auto 16px;
+  max-width: 480px;
+  height: 48px;
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #1a0a2e 60%, #2d1b4e 100%);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  animation: ribbonEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.gallery-complete-ribbon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--rarity-ur-1), #c084fc, var(--rarity-ur-1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ribbonBorderGlow 2s ease-in-out infinite;
+}
+
+@keyframes ribbonEntrance {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ribbonBorderGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.ribbon-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(192, 132, 252, 0.15) 35%,
+    rgba(255, 255, 255, 0.25) 45%,
+    rgba(192, 132, 252, 0.15) 60%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSlide 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmerSlide {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ribbon-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ribbon-spark {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--rarity-ur-1);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkPop 1.8s ease-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes sparkPop {
+  0%, 100% { opacity: 0; transform: translateY(-50%) scale(0.3); }
+  50% { opacity: 0.8; transform: translateY(-50%) scale(1); }
+}
+
+.ribbon-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+
+.ribbon-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--rarity-ur-1), #e9d5ff, var(--rarity-ur-1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.08em;
+}
+
+/* ================================================
+   GALLERY HEADER — Starlight Portal
+   ================================================ */
+.gallery-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 20px;
+  z-index: 2;
+}
+
+/* Orbital rings */
+.portal-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+}
+
+.portal-orbit-1 {
+  width: 120px;
+  height: 120px;
+  animation: orbitSpin 12s linear infinite;
+}
+
+.portal-orbit-2 {
+  width: 180px;
+  height: 180px;
+  border-color: rgba(139, 92, 246, 0.15);
+  animation: orbitSpin 20s linear infinite reverse;
+}
+
+.portal-orbit-3 {
+  width: 260px;
+  height: 260px;
+  border-color: rgba(99, 102, 241, 0.1);
+  animation: orbitSpin 30s linear infinite;
+}
+
+@keyframes orbitSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.portal-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--rarity-sr, #a78bfa);
+  border-radius: 50%;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px var(--rarity-sr, #a78bfa);
+}
+
+.portal-node-2 {
+  background: var(--rarity-ssr, #f472b6);
+  box-shadow: 0 0 8px var(--rarity-ssr, #f472b6);
+  width: 6px;
+  height: 6px;
+  top: -3px;
+}
+
+.portal-node-3 {
+  background: var(--rarity-ur-1);
+  box-shadow: 0 0 10px var(--rarity-ur-1);
+  width: 10px;
+  height: 10px;
+  top: -5px;
+}
+
+.portal-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
+  border-radius: 50%;
+  animation: portalPulse 3s ease-in-out infinite;
+}
+
+@keyframes portalPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.gallery-title-wrap {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.gallery-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--rarity-sr, #a78bfa) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gallery-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+/* Corner constellation dots */
+.portal-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 50%;
+}
+
+.portal-corner-tl { top: 0; left: 0; }
+.portal-corner-tr { top: 0; right: 0; }
+.portal-corner-bl { bottom: 0; left: 0; }
+.portal-corner-br { bottom: 0; right: 0; }
+
+/* ================================================
+   GALLERY PROGRESS PANEL — Constellation Path
+   ================================================ */
+.gallery-progress-panel {
+  position: relative;
+  margin: 0 auto 20px;
+  max-width: 560px;
+  padding: 18px 20px 14px;
+  background: rgba(15, 8, 30, 0.6);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  z-index: 2;
+}
+
+.gallery-progress-panel.gallery-progress-complete {
+  border-color: rgba(192, 132, 252, 0.5);
+  box-shadow: 0 0 24px rgba(192, 132, 252, 0.15);
+}
+
+/* Constellation path — rarity nodes connected by lines */
+.constellation-path {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.constellation-node-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.constellation-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.constellation-node .cn-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.constellation-node .cn-count {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.constellation-node.obtained .cn-count {
+  color: var(--text-primary);
+}
+
+.constellation-node.active {
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.constellation-node.active .cn-icon {
+  transform: scale(1.15);
+}
+
+.constellation-line {
+  width: 32px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.4s ease;
+}
+
+.constellation-line.obtained {
+  background: linear-gradient(90deg, var(--rarity-n, #9ca3af), var(--rarity-r, #6ee7b7));
+}
+
+/* Rarity colors on nodes */
+.constellation-node.rarity-n.obtained { background: rgba(156, 163, 175, 0.1); }
+.constellation-node.rarity-r.obtained { background: rgba(110, 231, 183, 0.1); }
+.constellation-node.rarity-sr.obtained { background: rgba(167, 139, 250, 0.1); }
+.constellation-node.rarity-ssr.obtained { background: rgba(244, 114, 182, 0.1); }
+.constellation-node.rarity-ur.obtained { background: rgba(192, 132, 252, 0.12); }
+
+/* Progress track */
+.progress-track {
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: visible;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, var(--rarity-n, #9ca3af), var(--rarity-r, #6ee7b7), var(--rarity-sr, #a78bfa), var(--rarity-ssr, #f472b6), var(--rarity-ur-1));
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.progress-glow {
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--rarity-ur-1);
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px rgba(192, 132, 252, 0.5);
+  animation: progressGlowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progressGlowPulse {
+  0%, 100% { opacity: 0.7; transform: translateY(-50%) scale(0.85); }
+  50% { opacity: 1; transform: translateY(-50%) scale(1.1); }
+}
+
+.progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+}
+
+.progress-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.gallery-progress-complete .progress-label {
+  color: var(--rarity-ur-1);
+}
+
+.progress-fraction {
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.progress-percent {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+
+/* ================================================
+   INVENTORY PAGE — Starfield & Tabs
+   ================================================ */
+.inventory-page {
+  position: relative;
+  overflow: hidden;
+}
+
+.inventory-starfield {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.inv-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: invStarTwinkle var(--dur, 3s) ease-in-out infinite;
+}
+
+@keyframes invStarTwinkle {
+  0%, 100% { opacity: 0.05; transform: scale(0.8); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* ─── Inventory Header – Tactical Command Console ─── */
+.inventory-header {
+  position: relative;
+  z-index: 2;
+  padding: 20px 20px 10px;
+}
+
+/* Asymmetric two-column layout inside the header */
+.inventory-header-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 16px;
+}
+
+/* Left: Title with scan-line overlay */
+.inventory-title-block {
+  position: relative;
+  display: inline-block;
+}
+
+/* Animated corner brackets */
+.inventory-title-block::before,
+.inventory-title-block::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--rarity-sr, #a78bfa);
+  border-style: solid;
+  opacity: 0.6;
+  animation: bracketPulse 3s ease-in-out infinite;
+}
+.inventory-title-block::before {
+  top: -4px;
+  left: -8px;
+  border-width: 2px 0 0 2px;
+}
+.inventory-title-block::after {
+  bottom: -4px;
+  right: -8px;
+  border-width: 0 2px 2px 0;
+  animation-delay: 1.5s;
+}
+
+@keyframes bracketPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.inventory-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0;
+  position: relative;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* Cyberpunk glow title */
+  background: linear-gradient(90deg, #fff 0%, var(--rarity-sr, #a78bfa) 50%, #fff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleShine 4s linear infinite;
+}
+
+@keyframes titleShine {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Scan-line overlay on title */
+.inventory-title-block .scan-line {
+  position: absolute;
+  top: 0;
+  left: -8px;
+  right: -8px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(139, 92, 246, 0.04) 3px,
+    rgba(139, 92, 246, 0.04) 4px
+  );
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+/* Right: Data panel */
+.inventory-data-panel {
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  /* Glass edge glow */
+  box-shadow:
+    0 0 12px rgba(139, 92, 246, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Corner accent dots on data panel */
+.inventory-data-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  background: var(--rarity-sr, #a78bfa);
+  border-radius: 0 8px 0 0;
+  box-shadow: 0 0 6px var(--rarity-sr, #a78bfa);
+}
+
+.inventory-data-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 6px;
+  height: 6px;
+  background: var(--rarity-sr, #a78bfa);
+  border-radius: 0 0 0 6px;
+  box-shadow: 0 0 6px var(--rarity-sr, #a78bfa);
+  opacity: 0.5;
+}
+
+.inventory-count-line {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  line-height: 1;
+}
+
+.inventory-count-num {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px rgba(167, 139, 250, 0.5);
+}
+
+.inventory-count-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+/* Rarity power-bar */
+.inventory-rarity-bar {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.rarity-pip {
+  height: 4px;
+  border-radius: 2px;
+  transition: width 0.4s ease, opacity 0.3s ease;
+  min-width: 4px;
+}
+.rarity-pip.rarity-n   { background: #9ca3af; }
+.rarity-pip.rarity-r   { background: var(--rarity-r, #10b981); }
+.rarity-pip.rarity-sr { background: var(--rarity-sr, #a78bfa); }
+.rarity-pip.rarity-ssr{ background: var(--rarity-ssr-1, #f472b6); }
+.rarity-pip.rarity-ur { background: var(--rarity-ur-1, #c084fc); box-shadow: 0 0 4px var(--rarity-ur-1); }
+
+/* Rarity labels row */
+.inventory-rarity-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.rarity-chip {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+}
+.rarity-chip.rarity-n  { background: rgba(156,163,175,0.12); color: #9ca3af; border-color: rgba(156,163,175,0.3); }
+.rarity-chip.rarity-r  { background: rgba(16,185,129,0.12); color: var(--rarity-r); border-color: rgba(16,185,129,0.3); }
+.rarity-chip.rarity-sr { background: rgba(139,92,246,0.12); color: var(--rarity-sr); border-color: rgba(139,92,246,0.3); }
+.rarity-chip.rarity-ssr{ background: rgba(244,114,182,0.12); color: var(--rarity-ssr-1); border-color: rgba(244,114,182,0.3); }
+.rarity-chip.rarity-ur { background: rgba(192,132,252,0.12); color: var(--rarity-ur-1); border-color: rgba(192,132,252,0.3); box-shadow: 0 0 6px rgba(192,132,252,0.2); }
+
+/* Filter tabs */
+.inventory-tabs {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.inventory-tabs::-webkit-scrollbar { display: none; }
+
+.inv-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.inv-tab:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+.inv-tab.active {
+  background: rgba(139,92,246,0.2);
+  border-color: rgba(139,92,246,0.5);
+  color: var(--rarity-sr);
+}
+
+.inv-tab.rarity-n.active  { background: rgba(156,163,175,0.15); border-color: rgba(156,163,175,0.4); color: #9ca3af; }
+.inv-tab.rarity-r.active  { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.4); color: var(--rarity-r); }
+.inv-tab.rarity-sr.active { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.4); color: var(--rarity-sr); }
+.inv-tab.rarity-ssr.active{ background: rgba(244,114,182,0.12); border-color: rgba(244,114,182,0.4); color: var(--rarity-ssr-1); }
+.inv-tab.rarity-ur.active { background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.4); color: var(--rarity-ur-1); }
+
+.inv-tab-count {
+  font-size: 0.65rem;
+  background: rgba(255,255,255,0.1);
+  padding: 0 4px;
+  border-radius: 6px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.inv-tab-spacer {
+  flex: 1;
+}
+
+.inv-sort-dropdown {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.inv-sort-trigger {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.inv-sort-trigger:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.inv-sort-trigger svg {
+  transition: transform 0.2s ease;
+  opacity: 0.7;
+}
+
+.inv-sort-dropdown:has(.inv-sort-menu) .inv-sort-trigger svg {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.inv-sort-menu {
+  position: fixed;
+  min-width: 120px;
+  background: rgba(15, 10, 30, 0.97);
+  border: 1.5px solid rgba(139, 92, 246, 0.4);
+  border-radius: 12px;
+  padding: 4px;
+  z-index: 99999;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(139,92,246,0.15) inset;
+  animation: sortMenuReveal 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes sortMenuReveal {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.inv-sort-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.inv-sort-option:hover {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--text-primary);
+}
+
+.inv-sort-option.active {
+  color: var(--rarity-sr);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Inventory grid */
+.inventory-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Card stagger entrance */
+.card-enter {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cardReveal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* High rarity pulse effect */
+.idol-card.high-rarity {
+  animation: cardReveal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             highRarityPulse 3s ease-in-out infinite;
+}
+
+@keyframes highRarityPulse {
+  0%, 100% { box-shadow: 0 0 8px var(--card-rarity-glow, rgba(192,132,252,0.3)); }
+  50% { box-shadow: 0 0 20px var(--card-rarity-glow, rgba(192,132,252,0.5)); }
+}
+
+/* Fragment progress bar */
+.inv-frag-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 2px 6px;
+}
+
+.inv-frag-bar-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.inv-frag-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rarity-sr), var(--rarity-ur-1));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.inv-frag-bar-text {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 600;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* Empty state */
+.inventory-empty {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.inv-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  filter: grayscale(0.3);
+  opacity: 0.8;
+}
+
+.inv-empty-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.inv-empty-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  max-width: 260px;
+}
+
+/* Idol card stat improvements */
+.idol-card-stat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.idol-card-stat span {
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Better idol-grid for inventory — more vertical space */
+.inventory-grid.idol-grid {
+  padding-bottom: 80px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .inventory-header { padding: 16px 16px 6px; }
+  .inventory-tabs { padding: 6px 12px 10px; }
+  .inv-tab { padding: 4px 8px; font-size: 0.7rem; }
+}
+
+@media (max-width: 480px) {
+  .inventory-tabs { gap: 4px; }
+  .inv-sort-dropdown { display: none; }
+}

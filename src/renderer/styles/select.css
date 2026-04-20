@@ -1,0 +1,105 @@
+/* ========================================
+   Select Component Styles
+   ======================================== */
+
+.atom-select {
+  position: relative;
+  display: inline-block;
+  min-width: 160px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.atom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: var(--text-primary, #fff);
+  font-size: var(--text-base, 14px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.atom-select-trigger:focus-visible {
+  outline: 2px solid var(--accent-pink-solid, #ff6b9d);
+  outline-offset: 2px;
+}
+
+.atom-select-open .atom-select-trigger,
+.atom-select-trigger:hover {
+  border-color: var(--accent-pink-solid, #ff6b9d);
+  box-shadow: 0 0 12px rgba(255, 107, 157, 0.3);
+}
+
+.atom-select-error .atom-select-trigger {
+  border-color: var(--danger, #ff4757);
+  box-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+}
+
+.atom-select-disabled .atom-select-trigger {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.atom-select-value { flex: 1; text-align: left; }
+
+.atom-select-placeholder { color: rgba(255, 255, 255, 0.4); }
+
+.atom-select-arrow {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s;
+}
+
+.atom-select-open .atom-select-arrow { transform: rotate(180deg); }
+
+.atom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: rgba(20, 15, 40, 0.98);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 100;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: fadeSlideIn 0.2s ease;
+}
+
+.atom-select-option {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-base, 14px);
+  color: var(--text-secondary, rgba(255,255,255,0.6));
+  transition: background 0.15s;
+}
+
+.atom-select-option:hover,
+.atom-select-option-selected {
+  background: rgba(255, 107, 157, 0.15);
+  color: var(--text-primary, #fff);
+}
+
+.atom-select-option-focused {
+  background: rgba(255, 107, 157, 0.25);
+  color: var(--text-primary, #fff);
+}
+
+.atom-select-option-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.atom-select-check { color: var(--accent-pink-solid, #ff6b9d); }

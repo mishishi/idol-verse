@@ -1,0 +1,8 @@
+.worktrees/
+*fix
+*.log
+node_modules/
+data/*.db
+dist/
+.env
+*.local

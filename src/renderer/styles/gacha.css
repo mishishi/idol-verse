@@ -1,0 +1,2300 @@
+
+
+/* ============ Deep Space Nebula Gateway — Single Card ============ */
+/* Nebula Aura Background */
+.result-card-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background: radial-gradient(ellipse at 50% 40%,
+    rgba(30, 10, 60, 0.9) 0%,
+    rgba(8, 5, 25, 0.95) 60%,
+    rgba(5, 3, 18, 0.98) 100%);
+}
+
+/* Nebula color clouds per rarity */
+.rarity-R .result-card-bg { background: radial-gradient(ellipse at 50% 30%, rgba(0, 40, 30, 0.8), rgba(5, 15, 20, 0.95) 60%, rgba(3, 5, 15, 0.98) 100%); }
+.rarity-SR .result-card-bg { background: radial-gradient(ellipse at 50% 30%, rgba(0, 30, 60, 0.8), rgba(5, 15, 35, 0.95) 60%, rgba(3, 5, 20, 0.98) 100%); }
+.rarity-SSR .result-card-bg { background: radial-gradient(ellipse at 50% 30%, rgba(50, 0, 50, 0.8), rgba(20, 5, 40, 0.95) 60%, rgba(8, 3, 20, 0.98) 100%); }
+.rarity-UR .result-card-bg { background: radial-gradient(ellipse at 50% 30%, rgba(60, 30, 0, 0.8), rgba(40, 15, 5, 0.95) 60%, rgba(15, 5, 3, 0.98) 100%); }
+
+.nebula-cloud-single {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.4;
+  animation: nebulaDriftSingle 18s ease-in-out infinite alternate;
+}
+
+.nebula-cloud-single-1 {
+  width: 280px;
+  height: 200px;
+  top: -60px;
+  left: -60px;
+  background: radial-gradient(ellipse, rgba(255, 0, 200, 0.5), transparent 70%);
+  animation-delay: 0s;
+}
+
+.nebula-cloud-single-2 {
+  width: 220px;
+  height: 180px;
+  bottom: -40px;
+  right: -40px;
+  background: radial-gradient(ellipse, rgba(0, 150, 255, 0.5), transparent 70%);
+  animation-delay: -6s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nebulaDriftSingle {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    100% { transform: translate(20px, 15px) scale(1.1); opacity: 0.5; }
+  }
+}
+
+/* Portal Ring */
+.portal-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.portal-ring-1 {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 0, 200, 0.75);
+  border-right-color: rgba(255, 0, 200, 0.35);
+  animation: portalSpinRing1 3.5s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 0, 200, 0.5));
+}
+
+.portal-ring-2 {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-bottom-color: rgba(0, 200, 255, 0.65);
+  border-left-color: rgba(0, 200, 255, 0.3);
+  animation: portalSpinRing2 4.5s linear infinite reverse;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.45));
+}
+
+.portal-ring-3 {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: rgba(255, 215, 0, 0.55);
+  border-right-color: rgba(255, 150, 0, 0.3);
+  animation: portalSpinRing3 5.5s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes portalSpinRing1 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes portalSpinRing2 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+  }
+  @keyframes portalSpinRing3 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+}
+
+/* Result Card Inner */
+.result-card-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  background: linear-gradient(135deg,
+    rgba(30, 20, 70, 0.88) 0%,
+    rgba(15, 10, 45, 0.92) 100%);
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+/* HUD Corner Brackets */
+.result-card-hud {
+  position: absolute;
+  inset: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.result-card-hud::before,
+.result-card-hud::after,
+.result-card-hud-br,
+.result-card-hud-tr {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(255, 107, 157, 0.5);
+  border-style: solid;
+}
+
+.result-card-hud::before {
+  top: 0; left: 0;
+  border-width: 2px 0 0 2px;
+  border-radius: 6px 0 0 0;
+}
+
+.result-card-hud::after {
+  top: 0; right: 0;
+  border-width: 2px 2px 0 0;
+  border-radius: 0 6px 0 0;
+}
+
+.result-card-hud-br {
+  bottom: 0; right: 0;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 6px 0;
+}
+
+.result-card-hud-tr {
+  bottom: 0; left: 0;
+  border-width: 0 0 2px 2px;
+  border-radius: 0 0 0 6px;
+}
+
+/* Rarity Badge */
+.result-card-badge {
+  --badge-rarity-rgb: 160, 160, 160;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 22px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
+  animation: badgePulse 1.5s ease-in-out infinite;
+  background: linear-gradient(135deg, var(--rarity-n), #606060);
+  color: white;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.result-card-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(var(--badge-rarity-rgb), 0.8),
+    rgba(var(--badge-rarity-rgb), 0.2) 40%,
+    rgba(var(--badge-rarity-rgb), 0.6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorder 3s linear infinite;
+  filter: hue-rotate(0deg);
+  z-index: -1;
+}
+
+.rarity-R .result-card-badge { --badge-rarity-rgb: 0, 255, 136; background: linear-gradient(135deg, var(--rarity-r), #00aa5c); color: #000; }
+.rarity-SR .result-card-badge { --badge-rarity-rgb: 0, 204, 255; background: linear-gradient(135deg, var(--rarity-sr), #0088aa); color: #000; }
+.rarity-SSR .result-card-badge { --badge-rarity-rgb: 255, 0, 255; background: linear-gradient(135deg, var(--rarity-ssr-1), #aa00aa); }
+.rarity-UR .result-card-badge { --badge-rarity-rgb: 255, 215, 0; background: linear-gradient(135deg, var(--rarity-ur-1), #ff8c00); color: #000; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+}
+
+/* Avatar Frame */
+.result-card-avatar-frame {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  z-index: 4;
+}
+
+.result-card-avatar-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  opacity: 0.5;
+  filter: blur(15px);
+  animation: avatarGlow 2s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes avatarGlow {
+    0% { opacity: 0.35; transform: scale(0.92); }
+    100% { opacity: 0.6; transform: scale(1.08); }
+  }
+}
+
+.result-card-avatar {
+  position: relative;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(var(--badge-rarity-rgb, 255, 107, 157), 0.7);
+  box-shadow: 0 0 24px rgba(var(--badge-rarity-rgb, 255, 107, 157), 0.5);
+}
+
+.result-card-avatar-fallback {
+  position: relative;
+  z-index: 1;
+  font-size: 3.5rem;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--badge-rarity-rgb, 255, 107, 157), 0.15);
+  border: 3px solid rgba(var(--badge-rarity-rgb, 255, 107, 157), 0.7);
+  box-shadow: 0 0 24px rgba(var(--badge-rarity-rgb, 255, 107, 157), 0.5);
+  color: white;
+}
+
+.result-card-avatar-fallback.hidden { display: none; }
+
+/* Name */
+.result-card-name {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1.5px;
+  text-shadow:
+    0 0 20px rgba(255, 107, 157, 0.8),
+    0 0 40px rgba(255, 107, 157, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Subtitle */
+.result-card-subtitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 32px;
+  font-family: 'Orbitron', monospace;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Button */
+.result-card-btn {
+  --btn-rarity-rgb: 255, 107, 157;
+  position: relative;
+  padding: 14px 52px;
+  background: linear-gradient(135deg, var(--accent-pink-solid), #c44569);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+  overflow: hidden;
+  z-index: 1;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.result-card-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(var(--btn-rarity-rgb), 0.8),
+    rgba(var(--btn-rarity-rgb), 0.2) 40%,
+    rgba(var(--btn-rarity-rgb), 0.6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorder 3s linear infinite;
+  filter: hue-rotate(0deg);
+  z-index: -1;
+}
+
+.result-card-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.result-card-btn:hover::after { left: 150%; }
+
+.result-card-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 55px rgba(255, 107, 157, 0.75);
+}
+
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.result-card-btn:hover .btn-shine { left: 100%; }
+
+/* Star particles */
+.result-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  animation: starTwinkle 1.5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes starTwinkle {
+    0% { opacity: 0.2; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1.4); }
+  }
+}
+
+/* Gacha Modal overlay for single card */
+.gacha-result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 3, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeInModal 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* ============ Deep Space Nebula Gateway — Multi Card ============ */
+.gacha-result-card.gacha-multi-card {
+  width: 90%;
+  max-width: 1100px;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  position: relative;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  padding: 24px 20px;
+  box-sizing: border-box;
+}
+
+/* Nebula Background */
+.nebula-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+.nebula-cloud {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  animation: nebulaDrift 20s ease-in-out infinite alternate;
+}
+
+.nebula-cloud-1 {
+  width: 400px;
+  height: 300px;
+  top: -80px;
+  left: -100px;
+  background: radial-gradient(ellipse, rgba(255, 0, 200, 0.5), transparent 70%);
+  animation-delay: 0s;
+}
+
+.nebula-cloud-2 {
+  width: 350px;
+  height: 280px;
+  bottom: -60px;
+  right: -80px;
+  background: radial-gradient(ellipse, rgba(0, 150, 255, 0.5), transparent 70%);
+  animation-delay: -7s;
+}
+
+.nebula-cloud-3 {
+  width: 300px;
+  height: 250px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(255, 100, 50, 0.3), transparent 70%);
+  animation-delay: -14s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nebulaDrift {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    100% { transform: translate(30px, 20px) scale(1.15); opacity: 0.45; }
+  }
+}
+
+/* Wormhole Portal Rings */
+.wormhole-portal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.portal-ring-nebula {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.portal-ring-nebula-1 {
+  width: 340px;
+  height: 340px;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 0, 200, 0.7);
+  border-right-color: rgba(255, 0, 200, 0.3);
+  animation: portalSpinNebula1 4s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 0, 200, 0.5));
+}
+
+.portal-ring-nebula-2 {
+  width: 280px;
+  height: 280px;
+  border: 1.5px solid transparent;
+  border-bottom-color: rgba(0, 200, 255, 0.6);
+  border-left-color: rgba(0, 200, 255, 0.25);
+  animation: portalSpinNebula2 5s linear infinite reverse;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.4));
+}
+
+.portal-ring-nebula-3 {
+  width: 220px;
+  height: 220px;
+  border: 1px solid transparent;
+  border-top-color: rgba(255, 215, 0, 0.5);
+  border-right-color: rgba(255, 150, 0, 0.3);
+  animation: portalSpinNebula3 6s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes portalSpinNebula1 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes portalSpinNebula2 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+  }
+  @keyframes portalSpinNebula3 {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+}
+
+/* =============================================
+   CONSTELLATION GRID — stellar portal card grid
+   ============================================= */
+.multi-reveal-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 8px 4px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* =============================================
+   STELLAR PORTAL CARD — holo-card redesign
+   Each card is a dimensional gateway portal
+   ============================================= */
+
+.holo-card {
+  position: relative;
+  opacity: 0;
+  transform: scale(0.4) translateY(30px) rotateX(20deg);
+  transition:
+    opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  perspective: 900px;
+}
+
+.holo-card.multi-reveal {
+  opacity: 1;
+  transform: scale(1) translateY(0) rotateX(0deg);
+}
+
+.holo-card:hover {
+  transform: scale(1.07) translateY(-6px) rotateX(-4deg);
+  z-index: 10;
+}
+
+.holo-card-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 0.68;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: linear-gradient(175deg,
+    rgba(12, 8, 35, 0.88) 0%,
+    rgba(8, 5, 22, 0.96) 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+/* ---- Dimensional border glow ---- */
+.holo-card-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(var(--card-rgb), 0.1),
+    rgba(var(--card-rgb), 0.9) 25%,
+    rgba(var(--card-rgb), 0.3) 45%,
+    rgba(var(--card-rgb), 0.8) 65%,
+    rgba(var(--card-rgb), 0.2) 80%,
+    rgba(var(--card-rgb), 0.9)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: portalSpin 8s linear infinite;
+}
+
+.holo-card-inner::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 17px;
+  background: linear-gradient(175deg,
+    rgba(12, 8, 35, 0.0) 0%,
+    rgba(8, 5, 22, 0.8) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes portalSpin {
+    0%   { transform: rotate(0deg); filter: brightness(1); }
+    50%  { filter: brightness(1.5); }
+    100% { transform: rotate(360deg); filter: brightness(1); }
+  }
+}
+
+/* Rarity color vars */
+.rarity-N  .holo-card-inner { --card-rgb: 160, 160, 160; }
+.rarity-R  .holo-card-inner { --card-rgb: 0, 255, 136; }
+.rarity-SR .holo-card-inner { --card-rgb: 0, 204, 255; }
+.rarity-SSR.holo-card-inner { --card-rgb: 255, 0, 255; }
+.rarity-UR .holo-card-inner { --card-rgb: 255, 215, 0; }
+
+/* ---- Portal ring (orbital frame around avatar) ---- */
+.portal-orbit {
+  position: relative;
+  width: 72%;
+  aspect-ratio: 1;
+  margin: 12px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.portal-orbit-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--card-rgb), 0.35);
+  animation: orbitPulse 3s ease-in-out infinite;
+}
+
+.portal-orbit-ring-2 {
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(var(--card-rgb), 0.2);
+  animation: orbitPulse 3s ease-in-out infinite 0.5s reverse;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes orbitPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50%       { opacity: 0.9; transform: scale(1.03); }
+  }
+}
+
+/* Avatar */
+.holo-card-image {
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(var(--card-rgb), 0.7);
+  box-shadow:
+    0 0 20px rgba(var(--card-rgb), 0.5),
+    0 0 40px rgba(var(--card-rgb), 0.2),
+    inset 0 0 12px rgba(var(--card-rgb), 0.15);
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+.holo-card-image-fallback {
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(var(--card-rgb), 0.2) 0%, transparent 70%);
+  border: 2px solid rgba(var(--card-rgb), 0.7);
+  box-shadow:
+    0 0 20px rgba(var(--card-rgb), 0.5),
+    0 0 40px rgba(var(--card-rgb), 0.2);
+  font-size: 2rem;
+  font-weight: 800;
+  color: rgba(var(--card-rgb), 1);
+  text-shadow: 0 0 12px rgba(var(--card-rgb), 0.8);
+  position: relative;
+  z-index: 2;
+}
+
+.holo-card-image-fallback.hidden { display: none; }
+
+/* ---- Info panel — gradient overlay at bottom ---- */
+.holo-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 10px 12px;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.55) 55%,
+    transparent 100%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+/* Decorative separator line */
+.holo-card-info::before {
+  content: '';
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(var(--card-rgb), 0.7) 30%,
+    rgba(var(--card-rgb), 0.7) 70%,
+    transparent);
+  margin-bottom: 5px;
+  flex-shrink: 0;
+}
+
+.holo-card-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.98);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-shadow:
+    0 0 12px rgba(var(--card-rgb), 0.95),
+    0 2px 8px rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+.holo-card-rarity {
+  font-size: 0.62rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+/* Glow diamonds flanking rarity label */
+.holo-card-rarity::before,
+.holo-card-rarity::after {
+  content: '✦';
+  font-size: 0.45rem;
+  vertical-align: middle;
+  margin: 0 5px;
+  opacity: 0.75;
+}
+
+.rarity-N  .holo-card-rarity { color: var(--rarity-n); }
+.rarity-R  .holo-card-rarity { color: var(--rarity-r); text-shadow: 0 0 8px var(--rarity-r); }
+.rarity-SR .holo-card-rarity { color: var(--rarity-sr); text-shadow: 0 0 8px var(--rarity-sr); }
+.rarity-SSR .holo-card-rarity { color: var(--rarity-ssr-1); text-shadow: 0 0 12px var(--rarity-ssr-1); }
+.rarity-UR .holo-card-rarity {
+  color: var(--rarity-ur-1);
+  text-shadow: 0 0 14px var(--rarity-ur-1), 0 0 28px rgba(255, 215, 0, 0.4);
+  animation: badgePulse 1.2s ease-in-out infinite;
+}
+
+/* ---- Floating star particles ---- */
+.holo-card-star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  animation: starTwinkle 1.5s ease-in-out infinite alternate;
+  z-index: 4;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes starTwinkle {
+    0%   { opacity: 0.2; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1.5); }
+  }
+}
+
+/* Multi Reveal Controls */
+.multi-reveal-controls {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5));
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pity-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.pity-current {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-pink-solid);
+  text-shadow: 0 0 16px rgba(255, 107, 157, 0.9);
+}
+
+.pity-separator {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.pity-max {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Result Card Button — Reused for multi */
+.result-card-btn {
+  --btn-rarity-rgb: 255, 107, 157;
+  position: relative;
+  padding: 14px 52px;
+  background: linear-gradient(135deg, var(--accent-pink-solid), #c44569);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+  overflow: hidden;
+  z-index: 1;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.result-card-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(var(--btn-rarity-rgb), 0.8),
+    rgba(var(--btn-rarity-rgb), 0.2) 40%,
+    rgba(var(--btn-rarity-rgb), 0.6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorder 3s linear infinite;
+  filter: hue-rotate(0deg);
+  z-index: -1;
+}
+
+.result-card-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.result-card-btn:hover::after { left: 150%; }
+
+.result-card-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 55px rgba(255, 107, 157, 0.75);
+}
+
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.result-card-btn:hover .btn-shine { left: 100%; }
+
+/* ============ Gacha Modal (used in JSX) ============ */
+/* ============ Gacha Modal (used in JSX) ============ */
+.gacha-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(8, 6, 24, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeInModal 0.3s ease-out;
+}
+
+
+.gacha-modal-content {
+  position: relative;
+  background: linear-gradient(145deg, rgba(30, 30, 60, 0.97), rgba(15, 15, 35, 0.99));
+  border-radius: 28px;
+  padding: 48px 44px;
+  min-width: 340px;
+  max-width: 400px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow:
+    0 0 60px rgba(255, 107, 157, 0.3),
+    0 0 120px rgba(0, 204, 255, 0.15),
+    inset 0 0 80px rgba(255, 107, 157, 0.05);
+}
+
+/* Prismatic holographic border with dramatic animation */
+.gacha-modal-content::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 31px;
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    var(--accent-pink-solid) 0%,
+    var(--rarity-ssr-1) 20%,
+    var(--rarity-sr) 40%,
+    var(--rarity-r) 60%,
+    var(--rarity-ur-1) 80%,
+    var(--accent-pink-solid) 100%
+  );
+  background-size: 400% 400%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: holoBorderModal 4s ease-in-out infinite;
+  filter: hue-rotate(0deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes holoBorderModal {
+  0%, 100% { background-position: 0% 50%; filter: hue-rotate(0deg) brightness(1); }
+}}
+
+/* Dramatic scanline overlay */
+.gacha-modal-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 1), rgba(0, 204, 255, 0.8), transparent);
+  animation: scanlineModal 2s linear infinite;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes scanlineModal {
+  0% { top: 0; opacity: 1; }
+}}
+
+.gacha-modal-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Rarity-specific modal accents */
+.gacha-modal-content.rarity-N { --modal-accent: var(--rarity-n); }
+.gacha-modal-content.rarity-R { --modal-accent: var(--rarity-r); }
+.gacha-modal-content.rarity-SR { --modal-accent: var(--rarity-sr); }
+.gacha-modal-content.rarity-SSR { --modal-accent: var(--rarity-ssr-1); }
+.gacha-modal-content.rarity-UR { --modal-accent: var(--rarity-ur-1); }
+
+.gacha-modal-content.rarity-SSR::before,
+.gacha-modal-content.rarity-UR::before {
+  background: linear-gradient(135deg,
+    rgba(var(--modal-accent), 0.8),
+    rgba(255, 0, 255, 0.5) 40%,
+    rgba(255, 215, 0, 0.6)
+  );
+}
+
+/* Confetti container */
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.confetti {
+  position: absolute;
+  top: -20px;
+  animation: confettiFall 2s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(400px) rotate(720deg);
+    opacity: 0;
+  }
+}}
+
+/* Result avatar with dramatic glow */
+.result-avatar {
+  font-size: 6rem;
+  margin-bottom: 24px;
+  animation: avatarPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), avatarGlow 2s ease-in-out infinite 0.6s;
+  filter: drop-shadow(0 0 40px var(--modal-accent, rgba(255, 107, 157, 0.8)));
+  position: relative;
+}
+
+.result-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--modal-accent, rgba(255, 107, 157, 0.3)) 0%, transparent 70%);
+  animation: avatarAura 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes avatarAura {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes avatarPop {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes avatarGlow {
+  0%, 100% { filter: drop-shadow(0 0 30px var(--modal-accent, rgba(255, 107, 157, 0.8))); }
+}}
+
+.result-header {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  animation: headerFadeIn 0.5s ease-out 0.2s both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes headerFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+}}
+
+.result-name {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 28px;
+  text-shadow:
+    0 0 20px var(--modal-accent, rgba(255, 107, 157, 0.8)),
+    0 0 40px var(--modal-accent, rgba(255, 107, 157, 0.4));
+  animation: nameGlow 2s ease-in-out infinite;
+  letter-spacing: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes nameGlow {
+  0%, 100% { text-shadow: 0 0 20px var(--modal-accent, rgba(255, 107, 157, 0.6)); }
+}}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.result-rarity {
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.gacha-modal-content.rarity-N .result-rarity { background: linear-gradient(135deg, var(--rarity-n), #707070); }
+.gacha-modal-content.rarity-R .result-rarity { background: linear-gradient(135deg, var(--rarity-r), #00aa5c); color: #000; }
+.gacha-modal-content.rarity-SR .result-rarity { background: linear-gradient(135deg, var(--rarity-sr), #0088aa); color: #000; }
+.gacha-modal-content.rarity-SSR .result-rarity { background: linear-gradient(135deg, var(--rarity-ssr-1), #aa00aa); }
+.gacha-modal-content.rarity-UR .result-rarity { background: linear-gradient(135deg, var(--rarity-ur-1), #ff8c00); color: #000; }
+
+.result-confirm-btn {
+  padding: 16px 48px;
+  background: linear-gradient(135deg, var(--accent-pink-solid) 0%, #ff4081 50%, #c44569 100%);
+  background-size: 200% 200%;
+  border: none;
+  border-radius: 32px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 0 30px rgba(255, 107, 157, 0.6),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dramatic shine effect */
+.result-confirm-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  animation: confirmShine 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes confirmShine {
+  0% { transform: translateX(-150%) rotate(45deg); }
+  50%, 100% { transform: translateX(150%) rotate(45deg); }
+}}
+
+.result-confirm-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow:
+    0 0 50px rgba(255, 107, 157, 0.8),
+    0 8px 30px rgba(0, 0, 0, 0.4);
+  animation: btnConfirmPulse 1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes btnConfirmPulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.6), 0 6px 25px rgba(0, 0, 0, 0.3); }
+}}
+
+.result-confirm-btn:hover::before {
+  animation: confirmShine 1.5s ease-in-out infinite;
+}
+
+.result-confirm-btn:active {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
+}
+
+/* Multi card modal specific */
+.gacha-multi-modal {
+  min-width: 90%;
+  max-width: 800px;
+  padding: 30px;
+}
+
+.multi-card-reveal {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.multi-card {
+  background: rgba(20, 20, 40, 0.8);
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.5) translateY(30px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.multi-card.revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.multi-card-avatar {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.multi-card-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.multi-card-rarity-badge {
+  font-size: 0.65rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.multi-card.rarity-N .multi-card-rarity-badge { background: var(--rarity-n); color: #000; }
+.multi-card.rarity-R .multi-card-rarity-badge { background: var(--rarity-r); color: #000; }
+.multi-card.rarity-SR .multi-card-rarity-badge { background: var(--rarity-sr); color: #000; }
+.multi-card.rarity-SSR .multi-card-rarity-badge { background: var(--rarity-ssr-1); }
+.multi-card.rarity-UR .multi-card-rarity-badge { background: var(--rarity-ur-1); color: #000; }
+
+.multi-reveal-controls {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.multi-card-counter {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Gacha hint and error */
+.gacha-hint {
+  text-align: center;
+  padding: 12px;
+  color: rgba(255, 107, 157, 0.8);
+  font-size: 0.9rem;
+}
+
+.gacha-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin: 0 auto 20px;
+  max-width: 400px;
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  border-radius: 12px;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+}
+
+.gacha-error-icon {
+  font-size: 1.2rem;
+}
+
+.gacha-error-text {
+  flex: 1;
+  text-align: center;
+}
+
+/* Pity section */
+.pity-section {
+  margin: 30px auto;
+  max-width: 500px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pity-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.pity-count {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  color: var(--accent-pink-solid);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pity-count-current {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-pink-solid);
+  text-shadow: 0 0 12px rgba(255, 107, 157, 0.8);
+}
+
+.pity-count-sep {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pity-count-max {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pity-bar {
+  position: relative;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pity-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-pink), var(--rarity-ssr-1));
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.pity-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: pityShine 2s ease-in-out infinite;
+}
+
+
+.pity-milestone-90 {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 4px;
+  background: white;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.pity-milestone-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.pity-milestone-label {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.pity-guaranteed-badge {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--rarity-ssr-1), #9900cc);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+  animation: badgePulse 1s ease-in-out infinite;
+}
+
+.pity-tip {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+/* ============ Tablet Responsive (≤768px) ============ */
+@media (max-width: 768px) {
+  .gacha-title-main {
+    font-size: 2.2rem;
+  }
+
+  .gacha-hero {
+    margin: 20px 0 30px;
+    padding: 24px 16px;
+  }
+
+  .gacha-currency-display {
+    gap: 16px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+  }
+
+  .gacha-currency-display .currency-item {
+    padding: 10px 16px;
+  }
+
+  .gacha-buttons-area {
+    gap: 24px;
+    margin: 30px 0;
+  }
+
+  .gacha-btn {
+    padding: 16px 40px;
+    font-size: 1.1rem;
+  }
+
+  .gacha-btn-multi {
+    padding: 14px 36px;
+    font-size: 1rem;
+  }
+
+  .holo-card {
+    /* Uses aspect-ratio: 0.68 — no fixed dimensions */
+  }
+
+  .holo-card-image,
+  .holo-card-image-fallback {
+    /* Uses % width from parent — no fixed dimensions */
+  }
+
+  .holo-card-name {
+    font-size: 0.7rem;
+  }
+
+  .holo-card-rarity {
+    font-size: 0.6rem;
+  }
+
+  .portal-orbit {
+    width: 76%;
+    margin-top: 10px;
+  }
+
+  .holo-card-info {
+    padding: 14px 8px 10px;
+  }
+
+  .holo-card-info::before {
+    width: 45%;
+    margin-bottom: 4px;
+  }
+
+  .holo-card-name {
+    font-size: 0.68rem;
+  }
+
+  .holo-card-rarity {
+    font-size: 0.58rem;
+  }
+
+  .gacha-modal-content {
+    padding: 36px 28px;
+    min-width: 300px;
+  }
+
+  .gacha-modal-content.rarity-UR .result-rarity,
+  .gacha-modal-content.rarity-SSR .result-rarity {
+    font-size: 0.85rem;
+  }
+
+  .multi-card-reveal {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .multi-card {
+    padding: 12px 6px;
+  }
+
+  .multi-card-avatar {
+    font-size: 1.6rem;
+  }
+
+  .multi-card-name {
+    font-size: 0.65rem;
+  }
+
+  .result-card-avatar-frame {
+    width: 110px;
+    height: 110px;
+  }
+
+  .result-card-avatar,
+  .result-card-avatar-fallback {
+    width: 90px;
+    height: 90px;
+    font-size: 3rem;
+  }
+
+  .result-card-name {
+    font-size: 1.4rem;
+  }
+
+  .multi-reveal-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    padding: 8px 4px 16px;
+  }
+
+  .multi-card-avatar-new {
+    font-size: 1.4rem;
+  }
+
+  .multi-card-name-new {
+    font-size: 0.55rem;
+  }
+
+  .gacha-result-card.gacha-multi-card {
+    max-width: 95%;
+    min-height: 0;
+    padding: 16px 12px;
+  }
+}
+
+/* ===== 480px Mobile ===== */
+@media (max-width: 480px) {
+  .gacha-title-main {
+    font-size: 1.8rem;
+  }
+
+  .gacha-hero {
+    margin: 16px 0 24px;
+    padding: 20px 12px;
+  }
+
+  .gacha-currency-display {
+    gap: 10px;
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+
+  .gacha-currency-display .currency-item {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .gacha-buttons-area {
+    gap: 18px;
+    margin: 24px 0;
+  }
+
+  .gacha-btn {
+    padding: 14px 32px;
+    font-size: 1rem;
+  }
+
+  .gacha-btn-multi {
+    padding: 12px 28px;
+    font-size: 0.9rem;
+  }
+
+  .holo-card {
+    /* Uses aspect-ratio: 0.68 — no fixed dimensions */
+  }
+
+  .holo-card-image,
+  .holo-card-image-fallback {
+    /* Uses % width from parent */
+  }
+
+  .holo-card-name {
+    font-size: 0.65rem;
+  }
+
+  .holo-card-rarity {
+    font-size: 0.58rem;
+  }
+
+  .portal-orbit {
+    width: 70%;
+    margin-top: 8px;
+  }
+
+  .holo-card-info {
+    padding: 12px 6px 8px;
+  }
+
+  .holo-card-info::before {
+    width: 40%;
+    margin-bottom: 3px;
+  }
+
+  .gacha-modal-content {
+    padding: 24px 16px;
+    min-width: 260px;
+  }
+
+  .gacha-modal-content.rarity-UR .result-rarity,
+  .gacha-modal-content.rarity-SSR .result-rarity {
+    font-size: 0.75rem;
+  }
+
+  .multi-card-reveal {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .multi-card {
+    padding: 10px 4px;
+  }
+
+  .multi-card-avatar {
+    font-size: 1.3rem;
+  }
+
+  .multi-card-name {
+    font-size: 0.55rem;
+  }
+
+  .result-card-avatar-frame {
+    width: 90px;
+    height: 90px;
+  }
+
+  .result-card-avatar,
+  .result-card-avatar-fallback {
+    width: 72px;
+    height: 72px;
+    font-size: 2.4rem;
+  }
+
+  .result-card-name {
+    font-size: 1.2rem;
+  }
+
+  .multi-reveal-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 8px 4px 16px;
+  }
+
+  .multi-card-avatar-new {
+    font-size: 1.2rem;
+  }
+
+  .multi-card-name-new {
+    font-size: 0.5rem;
+  }
+
+  .gacha-result-card.gacha-multi-card {
+    max-width: 100%;
+    min-height: 0;
+    padding: 12px 8px;
+  }
+}
+
+/* ============ Gacha Drawer (Bottom Sheet) ============ */
+.gacha-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 0, 8, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 500;
+  animation: fadeInDrawer 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes fadeInDrawer {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}}
+
+.gacha-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 501;
+  background: linear-gradient(180deg, rgba(15, 10, 35, 0.97) 0%, rgba(8, 5, 20, 0.99) 100%);
+  border-top: 1px solid rgba(255, 107, 157, 0.2);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 0 0 env(safe-area-inset-bottom, 16px);
+  max-height: 88vh;
+  overflow-y: auto;
+  animation: drawerSlideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow:
+    0 -20px 60px rgba(255, 107, 157, 0.1),
+    0 -8px 30px rgba(0, 212, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.gacha-drawer.drawer-closing {
+  animation: drawerSlideDown 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes drawerSlideUp {
+  from { transform: translateY(100%) }
+  to { transform: translateY(0) }
+}}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes drawerSlideDown {
+  from { transform: translateY(0) }
+  to { transform: translateY(100%) }
+}}
+
+.gacha-drawer-handle {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+  cursor: grab;
+}
+
+.gacha-drawer-handle-bar {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.2s;
+}
+
+.gacha-drawer-handle:hover .gacha-drawer-handle-bar {
+  background: rgba(255, 107, 157, 0.5);
+}
+
+.gacha-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gacha-drawer-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #ff6b9d 0%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gacha-drawer-close {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s;
+}
+
+.gacha-drawer-close:hover {
+  background: rgba(255, 107, 157, 0.15);
+  border-color: rgba(255, 107, 157, 0.3);
+  color: #ff6b9d;
+}
+
+.gacha-drawer-currency {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+
+.gacha-drawer-currency-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+
+.gacha-drawer-currency-item .currency-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.gacha-drawer-currency-item .currency-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.gacha-drawer-section {
+  padding: 14px 20px;
+}
+
+.gacha-drawer-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px 20px 20px;
+}
+
+/* ── Drawer Buttons — Starlight Command Panel ── */
+.gacha-drawer-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 20px 22px;
+}
+
+.gacha-drawer-btn-wrapper {
+  flex: 1;
+  max-width: 210px;
+  position: relative;
+  border-radius: 18px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(255,107,157,0.5), rgba(168,85,247,0.5));
+  animation: drawerBtnBorderGlow 3s ease-in-out infinite;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.gacha-drawer-btn-wrapper.multi {
+  background: linear-gradient(135deg, rgba(168,85,247,0.5), rgba(80,40,200,0.5));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes drawerBtnBorderGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+}
+
+.gacha-drawer-btn-glow {
+  position: absolute;
+  inset: -24px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,107,157,0.35) 0%, transparent 70%);
+  filter: blur(12px);
+  z-index: 0;
+  pointer-events: none;
+  animation: glowPulse 2.4s ease-in-out infinite;
+}
+
+.gacha-drawer-btn-wrapper.multi .gacha-drawer-btn-glow {
+  background: radial-gradient(circle, rgba(168,85,247,0.35) 0%, transparent 70%);
+}
+
+.gacha-drawer-btn {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 18px 10px 14px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(10, 5, 30, 0.85);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+/* Corner bracket accents */
+.gacha-drawer-btn::before,
+.gacha-drawer-btn::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255,255,255,0.35);
+  border-style: solid;
+  transition: border-color 0.25s, width 0.25s, height 0.25s;
+}
+
+.gacha-drawer-btn::before {
+  top: 8px;
+  left: 8px;
+  border-width: 2px 0 0 2px;
+  border-radius: 3px 0 0 0;
+}
+
+.gacha-drawer-btn::after {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 3px 0;
+}
+
+.gacha-drawer-btn:hover:not(:disabled)::before,
+.gacha-drawer-btn:hover:not(:disabled)::after {
+  border-color: rgba(255,255,255,0.7);
+  width: 16px;
+  height: 16px;
+}
+
+.gacha-drawer-btn:hover:not(:disabled) {
+  background: rgba(20, 10, 50, 0.9);
+  transform: translateY(-3px);
+}
+
+.gacha-drawer-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gacha-drawer-btn-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.gacha-drawer-btn.single:hover:not(:disabled) {
+  box-shadow: 0 8px 30px rgba(255,107,157,0.25);
+}
+.gacha-drawer-btn.multi:hover:not(:disabled) {
+  box-shadow: 0 8px 30px rgba(168,85,247,0.25);
+}
+
+.gacha-drawer-btn-label {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.gacha-drawer-btn.single .gacha-drawer-btn-label {
+  color: #ffb3cc;
+}
+
+.gacha-drawer-btn.multi .gacha-drawer-btn-label {
+  color: #d4b3ff;
+}
+
+.gacha-drawer-btn-cost {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.5px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.gacha-drawer-btn.single .gacha-drawer-btn-cost {
+  color: rgba(255,179,204,0.6);
+}
+
+.gacha-drawer-btn.multi .gacha-drawer-btn-cost {
+  color: rgba(212,179,255,0.6);
+}
+
+/* Drawer mode toggle */
+.gacha-drawer-mode {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.gacha-drawer-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.75rem;
+}
+
+.gacha-drawer-mode-btn.active {
+  background: rgba(255, 107, 157, 0.12);
+  border-color: rgba(255, 107, 157, 0.4);
+  color: #ff6b9d;
+}
+
+.gacha-drawer-mode-btn .mode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Drawer pity section */
+.gacha-drawer-pity {
+  margin: 0 20px 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.gacha-drawer-pity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.gacha-drawer-pity-title {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+.gacha-drawer-pity-count {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  color: #ff6b9d;
+}
+
+.gacha-drawer-pity-track {
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gacha-drawer-pity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b9d, #a855f7);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.gacha-drawer-insufficient {
+  text-align: center;
+  font-size: 0.7rem;
+  color: rgba(255, 107, 157, 0.7);
+  padding: 4px 0 0;
+}
+
+/* ============ Gacha Drawer Fullscreen Overlay (10-pull) ============ */
+.gacha-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 0, 8, 0.96);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes overlayFadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}}
+
+.gacha-drawer-overlay .gacha-result-modal {
+  position: static;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gacha-drawer-overlay .gacha-result-modal::before,
+.gacha-drawer-overlay .gacha-result-modal::after {
+  display: none;
+}
+
+/* ============ Mobile (< 768px): full-screen scrollable drawer ============ */
+@media (max-width: 768px) {
+  .gacha-drawer-overlay {
+    align-items: stretch;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gacha-drawer-overlay .gacha-result-card {
+    width: 100%;
+    min-height: 100vh;
+    max-height: none;
+    overflow-y: visible;
+    border-radius: 0;
+    padding: 16px 12px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .gacha-drawer-overlay .nebula-bg {
+    border-radius: 0;
+  }
+
+  .gacha-drawer-overlay .wormhole-portal {
+    display: none;
+  }
+
+  .gacha-drawer-overlay .multi-reveal-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 8px 2px 16px;
+  }
+
+  .gacha-drawer-overlay .holo-card-name {
+    font-size: 0.62rem;
+  }
+
+  .gacha-drawer-overlay .holo-card-rarity {
+    font-size: 0.55rem;
+  }
+
+  .gacha-drawer-overlay .portal-orbit {
+    width: 68%;
+    margin-top: 8px;
+  }
+
+  .gacha-drawer-overlay .holo-card-info {
+    padding: 12px 6px 8px;
+  }
+
+  .gacha-drawer-overlay .holo-card-info::before {
+    width: 40%;
+    margin-bottom: 2px;
+  }
+
+  .gacha-drawer-overlay .result-card-btn {
+    width: 100%;
+    margin-top: 12px;
+  }
+}
+
+/* ============ Desktop (≥ 769px): centered portal ============ */
+@media (min-width: 769px) {
+  .gacha-drawer-overlay .gacha-result-card {
+    width: 90%;
+    max-width: 700px;
+    overflow: visible;
+  }
+
+  .gacha-drawer-overlay .multi-reveal-grid {
+    padding: 8px 4px 16px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .gacha-drawer-overlay .holo-card-name {
+    font-size: 0.65rem;
+  }
+
+  .gacha-drawer-overlay .holo-card-rarity {
+    font-size: 0.58rem;
+  }
+
+  .gacha-drawer-overlay .portal-orbit {
+    width: 70%;
+    margin-top: 10px;
+  }
+
+  .gacha-drawer-overlay .holo-card-info {
+    padding: 14px 8px 10px;
+  }
+
+  .gacha-drawer-overlay .holo-card-info::before {
+    width: 45%;
+    margin-bottom: 3px;
+  }
+
+  .gacha-drawer-overlay .result-card-btn {
+    margin-top: 16px;
+  }
+}
+
+/* Drawer single card result - compact version */
+.gacha-drawer-result {
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 0, 8, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fadeInDrawer 0.2s ease-out;
+}
+
+.gacha-drawer-result .gacha-result-card {
+  width: 280px;
+  height: 380px;
+}
+
+/* ============ Mobile Responsive ============ */
+@media (max-width: 480px) {
+  .gacha-drawer {
+    max-height: 92vh;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .gacha-drawer-buttons {
+    gap: 10px;
+    padding: 8px 16px 16px;
+  }
+
+  .gacha-drawer-btn {
+    padding: 14px 10px;
+    font-size: 0.8rem;
+  }
+
+  .gacha-drawer-currency {
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .gacha-drawer-currency-item {
+    padding: 5px 10px;
+  }
+
+  .gacha-drawer-result .gacha-result-card {
+    width: 260px;
+    height: 360px;
+  }
+
+  .gacha-drawer-overlay .gacha-result-card {
+    max-height: 85vh;
+  }
+}

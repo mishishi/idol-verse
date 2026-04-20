@@ -1,0 +1,463 @@
+/* ========================================
+   偶像收藏集 - Starlight Gateway Auth
+   ======================================== */
+
+/* === Deep Space Background === */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #020008;
+}
+
+/* Nebula cloud layers */
+.auth-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180, 40, 180, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0, 80, 200, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 10%, rgba(255, 60, 160, 0.12) 0%, transparent 55%);
+  z-index: 0;
+  animation: nebulaDrift 20s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes nebulaDrift {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.08) rotate(3deg); opacity: 0.85; }
+}}
+
+/* === Star Particles === */
+.star-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.star-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .star-particle { animation: starTwinkle var(--twinkle-dur, 3s) ease-in-out infinite var(--twinkle-delay, 0s); }
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}}
+
+/* Shooting star */
+.shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: linear-gradient(45deg, #fff, transparent);
+  border-radius: 50%;
+  animation: shoot linear infinite;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shooting-star { animation: shoot linear infinite; }
+@keyframes shoot {
+  0% { transform: translate(0, 0); opacity: 0; }
+  5% { opacity: 1; }
+  30% { opacity: 0; transform: translate(-200px, 200px); }
+  100% { opacity: 0; }
+}}
+
+/* === Central Portal === */
+.portal-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 480px;
+  max-width: calc(100vw - 40px);
+}
+
+/* Outer portal ring */
+.portal-ring {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#020008, #020008) padding-box,
+    conic-gradient(from 0deg, #ff6b9d, #00d4ff, #a855f7, #00d4ff, #ff6b9d) border-box;
+  animation: portalSpin 12s linear infinite;
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes portalSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}}
+
+/* Second ring - counter rotate */
+.portal-ring-2 {
+  position: absolute;
+  inset: -65px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#020008, #020008) padding-box,
+    conic-gradient(from 180deg, rgba(0,212,255,0.5), rgba(255,107,157,0.5), rgba(168,85,247,0.5), rgba(255,107,157,0.5), rgba(0,212,255,0.5)) border-box;
+  animation: portalSpinReverse 18s linear infinite;
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes portalSpinReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}}
+
+/* Portal inner glow */
+.portal-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,107,157,0.12) 0%, rgba(0,212,255,0.08) 40%, transparent 70%);
+  animation: portalPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes portalPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}}
+
+/* === Form Panel (Glass Holographic) === */
+.auth-form-panel {
+  position: relative;
+  width: 100%;
+  background: rgba(5, 3, 18, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 107, 157, 0.15);
+  padding: 48px 40px;
+  box-shadow:
+    0 0 60px rgba(255, 107, 157, 0.08),
+    0 0 120px rgba(0, 212, 255, 0.05),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Holographic shimmer sweep */
+.auth-form-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 60%,
+    transparent 100%
+  );
+  border-radius: 28px;
+  animation: holoShimmer 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes holoShimmer {
+  0%, 100% { left: -120%; }
+  50% { left: 120%; }
+}}
+
+/* Corner accent glows */
+.auth-form-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,107,157,0.2) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(0,212,255,0.15) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* Accent variants */
+.auth-form-panel.accent-pink { border-color: rgba(255, 107, 157, 0.2); }
+.auth-form-panel.accent-green { border-color: rgba(0, 255, 136, 0.2); }
+
+/* === Title Area === */
+.auth-star-title {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: 8px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.auth-main-title {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 2rem;
+  letter-spacing: 6px;
+  margin-bottom: 36px;
+  background: linear-gradient(135deg, #ff6b9d 0%, #00d4ff 50%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(255,107,157,0.4));
+  animation: titleShine 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes titleShine {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(255,107,157,0.4)); }
+  50% { filter: drop-shadow(0 0 35px rgba(0,212,255,0.6)); }
+}}
+
+/* Subtitle */
+.auth-subtitle {
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+/* === Holographic Input Fields === */
+.holo-field {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.holo-field .holo-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 18px 48px 18px 18px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  caret-color: #ff6b9d;
+}
+
+.holo-field .holo-input::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+.holo-field .holo-input:focus {
+  border-color: rgba(255, 107, 157, 0.6);
+  background: rgba(255,107,157,0.05);
+  box-shadow:
+    0 0 0 3px rgba(255,107,157,0.12),
+    0 0 20px rgba(255,107,157,0.15);
+}
+
+/* Password visibility toggle */
+.holo-pw-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.holo-pw-toggle:hover,
+.holo-pw-toggle:focus {
+  color: rgba(255,255,255,0.7);
+  outline: none;
+}
+
+/* Field bottom scan line */
+.holo-field::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ff6b9d, #00d4ff, transparent);
+  transition: width 0.4s ease, left 0.4s ease;
+  pointer-events: none;
+}
+
+.holo-field:focus-within::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Username availability status */
+.holo-username-status {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.holo-username-status.checking { color: rgba(255,255,255,0.3); }
+.holo-username-status.available { color: #00ff88; }
+.holo-username-status.taken { color: #ff4466; }
+
+/* === Password Strength Meter === */
+.pw-strength-wrap {
+  margin-bottom: 18px;
+}
+
+.pw-strength-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.pw-strength-seg {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.3s;
+}
+
+.pw-strength-seg.active-weak { background: #ff4466; box-shadow: 0 0 6px rgba(255,68,102,0.5); }
+.pw-strength-seg.active-mid { background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.5); }
+.pw-strength-seg.active-strong { background: #00ff88; box-shadow: 0 0 6px rgba(0,255,136,0.5); }
+
+.pw-strength-label {
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+}
+.pw-strength-label.weak { color: #ff4466; }
+.pw-strength-label.mid { color: #ffaa00; }
+.pw-strength-label.strong { color: #00ff88; }
+
+/* === Neon Submit Button === */
+.holo-submit-btn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 8px;
+  border-radius: 14px;
+  border: none;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.3s;
+}
+
+.holo-submit-btn.pink {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff3366 100%);
+  color: #fff;
+  box-shadow: 0 0 30px rgba(255,107,157,0.3);
+}
+
+.holo-submit-btn.green {
+  background: linear-gradient(135deg, #00d4ff 0%, #00ff88 100%);
+  color: #020008;
+  box-shadow: 0 0 30px rgba(0,212,255,0.3);
+}
+
+.holo-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(255,107,157,0.5);
+}
+
+.holo-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.holo-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Button shimmer */
+.holo-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.holo-submit-btn:hover::before {
+  left: 100%;
+}
+
+/* === Auth Link === */
+.auth-link-row {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1px;
+}
+
+.auth-link-row span {
+  color: #ff6b9d;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-link-row span:hover {
+  color: #00d4ff;
+}
+
+/* === Loading Spinner === */
+.auth-loading {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+@keyframes spin { to { transform: rotate(360deg); } }
+}
+
+/* === Responsive === */
+@media (max-width: 480px) {
+  .auth-form-panel { padding: 36px 24px; }
+  .portal-ring { inset: -30px; }
+  .portal-ring-2 { inset: -50px; }
+  .auth-main-title { font-size: 1.6rem; letter-spacing: 4px; }
+}
