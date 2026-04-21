@@ -190,6 +190,24 @@
   text-shadow: 0 0 8px var(--rarity-ur-1);
 }
 
+/* ═══════════════════════════════════════
+   RARITY TAG (Constellation Map)
+   ═══════════════════════════════════════ */
+.rarity-tag {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.rarity-tag.UR   { color: #ffd700; background: rgba(255,215,0,0.15); }
+.rarity-tag.SSR  { color: #7eb8da; background: rgba(126,184,218,0.15); }
+.rarity-tag.SR   { color: #c8c8d0; background: rgba(200,200,208,0.1); }
+.rarity-tag.R    { color: #8a8a96; background: rgba(138,138,150,0.1); }
+.rarity-tag.N    { color: #6a6a78; background: rgba(106,106,120,0.1); }
+
 /* ============ Atomic Tag ============ */
 .atom-tag {
   display: inline-flex;
