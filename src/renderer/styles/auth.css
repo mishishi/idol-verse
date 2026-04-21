@@ -93,7 +93,7 @@
   border: 1.5px solid transparent;
   background:
     linear-gradient(#020008, #020008) padding-box,
-    conic-gradient(from 0deg, #ff6b9d, #00d4ff, #a855f7, #00d4ff, #ff6b9d) border-box;
+    conic-gradient(from 0deg, var(--brand-primary), var(--accent-cyan-solid), var(--accent-purple-solid), var(--accent-cyan-solid), var(--brand-primary)) border-box;
   animation: portalSpin 12s linear infinite;
   opacity: 0.6;
 }
@@ -155,31 +155,6 @@
     inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-/* Holographic shimmer sweep */
-.auth-form-panel::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -120%;
-  width: 80%;
-  height: 100%;
-  background: linear-gradient(
-    100deg,
-    transparent 0%,
-    rgba(255,255,255,0.04) 40%,
-    rgba(255,255,255,0.08) 50%,
-    rgba(255,255,255,0.04) 60%,
-    transparent 100%
-  );
-  border-radius: 28px;
-  animation: holoShimmer 6s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-@keyframes holoShimmer {
-  0%, 100% { left: -120%; }
-  50% { left: 120%; }
-}}
-
 /* Corner accent glows */
 .auth-form-panel::after {
   content: '';
@@ -215,19 +190,12 @@
   font-size: 2rem;
   letter-spacing: 6px;
   margin-bottom: 36px;
-  background: linear-gradient(135deg, #ff6b9d 0%, #00d4ff 50%, #a855f7 100%);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-cyan-solid) 50%, var(--accent-purple-solid) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 20px rgba(255,107,157,0.4));
-  animation: titleShine 5s ease-in-out infinite;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-@keyframes titleShine {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(255,107,157,0.4)); }
-  50% { filter: drop-shadow(0 0 35px rgba(0,212,255,0.6)); }
-}}
 
 /* Subtitle */
 .auth-subtitle {
@@ -256,7 +224,7 @@
   font-family: 'Noto Sans SC', sans-serif;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
-  caret-color: #ff6b9d;
+  caret-color: var(--brand-primary);
 }
 
 .holo-field .holo-input::placeholder {
@@ -302,7 +270,7 @@
   left: 50%;
   width: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #ff6b9d, #00d4ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), var(--accent-cyan-solid), transparent);
   transition: width 0.4s ease, left 0.4s ease;
   pointer-events: none;
 }
@@ -378,13 +346,13 @@
 }
 
 .holo-submit-btn.pink {
-  background: linear-gradient(135deg, #ff6b9d 0%, #ff3366 100%);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, #ff3366 100%);
   color: #fff;
   box-shadow: 0 0 30px rgba(255,107,157,0.3);
 }
 
 .holo-submit-btn.green {
-  background: linear-gradient(135deg, #00d4ff 0%, #00ff88 100%);
+  background: linear-gradient(135deg, var(--accent-cyan-solid) 0%, #00ff88 100%);
   color: #020008;
   box-shadow: 0 0 30px rgba(0,212,255,0.3);
 }
@@ -428,7 +396,7 @@
 }
 
 .auth-link-row span {
-  color: #ff6b9d;
+  color: var(--brand-primary);
   cursor: pointer;
   transition: color 0.2s;
   text-decoration: underline;
@@ -436,7 +404,7 @@
 }
 
 .auth-link-row span:hover {
-  color: #00d4ff;
+  color: var(--accent-cyan-solid);
 }
 
 /* === Loading Spinner === */

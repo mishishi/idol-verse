@@ -161,7 +161,7 @@ function App() {
 
   // Star particle data — generated once per mount
   const starParticles = useMemo(() => {
-    return Array.from({ length: 60 }, (_, i) => ({
+    return Array.from({ length: 18 }, (_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
@@ -191,9 +191,8 @@ function App() {
             } as React.CSSProperties}
           />
         ))}
-        {/* Two shooting stars */}
-        <div className="shooting-star" style={{ top: '15%', left: '10%', animationDuration: '3s', animationDelay: '0s' }} />
-        <div className="shooting-star" style={{ top: '40%', left: '70%', animationDuration: '4s', animationDelay: '8s' }} />
+        {/* Single shooting star */}
+        <div className="shooting-star" style={{ top: '20%', left: '15%', animationDuration: '6s', animationDelay: '0s' }} />
       </div>
 
       {/* Central portal */}
@@ -307,8 +306,7 @@ function App() {
               } as React.CSSProperties}
             />
           ))}
-          <div className="shooting-star" style={{ top: '20%', left: '60%', animationDuration: '3.5s', animationDelay: '3s' }} />
-          <div className="shooting-star" style={{ top: '60%', left: '20%', animationDuration: '4.5s', animationDelay: '12s' }} />
+          <div className="shooting-star" style={{ top: '20%', left: '60%', animationDuration: '6s', animationDelay: '0s' }} />
         </div>
 
         <div className="portal-container">

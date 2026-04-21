@@ -546,7 +546,7 @@
 }
 
 .daily-tab-badge {
-  background: linear-gradient(135deg, #ff6b9d, #ff00ff);
+  background: linear-gradient(135deg, var(--brand-primary), #ff00ff);
   color: #fff;
   font-size: var(--text-xs);
   font-weight: 800;
@@ -776,7 +776,7 @@
 }
 
 .achievement-item.unlocked .daily-progress-fill {
-  background: linear-gradient(90deg, #ffd700, #ff6b9d);
+  background: linear-gradient(90deg, #ffd700, var(--brand-primary));
 }
 
 .achievement-item.locked .daily-progress-fill {
@@ -1072,7 +1072,7 @@
 
 .pass-perk::before {
   content: '✦';
-  color: #ff6b9d;
+  color: var(--brand-primary);
   font-size: var(--text-sm);
   animation: perkSparkle 2s ease-in-out infinite;
 }
@@ -1088,7 +1088,7 @@
 
 .pass-purchase-btn {
   padding: 14px 32px;
-  background: linear-gradient(135deg, #ff6b9d, #c44569, #ff6b9d);
+  background: linear-gradient(135deg, var(--brand-primary), #c44569, var(--brand-primary));
   background-size: 200% 200%;
   border: none;
   border-radius: 14px;
@@ -1342,7 +1342,7 @@
 .btn-replay {
   background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(196, 69, 105, 0.15));
   border: 1px solid rgba(255, 107, 157, 0.4);
-  color: #ff6b9d;
+  color: var(--brand-primary);
 }
 
 .btn-replay:hover {
@@ -1911,7 +1911,7 @@
 /* ---- Type variants ---- */
 .toast-success { --t-accent: #00ff88; --t-glow: rgba(0,255,136,0.2); }
 .toast-error   { --t-accent: #ff3366; --t-glow: rgba(255,51,102,0.2); }
-.toast-info    { --t-accent: #00d4ff; --t-glow: rgba(0,212,255,0.2); }
+.toast-info    { --t-accent: var(--accent-cyan-solid); --t-glow: rgba(0,212,255,0.2); }
 
 /* ---- Keyframes ---- */
 @keyframes toastEntry {

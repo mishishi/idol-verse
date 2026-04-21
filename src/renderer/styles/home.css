@@ -47,7 +47,7 @@ width:700px;height:700px;z-index:2;pointer-events:none;opacity:0.2;
 position:absolute;inset:-40px;border-radius:50%;
 border:1.5px solid transparent;
 background:linear-gradient(#020008,#020008) padding-box,
-  conic-gradient(from 0deg,#ff6b9d,#00d4ff,#a855f7,#00d4ff,#ff6b9d) border-box;
+  conic-gradient(from 0deg,var(--brand-primary),var(--accent-cyan-solid),var(--accent-purple-solid),var(--accent-cyan-solid),var(--brand-primary)) border-box;
 animation:portalSpin 12s linear infinite;
 }
 .home-portal-ring-2{
@@ -107,7 +107,7 @@ font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:2px;
 .hero-banner-btn{
 flex-shrink:0;
 padding:10px 18px;
-background:linear-gradient(135deg,#ff6b9d,#a855f7);
+background:linear-gradient(135deg,var(--brand-primary),var(--accent-purple-solid));
 border:none;border-radius:12px;
 font-size:0.75rem;font-weight:700;color:#fff;cursor:pointer;
 letter-spacing:1px;
@@ -136,7 +136,7 @@ flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
 }
 .stat-big-value{
 font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;
-background:linear-gradient(135deg,#ff6b9d,#00d4ff);
+background:linear-gradient(135deg,var(--brand-primary),var(--accent-cyan-solid));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 filter:drop-shadow(0 0 8px rgba(255,107,157,0.4));
 }
@@ -257,7 +257,7 @@ filter:drop-shadow(0 0 8px currentColor);
 }
 .home-currency-strip .currency-value{
 font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;
-background:linear-gradient(135deg,#ff6b9d,#00d4ff);
+background:linear-gradient(135deg,var(--brand-primary),var(--accent-cyan-solid));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 filter:drop-shadow(0 0 8px rgba(255,107,157,0.4));
 }
@@ -304,14 +304,14 @@ animation:corePulse 3s ease-in-out infinite;
 }}
 .stat-main-value{
 font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;
-background:linear-gradient(135deg,#ff6b9d,#00d4ff);
+background:linear-gradient(135deg,var(--brand-primary),var(--accent-cyan-solid));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 filter:drop-shadow(0 0 10px rgba(255,107,157,0.5));
 }
 .stat-main-label{
-font-family:'Orbitron',sans-serif;font-size:0.6rem;
+font-family:'Orbitron',sans-serif;font-size:0.7rem;
 letter-spacing:2px;color:rgba(255,255,255,0.4);
-margin-top:-4px;
+margin-top:-2px;
 }
 
 .stat-satellite{
@@ -339,8 +339,8 @@ font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
 color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,0.5);
 }
 .sat-label{
-font-family:'Orbitron',sans-serif;font-size:0.55rem;
-letter-spacing:1px;color:rgba(255,255,255,0.35);
+font-family:'Orbitron',sans-serif;font-size:0.7rem;
+letter-spacing:1px;color:rgba(255,255,255,0.5);
 }
 
 /* ============ Scroll Sections ============ */
@@ -349,7 +349,7 @@ position:relative;z-index:10;
 margin-bottom:24px;
 }
 .section-title{
-font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;
+font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:700;
 color:rgba(255,255,255,0.35);margin:0 24px 12px;
 letter-spacing:3px;text-transform:uppercase;
 }
@@ -419,7 +419,7 @@ cursor:pointer;padding:6px 20px;border-radius:14px;transition:all 0.3s ease;
 .quickbar-item.active{background:rgba(255,107,157,0.15)}
 .quickbar-icon{font-size:1.4rem}
 .quickbar-label{font-size:0.6rem;color:rgba(255,255,255,0.45);letter-spacing:1px}
-.quickbar-item.active .quickbar-label{color:#ff6b9d}
+.quickbar-item.active .quickbar-label{color:var(--brand-primary)}
 
 /* ================================================
    Responsive Breakpoints
@@ -452,7 +452,7 @@ cursor:pointer;padding:6px 20px;border-radius:14px;transition:all 0.3s ease;
   .home-dashboard { padding: 24px 16px 20px }
 
   .welcome-title { font-size: 0.9rem; letter-spacing: 4px }
-  .welcome-sub { font-size: 0.5rem; letter-spacing: 3px }
+  .welcome-sub { font-size: 0.7rem; letter-spacing: 3px }
   .welcome-glow { inset: -12px }
 
   .home-currency-strip { gap: 8px; margin: 0 16px 16px; padding: 12px 16px }

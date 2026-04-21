@@ -26,13 +26,13 @@
 }
 
 .atom-select-trigger:focus-visible {
-  outline: 2px solid var(--accent-pink-solid, #ff6b9d);
+  outline: 2px solid var(--accent-pink-solid, var(--brand-primary));
   outline-offset: 2px;
 }
 
 .atom-select-open .atom-select-trigger,
 .atom-select-trigger:hover {
-  border-color: var(--accent-pink-solid, #ff6b9d);
+  border-color: var(--accent-pink-solid, var(--brand-primary));
   box-shadow: 0 0 12px rgba(255, 107, 157, 0.3);
 }
 
@@ -102,4 +102,4 @@
   cursor: not-allowed;
 }
 
-.atom-select-check { color: var(--accent-pink-solid, #ff6b9d); }
+.atom-select-check { color: var(--accent-pink-solid, var(--brand-primary)); }

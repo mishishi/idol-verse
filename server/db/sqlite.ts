@@ -35,7 +35,25 @@ export async function initDb(): Promise<SqlJsDatabase> {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        login_streak INTEGER DEFAULT 0,
+        last_login_date TEXT,
+        total_login_days INTEGER DEFAULT 0
+      )
+    `)
+
+    // Migrate: add missing columns to existing users table
+    try { db.run('ALTER TABLE users ADD COLUMN login_streak INTEGER DEFAULT 0') } catch {}
+    try { db.run('ALTER TABLE users ADD COLUMN last_login_date TEXT') } catch {}
+    try { db.run('ALTER TABLE users ADD COLUMN total_login_days INTEGER DEFAULT 0') } catch {}
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS user_login_records (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        login_date TEXT NOT NULL,
+        login_streak INTEGER DEFAULT 1,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `)
 

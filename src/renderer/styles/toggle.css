@@ -17,13 +17,13 @@
 }
 
 .atom-toggle[aria-checked="true"] {
-  background: linear-gradient(135deg, var(--accent-pink-solid, #ff6b9d), var(--rarity-sr, #00ccff));
+  background: linear-gradient(135deg, var(--accent-pink-solid, var(--brand-primary)), var(--rarity-sr, #00ccff));
   border-color: transparent;
   box-shadow: 0 0 12px rgba(255, 107, 157, 0.4);
 }
 
 .atom-toggle:focus-visible {
-  outline: 2px solid var(--accent-pink-solid, #ff6b9d);
+  outline: 2px solid var(--accent-pink-solid, var(--brand-primary));
   outline-offset: 2px;
 }
 

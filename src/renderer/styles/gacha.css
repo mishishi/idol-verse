@@ -1800,7 +1800,7 @@
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 3px;
-  background: linear-gradient(135deg, #ff6b9d 0%, #00d4ff 100%);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-cyan-solid) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1823,7 +1823,7 @@
 .gacha-drawer-close:hover {
   background: rgba(255, 107, 157, 0.15);
   border-color: rgba(255, 107, 157, 0.3);
-  color: #ff6b9d;
+  color: var(--brand-primary);
 }
 
 .gacha-drawer-currency {
@@ -2044,7 +2044,7 @@
 .gacha-drawer-mode-btn.active {
   background: rgba(255, 107, 157, 0.12);
   border-color: rgba(255, 107, 157, 0.4);
-  color: #ff6b9d;
+  color: var(--brand-primary);
 }
 
 .gacha-drawer-mode-btn .mode-dot {
@@ -2079,7 +2079,7 @@
 .gacha-drawer-pity-count {
   font-family: 'Orbitron', sans-serif;
   font-size: 0.75rem;
-  color: #ff6b9d;
+  color: var(--brand-primary);
 }
 
 .gacha-drawer-pity-track {
@@ -2092,7 +2092,7 @@
 
 .gacha-drawer-pity-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff6b9d, #a855f7);
+  background: linear-gradient(90deg, var(--brand-primary), var(--accent-purple-solid));
   border-radius: 3px;
   transition: width 0.5s ease;
 }

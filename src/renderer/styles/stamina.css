@@ -142,7 +142,7 @@
   font-weight: 700;
   color: #ffd700;
 }
-.celestial-stat.streak .celestial-stat-value { color: #ff6b9d; }
+.celestial-stat.streak .celestial-stat-value { color: var(--brand-primary); }
 .celestial-stat.total .celestial-stat-value { color: #00ccff; }
 
 .celestial-weekdays {
@@ -339,7 +339,7 @@
   font-family: "Orbitron", sans-serif;
   font-size: var(--text-2xl);
   font-weight: 700;
-  color: #ff6b9d;
+  color: var(--brand-primary);
   text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
 }
 .cal-stat-divider {
@@ -792,7 +792,7 @@
   font-family: 'Orbitron', 'Rajdhani', sans-serif;
   font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #ff6b9d, #00d4ff, #a855f7);
+  background: linear-gradient(135deg, var(--brand-primary), var(--accent-cyan-solid), var(--accent-purple-solid));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1001,8 +1001,8 @@
 }
 
 .stamina-pack-icon.gold { color: #ffd700; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); }
-.stamina-pack-icon.cyan { color: #00d4ff; filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6)); }
-.stamina-pack-icon.pink { color: #ff6b9d; filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
+.stamina-pack-icon.cyan { color: var(--accent-cyan-solid); filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6)); }
+.stamina-pack-icon.pink { color: var(--brand-primary); filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
 
 .stamina-pack-title {
   font-family: 'Orbitron', sans-serif;
@@ -1050,13 +1050,13 @@
 }
 
 .stamina-pack-btn.cyan {
-  background: linear-gradient(135deg, #00d4ff, #0088ff);
+  background: linear-gradient(135deg, var(--accent-cyan-solid), #0088ff);
   color: #fff;
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
 }
 
 .stamina-pack-btn.pink {
-  background: linear-gradient(135deg, #ff6b9d, #ff3366);
+  background: linear-gradient(135deg, var(--brand-primary), #ff3366);
   color: #fff;
   box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
 }
@@ -1129,7 +1129,7 @@
 
 .stamina-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff6b9d, #a855f7);
+  background: linear-gradient(90deg, var(--brand-primary), var(--accent-purple-solid));
   border-radius: 5px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -1181,7 +1181,7 @@
 }
 
 .stamina-zero-guide strong {
-  color: #ff6b9d;
+  color: var(--brand-primary);
 }
 
 /* Pack deficit hint */
@@ -1331,7 +1331,7 @@
 }
 
 .confirm-btn.ok {
-  background: linear-gradient(135deg, #ff6b9d, #a855f7);
+  background: linear-gradient(135deg, var(--brand-primary), var(--accent-purple-solid));
   color: #fff;
   box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
 }
@@ -1398,12 +1398,12 @@
 }
 
 .stamina-pack-card.accent-cyan .stamina-pack-btn {
-  background: linear-gradient(135deg, #00d4ff, #0088ff);
+  background: linear-gradient(135deg, var(--accent-cyan-solid), #0088ff);
   color: #fff;
 }
 
 .stamina-pack-card.accent-pink .stamina-pack-btn {
-  background: linear-gradient(135deg, #ff6b9d, #ff3366);
+  background: linear-gradient(135deg, var(--brand-primary), #ff3366);
   color: #fff;
 }
 

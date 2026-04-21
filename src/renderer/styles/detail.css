@@ -1432,7 +1432,7 @@
 
 .anim-btn.wave {
   background: rgba(0, 212, 255, 0.3);
-  color: #00d4ff;
+  color: var(--accent-cyan-solid);
 }
 
 /* ============ Idle Animations ============ */

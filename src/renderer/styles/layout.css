@@ -744,7 +744,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 52px;
-  background: linear-gradient(45deg, #00ccff, #ff6b9d, #00ccff);
+  background: linear-gradient(45deg, #00ccff, var(--brand-primary), #00ccff);
   background-size: 200% 200%;
   animation: gradientShift 3s ease infinite;
   z-index: -1;
@@ -832,11 +832,11 @@
   inset: -3px;
   border-radius: 26px;
   background: linear-gradient(45deg,
-    var(--card-accent, #ff6b9d),
+    var(--card-accent, var(--brand-primary)),
     transparent,
     var(--card-accent2, #00ccff),
     transparent,
-    var(--card-accent, #ff6b9d));
+    var(--card-accent, var(--brand-primary)));
   background-size: 300% 300%;
   animation: menuBorderGlow 4s ease infinite;
   z-index: -1;
@@ -918,7 +918,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 2px solid var(--card-accent, #ff6b9d);
+  border: 2px solid var(--card-accent, var(--brand-primary));
   opacity: 0.3;
   animation: iconRing 3s ease-in-out infinite;
 }
@@ -987,7 +987,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  border-color: var(--card-accent, #ff6b9d);
+  border-color: var(--card-accent, var(--brand-primary));
   opacity: 0.4;
   transition: all 0.4s ease;
   z-index: 2;
@@ -1029,7 +1029,7 @@
 
 /* Card accent color variants */
 .menu-card.accent-pink {
-  --card-accent: #ff6b9d;
+  --card-accent: var(--brand-primary);
   --card-accent2: #ff8fa3;
   --card-glow: rgba(255, 107, 157, 0.15);
   --card-shadow: rgba(255, 107, 157, 0.3);
@@ -1148,7 +1148,7 @@
   font-family: 'Orbitron', sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b9d, #00ccff);
+  background: linear-gradient(135deg, var(--brand-primary), #00ccff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1198,7 +1198,7 @@
   font-size: 0.65rem;
   font-weight: 700;
   padding: 3px 10px;
-  background: linear-gradient(135deg, #ff6b9d, #ff00ff);
+  background: linear-gradient(135deg, var(--brand-primary), #ff00ff);
   border-radius: 20px;
   color: #fff;
   margin-bottom: 8px;

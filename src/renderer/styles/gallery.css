@@ -1555,7 +1555,7 @@
   left: 10px;
   z-index: 10;
   padding: 2px 7px;
-  background: linear-gradient(135deg, #ff6b9d, #ff8c00);
+  background: linear-gradient(135deg, var(--brand-primary), #ff8c00);
   border-radius: 8px;
   font-family: 'Orbitron', sans-serif;
   font-size: 0.6rem;
