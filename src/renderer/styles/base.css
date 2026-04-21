@@ -97,6 +97,28 @@
   --text-label:   0.8125rem; /* 13px — minimum readable label */
   --text-caption: 0.6875rem; /* 11px — minimum readable caption */
   --text-micro:   0.625rem;  /* 10px — decorative/ticker only */
+
+  /* ═══════════════════════════════════════
+     COSMIC / CONSTELLATION MAP SYSTEM
+     ═══════════════════════════════════════ */
+
+  /* Universe backgrounds */
+  --bg-void: #050510;           /* Deep space void */
+  --bg-card: #0c0c1f;           /* Card/panel background */
+  --bg-elevated: #12122a;       /* Elevated panel */
+
+  /* Star colors by rarity */
+  --star-ur: #ffd700;            /* UR gold star */
+  --star-ur-glow: #ffaa00;       /* UR glow */
+  --star-ssr: #7eb8da;           /* SSR ice blue star */
+  --star-ssr-glow: #4a90c4;      /* SSR glow */
+  --star-sr: #c8c8d0;            /* SR silver white star */
+  --star-r: #8a8a96;             /* R gray star */
+  --star-n: #6a6a78;             /* N dim star */
+
+  /* Glow & accent */
+  --accent-glow: #fff8e7;        /* Warm white glow */
+  --accent-gold: #ffd700;        /* Gold accent */
 }
 
 /* ============ Semantic Type Scale Classes ============ */
