@@ -851,27 +851,30 @@ function App() {
         )}
 
         {summoning && result && (
-          <div className="gacha-summoning-overlay" role="dialog" aria-modal="true" aria-label="召唤中" data-testid="summoning-overlay">
+          <div className="gacha-summoning-overlay" role="dialog" aria-modal="true" aria-label="召唤中">
             <div className="gacha-summoning-inner">
               <div className="summoning-ring summoning-ring-1" />
               <div className="summoning-ring summoning-ring-2" />
               <div className="summoning-ring summoning-ring-3" />
-              <div className="summoning-text-wrapper">
-                <div className="summoning-rune summoning-rune-left" />
-                <div className="summoning-rune summoning-rune-right" />
-                <div className="summoning-text">
-                  <span className="summoning-text-inner">召唤中</span>
-                </div>
-                <div className="summoning-sub">命运的卡片正在汇聚...</div>
-                <div className="summoning-particles">
-                  <div className="summoning-particle" style={{left:'20%',top:'80%'}} />
-                  <div className="summoning-particle" style={{left:'80%',top:'70%'}} />
-                  <div className="summoning-particle" style={{left:'50%',top:'90%'}} />
-                  <div className="summoning-particle" style={{left:'30%',top:'75%'}} />
-                  <div className="summoning-particle" style={{left:'70%',top:'85%'}} />
-                  <div className="summoning-particle" style={{left:'50%',top:'65%'}} />
-                </div>
+              <div className="summoning-ring summoning-ring-4" />
+              <div className="summoning-ring summoning-ring-5" />
+              <div className="summoning-core" />
+              <div className="summoning-particles">
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
               </div>
+              <div className="summoning-text">召唤中</div>
+              <div className="summoning-sub">命运的卡片正在汇聚...</div>
             </div>
           </div>
         )}
@@ -882,22 +885,25 @@ function App() {
               <div className="summoning-ring summoning-ring-1" />
               <div className="summoning-ring summoning-ring-2" />
               <div className="summoning-ring summoning-ring-3" />
-              <div className="summoning-text-wrapper">
-                <div className="summoning-rune summoning-rune-left" />
-                <div className="summoning-rune summoning-rune-right" />
-                <div className="summoning-text">
-                  <span className="summoning-text-inner">十连召唤</span>
-                </div>
-                <div className="summoning-sub">10 张命运卡片正在汇聚...</div>
-                <div className="summoning-particles">
-                  <div className="summoning-particle" style={{left:'20%',top:'80%'}} />
-                  <div className="summoning-particle" style={{left:'80%',top:'70%'}} />
-                  <div className="summoning-particle" style={{left:'50%',top:'90%'}} />
-                  <div className="summoning-particle" style={{left:'30%',top:'75%'}} />
-                  <div className="summoning-particle" style={{left:'70%',top:'85%'}} />
-                  <div className="summoning-particle" style={{left:'50%',top:'65%'}} />
-                </div>
+              <div className="summoning-ring summoning-ring-4" />
+              <div className="summoning-ring summoning-ring-5" />
+              <div className="summoning-core" />
+              <div className="summoning-particles">
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
+                <div className="summoning-particle" />
               </div>
+              <div className="summoning-text">十连召唤</div>
+              <div className="summoning-sub">10 张命运卡片正在汇聚...</div>
             </div>
           </div>
         )}
@@ -918,6 +924,30 @@ function App() {
                   ))}
                 </div>
               </div>
+              {/* UR gold particle explosion */}
+              {result.rarity === 'UR' && (
+                <div className="ur-particle-explosion">
+                  {Array.from({ length: 16 }).map((_, i) => {
+                    const angle = (i / 16) * Math.PI * 2;
+                    const distance = 80 + Math.random() * 60;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    return (
+                      <div
+                        key={i}
+                        className="ur-particle"
+                        style={{
+          top: '50%',
+          left: '50%',
+          animationDelay: `${i * 0.05}s`,
+          ['--tx' as string]: `${tx}px`,
+          ['--ty' as string]: `${ty}px`,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              )}
               <div className="portal-ring">
                 <div className="portal-ring-1" />
                 <div className="portal-ring-2" />
@@ -935,6 +965,7 @@ function App() {
                 </div>
                 <div className="result-card-name">{result.name}</div>
                 <div className="result-card-subtitle">获得偶像</div>
+                <div className="result-card-congrats">恭喜获得！</div>
                 <div className="result-card-actions">
                   <button className="result-card-btn result-card-btn-secondary" onClick={() => { setShowing(false); setSummoning(true); doGacha() }}>
                     <span className="btn-shine" />再抽
@@ -977,6 +1008,7 @@ function App() {
               <div className="multi-reveal-controls">
                 {multiAllRevealed ? (
                   <div className="multi-summary">
+                    <div className="multi-summary-congrats">恭喜获得 {multiResults.length} 位偶像！</div>
                     <div className="multi-summary-badges">
                       {multiResults.filter(c => c.rarity === 'UR').length > 0 && (
                         <span className="multi-summary-badge rarity-UR">UR ×{multiResults.filter(c => c.rarity === 'UR').length}</span>
@@ -4656,7 +4688,7 @@ function App() {
         {/* ===== 方向D: 纯文字 + 底边短线 ===== */}
         <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
           <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>D — 纯文字 · 最克制 · hover加粗+底边细线</div>
-          <div style={{ display: 'flex', gap: '0', justifyContent: 'center', alignItems: 'center', marginBottom: '16px', gap: '24px' }}>
+          <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
             <div style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'Orbitron, monospace', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '4px', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
               onMouseEnter={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.92)'; el.style.fontWeight = '700'; el.style.borderBottomColor = 'rgba(255,255,255,0.5)' }}
               onMouseLeave={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.55)'; el.style.fontWeight = '400'; el.style.borderBottomColor = 'transparent' }}
