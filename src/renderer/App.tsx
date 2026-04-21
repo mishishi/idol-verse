@@ -425,7 +425,12 @@ function App() {
               <div className="hero-banner-title">春日限定召唤</div>
               <div className="hero-banner-desc">UR偶像概率UP！还剩3天</div>
             </div>
-            <button className="hero-banner-btn" onClick={() => setShowGachaDrawer(true)} aria-label="立即召唤，参与春日限定活动">立即召唤</button>
+            <button
+              className="hero-banner-btn"
+              onClick={() => setShowGachaDrawer(true)}
+              onKeyDown={e => e.key === 'Enter' && setShowGachaDrawer(true)}
+              aria-label="立即召唤，参与春日限定活动"
+            >立即召唤</button>
           </div>
         </div>
 
@@ -524,13 +529,13 @@ function App() {
                 className="action-card-new"
                 tabIndex={0}
                 role="button"
-                onClick={() => navigate('/stamina')}
-                onKeyDown={e => e.key === 'Enter' && navigate('/stamina')}
-                aria-label="体力购买"
+                onClick={() => navigate('/ranking')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/ranking')}
+                aria-label="排行榜"
               >
-                <div className="action-card-icon"><Icon name="stamina" size={26} /></div>
-                <div className="action-card-title">体力购买</div>
-                <div className="action-card-sub">能量补给站</div>
+                <div className="action-card-icon"><Icon name="chart" size={26} /></div>
+                <div className="action-card-title">排行榜</div>
+                <div className="action-card-sub">查看全服排名</div>
               </div>
             </div>
           </div>
