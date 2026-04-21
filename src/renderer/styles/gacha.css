@@ -1209,7 +1209,7 @@
 }
 
 .result-confirm-btn:active {
-  transform: scale(1.02);
+  transform: scale(0.96);
   box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
 }
 
@@ -1938,7 +1938,7 @@
   position: absolute;
   width: 12px;
   height: 12px;
-  border-color: rgba(255,255,255,0.35);
+  border-color: var(--text-muted);
   border-style: solid;
   transition: border-color 0.25s, width 0.25s, height 0.25s;
 }

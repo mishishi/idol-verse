@@ -371,7 +371,7 @@
 }
 
 .fragment-count.insufficient {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
 }
 
 .fragment-hint {
@@ -911,7 +911,7 @@
   position: relative;
   z-index: 2;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
   font-family: 'Orbitron', sans-serif;
   margin-left: auto;
   padding-right: 4px;
@@ -986,7 +986,7 @@
 /* Voice lines tooltip */
 .unlock-voice-lines {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
   font-style: italic;
   margin-top: 4px;
   display: block;

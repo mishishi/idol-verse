@@ -47,6 +47,11 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+.detail-tab:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .detail-tab.active {
   color: #fff;
   background: linear-gradient(135deg, rgba(0, 204, 255, 0.25), rgba(255, 107, 157, 0.15));
@@ -687,6 +692,10 @@
 .tab-item:hover {
   color: var(--text-primary);
   background: var(--bg-card);
+}
+
+.tab-item:active {
+  transform: scale(0.97);
 }
 
 .tab-item.active {

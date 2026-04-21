@@ -459,7 +459,7 @@ function App() {
     }, [token])
 
     const stars = useMemo(() =>
-      Array.from({ length: 30 }, (_, i) => ({
+      Array.from({ length: 15 }, (_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
@@ -479,11 +479,6 @@ function App() {
               ['--twinkle-delay' as string]: `${s.delay}s`,
             }} />
           ))}
-        </div>
-
-        <div className="home-portal-bg">
-          <div className="home-portal-ring" />
-          <div className="home-portal-ring-2" />
         </div>
 
         {/* Hero Banner */}
@@ -539,6 +534,17 @@ function App() {
           </div>
         </div>
 
+        {homeStats.character_count === 0 && (
+          <div className="empty-state">
+            <div className="empty-icon">🌟</div>
+            <div className="empty-title">还没有偶像</div>
+            <div className="empty-desc">去召唤试试你的运气吧！</div>
+            <div className="empty-action">
+              <button className="btn-primary" style={{ padding: '10px 24px', borderRadius: 12 }} onClick={() => setShowGachaDrawer(true)}>立即召唤</button>
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions Grid */}
         <div className="home-actions-section">
           <div className="section-title">✦ 快速入口</div>
@@ -557,16 +563,6 @@ function App() {
               <div className="action-card-icon"><Icon name="book" size={26} /></div>
               <div className="action-card-title">偶像图鉴</div>
               <div className="action-card-sub">查看所有偶像</div>
-            </div>
-            <div className="action-card-new" onClick={() => navigate('/inventory')}>
-              <div className="action-card-icon"><Icon name="backpack" size={26} /></div>
-              <div className="action-card-title">我的背包</div>
-              <div className="action-card-sub">已拥有偶像</div>
-            </div>
-            <div className="action-card-new" onClick={() => navigate('/friends')}>
-              <div className="action-card-icon"><Icon name="users" size={26} /></div>
-              <div className="action-card-title">好友系统</div>
-              <div className="action-card-sub">社交互动</div>
             </div>
             <div className="action-card-new" onClick={() => navigate('/ranking')}>
               <div className="action-card-icon"><Icon name="chart" size={26} /></div>
@@ -597,12 +593,6 @@ function App() {
               <div className="scroll-card-icon"><Icon name="ticket" size={28} /></div>
               <div className="scroll-card-title">通行证</div>
               <div className="scroll-card-desc">赛季奖励</div>
-            </div>
-            <div className="scroll-card" onClick={() => navigate('/stamina')}>
-              <div className="scroll-card-glow" />
-              <div className="scroll-card-icon"><Icon name="stamina" size={28} /></div>
-              <div className="scroll-card-title">购买体力</div>
-              <div className="scroll-card-desc">能量补给</div>
             </div>
           </div>
         </div>

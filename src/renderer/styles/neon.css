@@ -88,7 +88,7 @@
 }
 
 .ach-empty-hint {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-disabled);
   font-size: 0.8rem;
   font-style: italic;
 }
@@ -780,7 +780,7 @@
 }
 
 .achievement-item.locked .daily-progress-fill {
-  background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.35));
+  background: linear-gradient(90deg, rgba(255,255,255,0.2), var(--text-muted));
 }
 
 .daily-progress-text {
@@ -886,7 +886,7 @@
 
 .daily-claimed-label {
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.4);
+  color: var(--text-muted);
 }
 
 .daily-locked-label {
@@ -1038,7 +1038,7 @@
 
 .pass-daily-claim-btn:disabled {
   background: linear-gradient(135deg, #555, #333);
-  color: rgba(255,255,255,0.4);
+  color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
