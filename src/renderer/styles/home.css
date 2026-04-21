@@ -11,7 +11,7 @@ background:var(--bg-void, #050510);
 }
 
 .home-page::before{
-content:'';position:fixed;inset:0;z-index:0;
+content:'';position:fixed;inset:0;z-index:-1;
 background:
   radial-gradient(ellipse 80% 60% at 20% 20%, rgba(160,30,160,0.12) 0%, transparent 60%),
   radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,60,160,0.10) 0%, transparent 60%),
