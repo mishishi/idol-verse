@@ -485,55 +485,60 @@
 .summoning-ring-1 {
   width: 340px;
   height: 340px;
-  color: #ff6b9d;
+  border-color: #4a90c4;
+  box-shadow: 0 0 20px rgba(126,184,218,0.8), inset 0 0 15px rgba(126,184,218,0.3);
   animation: ringSpiral1 3.2s linear infinite;
 }
 .summoning-ring-1::before {
-  border-color: rgba(255,107,157,0.9);
+  border-color: rgba(126,184,218,0.9);
   transform: rotate(0deg);
 }
 
 .summoning-ring-2 {
   width: 270px;
   height: 270px;
-  color: #00d4ff;
+  border-color: #7eb8da;
+  box-shadow: 0 0 18px rgba(126,184,218,0.6), inset 0 0 12px rgba(126,184,218,0.2);
   animation: ringSpiral2 2.5s linear infinite reverse;
 }
 .summoning-ring-2::before {
-  border-color: rgba(0,212,255,0.85);
+  border-color: rgba(126,184,218,0.85);
   transform: rotate(60deg);
 }
 
 .summoning-ring-3 {
   width: 200px;
   height: 200px;
-  color: #a855f7;
+  border-color: #ffd700;
+  box-shadow: 0 0 15px rgba(255,215,0,0.7), inset 0 0 10px rgba(255,215,0,0.3);
   animation: ringSpiral3 4s linear infinite;
 }
 .summoning-ring-3::before {
-  border-color: rgba(168,85,247,0.8);
+  border-color: rgba(255,215,0,0.8);
   transform: rotate(120deg);
 }
 
 .summoning-ring-4 {
   width: 130px;
   height: 130px;
-  color: #ffd700;
+  border-color: #ffaa00;
+  box-shadow: 0 0 12px rgba(255,170,0,0.5), inset 0 0 8px rgba(255,170,0,0.2);
   animation: ringSpiral4 3s linear infinite reverse;
 }
 .summoning-ring-4::before {
-  border-color: rgba(255,215,0,0.75);
+  border-color: rgba(255,170,0,0.75);
   transform: rotate(180deg);
 }
 
 .summoning-ring-5 {
   width: 60px;
   height: 60px;
-  color: #ffffff;
+  border-color: #fff8e7;
+  box-shadow: 0 0 8px rgba(255,248,231,0.8), inset 0 0 6px rgba(255,248,231,0.4);
   animation: ringSpiral5 1.8s linear infinite;
 }
 .summoning-ring-5::before {
-  border-color: rgba(255,255,255,0.9);
+  border-color: rgba(255,248,231,0.9);
   transform: rotate(240deg);
 }
 
@@ -573,6 +578,15 @@
     0 0 60px rgba(255,107,157,0.3);
   animation: corePulse 1.2s ease-in-out infinite;
   z-index: 10;
+}
+
+.corePulse {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, #fff8e7 0%, rgba(255,215,0,0.8) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: corePulse 1.2s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3);
 }
 
 @keyframes corePulse {
