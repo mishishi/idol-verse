@@ -564,10 +564,10 @@ function App() {
               <div className="action-card-title">偶像图鉴</div>
               <div className="action-card-sub">查看所有偶像</div>
             </div>
-            <div className="action-card-new" onClick={() => navigate('/ranking')}>
-              <div className="action-card-icon"><Icon name="chart" size={26} /></div>
-              <div className="action-card-title">排行榜</div>
-              <div className="action-card-sub">实力排行</div>
+            <div className="action-card-new" onClick={() => navigate('/stamina')}>
+              <div className="action-card-icon"><Icon name="stamina" size={26} /></div>
+              <div className="action-card-title">体力购买</div>
+              <div className="action-card-sub">能量补给站</div>
             </div>
           </div>
         </div>
