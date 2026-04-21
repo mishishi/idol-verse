@@ -641,6 +641,8 @@ function App() {
     const useTicketRef = useRef(useTicket)
     useEffect(() => { useTicketRef.current = useTicket }, [useTicket])
     const [multiPulling, setMultiPulling] = useState(false)
+    const [summoning, setSummoning] = useState(false)
+    const [multiSummoning, setMultiSummoning] = useState(false)
     const [showingMulti, setShowingMulti] = useState(false)
     const [multiResults, setMultiResults] = useState<any[]>([])
     const [multiRevealIndex, setMultiRevealIndex] = useState(0)
@@ -667,15 +669,19 @@ function App() {
 
     useEffect(() => { if (isOpen) { fetchCurrency(); fetchPityStatus() } }, [isOpen])
 
-    // Auto-reveal cards one by one
+    // Auto-reveal cards one by one — first 3 fast (200ms), rest slower (500ms)
     useEffect(() => {
       if (!showingMulti) return
       if (multiRevealIndex < 0) {
         const t = setTimeout(() => setMultiRevealIndex(0), 300)
         return () => clearTimeout(t)
       }
+      if (multiRevealIndex < 3) {
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 200)
+        return () => clearTimeout(t)
+      }
       if (multiRevealIndex < 9) {
-        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 400)
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 500)
         return () => clearTimeout(t)
       }
       if (multiRevealIndex === 9) {
@@ -713,15 +719,21 @@ function App() {
         const data = await res.json()
         audio.playGachaSingle()
         setResult(data.character)
-        setShowing(true)
-        setTimeout(() => fetchCurrency(), 100)
-        setCurrency((prev: any) => ({
-          holy_stone: prev.holy_stone - (useTicketRef.current ? 0 : 10),
-          summon_ticket: prev.summon_ticket - (useTicketRef.current ? 1 : 0)
-        }))
-        setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
-      } catch (err: any) { addToast(err.message, 'error') }
-      finally { setPulling(false) }
+        setPulling(false)
+        // Phase 1: dark overlay — 1.5s of anticipation
+        setSummoning(true)
+        setTimeout(() => {
+          setSummoning(false)
+          setShowing(true)
+          // Phase 2: result reveal
+          setTimeout(() => fetchCurrency(), 100)
+          setCurrency((prev: any) => ({
+            holy_stone: prev.holy_stone - (useTicketRef.current ? 0 : 10),
+            summon_ticket: prev.summon_ticket - (useTicketRef.current ? 1 : 0)
+          }))
+          setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
+        }, 1500)
+      } catch (err: any) { addToast(err.message, 'error'); setPulling(false) }
     }
 
     const doMultiGacha = async () => {
@@ -739,15 +751,20 @@ function App() {
         setMultiResults(data.characters)
         setMultiRevealIndex(-1)
         setMultiAllRevealed(false)
-        setShowingMulti(true)
-        setTimeout(() => fetchCurrency(), 100)
-        setCurrency((prev: any) => ({
-          holy_stone: prev.holy_stone - (useTicketRef.current ? 0 : 100),
-          summon_ticket: prev.summon_ticket - (useTicketRef.current ? 10 : 0)
-        }))
-        setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
-      } catch (err: any) { addToast(err.message, 'error') }
-      finally { setMultiPulling(false) }
+        setMultiPulling(false)
+        // Phase 1: dark overlay — 1.5s of anticipation
+        setMultiSummoning(true)
+        setTimeout(() => {
+          setMultiSummoning(false)
+          setShowingMulti(true)
+          setTimeout(() => fetchCurrency(), 100)
+          setCurrency((prev: any) => ({
+            holy_stone: prev.holy_stone - (useTicketRef.current ? 0 : 100),
+            summon_ticket: prev.summon_ticket - (useTicketRef.current ? 10 : 0)
+          }))
+          setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
+        }, 1500)
+      } catch (err: any) { addToast(err.message, 'error'); setMultiPulling(false) }
     }
 
     if (!isOpen) return null
@@ -755,12 +772,14 @@ function App() {
     const multiInsufficientCurrency = useTicket ? currency.summon_ticket < 9 : currency.holy_stone < 100
     const pityPercent = Math.min(100, (pityStatus.pity_count / 90) * 100)
 
-    const handleClose = () => { onSuccess?.(); onClose(); setShowing(false); setShowingMulti(false) }
+    const handleClose = () => { onSuccess?.(); onClose(); setShowing(false); setShowingMulti(false); setSummoning(false); setMultiSummoning(false) }
 
     return (
       <>
-        <div className="gacha-drawer-backdrop" onClick={handleClose} />
-        <div className="gacha-drawer">
+        {(!summoning && !multiSummoning) && (
+          <>
+            <div className="gacha-drawer-backdrop" onClick={handleClose} />
+            <div className="gacha-drawer">
           <div className="gacha-drawer-handle"><div className="gacha-drawer-handle-bar" /></div>
           <div className="gacha-drawer-header">
             <span className="gacha-drawer-title">限时召唤</span>
@@ -828,8 +847,67 @@ function App() {
             </div>
           </div>
         </div>
+          </>
+        )}
+
+        {summoning && result && (
+          <div className="gacha-summoning-overlay" role="dialog" aria-modal="true" aria-label="召唤中" data-testid="summoning-overlay">
+            <div className="gacha-summoning-inner">
+              <div className="summoning-ring summoning-ring-1" />
+              <div className="summoning-ring summoning-ring-2" />
+              <div className="summoning-ring summoning-ring-3" />
+              <div className="summoning-text-wrapper">
+                <div className="summoning-rune summoning-rune-left" />
+                <div className="summoning-rune summoning-rune-right" />
+                <div className="summoning-text">
+                  <span className="summoning-text-inner">召唤中</span>
+                </div>
+                <div className="summoning-sub">命运的卡片正在汇聚...</div>
+                <div className="summoning-particles">
+                  <div className="summoning-particle" style={{left:'20%',top:'80%'}} />
+                  <div className="summoning-particle" style={{left:'80%',top:'70%'}} />
+                  <div className="summoning-particle" style={{left:'50%',top:'90%'}} />
+                  <div className="summoning-particle" style={{left:'30%',top:'75%'}} />
+                  <div className="summoning-particle" style={{left:'70%',top:'85%'}} />
+                  <div className="summoning-particle" style={{left:'50%',top:'65%'}} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {multiSummoning && (
+          <div className="gacha-summoning-overlay" role="dialog" aria-modal="true" aria-label="十连召唤中">
+            <div className="gacha-summoning-inner">
+              <div className="summoning-ring summoning-ring-1" />
+              <div className="summoning-ring summoning-ring-2" />
+              <div className="summoning-ring summoning-ring-3" />
+              <div className="summoning-text-wrapper">
+                <div className="summoning-rune summoning-rune-left" />
+                <div className="summoning-rune summoning-rune-right" />
+                <div className="summoning-text">
+                  <span className="summoning-text-inner">十连召唤</span>
+                </div>
+                <div className="summoning-sub">10 张命运卡片正在汇聚...</div>
+                <div className="summoning-particles">
+                  <div className="summoning-particle" style={{left:'20%',top:'80%'}} />
+                  <div className="summoning-particle" style={{left:'80%',top:'70%'}} />
+                  <div className="summoning-particle" style={{left:'50%',top:'90%'}} />
+                  <div className="summoning-particle" style={{left:'30%',top:'75%'}} />
+                  <div className="summoning-particle" style={{left:'70%',top:'85%'}} />
+                  <div className="summoning-particle" style={{left:'50%',top:'65%'}} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {showing && result && (
           <div className="gacha-result-modal" role="dialog" aria-modal="true" aria-label={`抽卡结果：${result.name || ''} ${result.rarity}`} onClick={() => { if (needsNavBarRefresh) { fetchCurrency(); setNeedsNavBarRefresh(false) }; setShowing(false) }}>
+            {/* SSR/UR reveal flash */}
+            {(result.rarity === 'SSR' || result.rarity === 'UR') && (
+              <div className={`result-flash ${result.rarity === 'UR' ? 'result-flash-ur' : 'result-flash-ssr'}`} />
+            )}
             <div className={`gacha-result-card rarity-${result.rarity}`} onClick={e => e.stopPropagation()}>
               <div className="result-card-bg">
                 <div className="nebula-cloud-single nebula-cloud-single-1" />
@@ -857,9 +935,14 @@ function App() {
                 </div>
                 <div className="result-card-name">{result.name}</div>
                 <div className="result-card-subtitle">获得偶像</div>
-                <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { fetchCurrency(); setNeedsNavBarRefresh(false) }; setShowing(false) }}>
-                  <span className="btn-shine" />确定
-                </button>
+                <div className="result-card-actions">
+                  <button className="result-card-btn result-card-btn-secondary" onClick={() => { setShowing(false); setSummoning(true); doGacha() }}>
+                    <span className="btn-shine" />再抽
+                  </button>
+                  <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { fetchCurrency(); setNeedsNavBarRefresh(false) }; setShowing(false) }}>
+                    <span className="btn-shine" />确定
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -891,14 +974,37 @@ function App() {
                   </div>
                 ))}
               </div>
-              <div className="multi-reveal-controls" style={{ textAlign: 'center', padding: '20px' }}>
+              <div className="multi-reveal-controls">
                 {multiAllRevealed ? (
-                  <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { fetchCurrency(); setNeedsNavBarRefresh(false) }; setShowingMulti(false) }}>确定</button>
+                  <div className="multi-summary">
+                    <div className="multi-summary-badges">
+                      {multiResults.filter(c => c.rarity === 'UR').length > 0 && (
+                        <span className="multi-summary-badge rarity-UR">UR ×{multiResults.filter(c => c.rarity === 'UR').length}</span>
+                      )}
+                      {multiResults.filter(c => c.rarity === 'SSR').length > 0 && (
+                        <span className="multi-summary-badge rarity-SSR">SSR ×{multiResults.filter(c => c.rarity === 'SSR').length}</span>
+                      )}
+                      {multiResults.filter(c => c.rarity === 'SR').length > 0 && (
+                        <span className="multi-summary-badge rarity-SR">SR ×{multiResults.filter(c => c.rarity === 'SR').length}</span>
+                      )}
+                    </div>
+                    <div className="multi-summary-actions">
+                      <button className="result-card-btn result-card-btn-secondary" onClick={() => { setShowingMulti(false); setMultiAllRevealed(false); setMultiRevealIndex(0); doMultiGacha() }}>
+                        <span className="btn-shine" />再抽
+                      </button>
+                      <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { fetchCurrency(); setNeedsNavBarRefresh(false) }; setShowingMulti(false); setMultiAllRevealed(false); setMultiRevealIndex(0) }}>
+                        <span className="btn-shine" />确定
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <div className="pity-stats" style={{ justifyContent: 'center' }}>
-                    <span className="pity-current">{Math.max(0, multiRevealIndex + 1)}</span>
-                    <span className="pity-separator">/</span>
-                    <span className="pity-max">10</span>
+                  <div className="multi-progress">
+                    <div className="multi-progress-dots">
+                      {multiResults.map((_, idx) => (
+                        <div key={idx} className={`multi-dot ${idx <= multiRevealIndex ? 'active' : ''} ${multiResults[idx]?.rarity === 'SSR' || multiResults[idx]?.rarity === 'UR' ? 'highlight' : ''}`} />
+                      ))}
+                    </div>
+                    <div className="multi-progress-label">{Math.max(0, multiRevealIndex + 1)} / 10</div>
                   </div>
                 )}
               </div>
@@ -945,15 +1051,19 @@ function App() {
 
     useEffect(() => { fetchCurrency(); fetchPityStatus() }, [])
 
-    // Auto-reveal cards one by one
+    // Auto-reveal cards one by one — first 3 fast (200ms), rest slower (500ms)
     useEffect(() => {
       if (!showingMulti) return
       if (multiRevealIndex < 0) {
         const t = setTimeout(() => setMultiRevealIndex(0), 300)
         return () => clearTimeout(t)
       }
+      if (multiRevealIndex < 3) {
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 200)
+        return () => clearTimeout(t)
+      }
       if (multiRevealIndex < 9) {
-        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 400)
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 500)
         return () => clearTimeout(t)
       }
       if (multiRevealIndex === 9) {
@@ -1250,16 +1360,37 @@ function App() {
                   </div>
                 ))}
               </div>
-              <div className="multi-reveal-controls" style={{ textAlign: 'center', padding: '20px' }}>
+              <div className="multi-reveal-controls">
                 {multiAllRevealed ? (
-                  <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { onCurrencyUpdate?.(); setNeedsNavBarRefresh(false) }; setShowingMulti(false) }}>
-                    确定
-                  </button>
+                  <div className="multi-summary">
+                    <div className="multi-summary-badges">
+                      {multiResults.filter(c => c.rarity === 'UR').length > 0 && (
+                        <span className="multi-summary-badge rarity-UR">UR ×{multiResults.filter(c => c.rarity === 'UR').length}</span>
+                      )}
+                      {multiResults.filter(c => c.rarity === 'SSR').length > 0 && (
+                        <span className="multi-summary-badge rarity-SSR">SSR ×{multiResults.filter(c => c.rarity === 'SSR').length}</span>
+                      )}
+                      {multiResults.filter(c => c.rarity === 'SR').length > 0 && (
+                        <span className="multi-summary-badge rarity-SR">SR ×{multiResults.filter(c => c.rarity === 'SR').length}</span>
+                      )}
+                    </div>
+                    <div className="multi-summary-actions">
+                      <button className="result-card-btn result-card-btn-secondary" onClick={() => { setShowingMulti(false); setMultiAllRevealed(false); setMultiRevealIndex(0); doMultiGacha() }}>
+                        <span className="btn-shine" />再抽
+                      </button>
+                      <button className="result-card-btn" onClick={() => { if (needsNavBarRefresh) { onCurrencyUpdate?.(); setNeedsNavBarRefresh(false) }; setShowingMulti(false); setMultiAllRevealed(false); setMultiRevealIndex(0) }}>
+                        <span className="btn-shine" />确定
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <div className="pity-stats" style={{ justifyContent: 'center' }}>
-                    <span className="pity-current">{Math.max(0, multiRevealIndex + 1)}</span>
-                    <span className="pity-separator">/</span>
-                    <span className="pity-max">10</span>
+                  <div className="multi-progress">
+                    <div className="multi-progress-dots">
+                      {multiResults.map((_, idx) => (
+                        <div key={idx} className={`multi-dot ${idx <= multiRevealIndex ? 'active' : ''} ${multiResults[idx]?.rarity === 'SSR' || multiResults[idx]?.rarity === 'UR' ? 'highlight' : ''}`} />
+                      ))}
+                    </div>
+                    <div className="multi-progress-label">{Math.max(0, multiRevealIndex + 1)} / 10</div>
                   </div>
                 )}
               </div>
@@ -4455,6 +4586,99 @@ function App() {
     )
   }
 
+  // ============ GachaButtonTestPage ============
+  const GachaButtonTestPage = () => {
+    return (
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%)', padding: '32px 16px 80px' }}>
+        <h1 style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Orbitron, monospace', fontSize: '0.75rem', textAlign: 'center', letterSpacing: '3px', marginBottom: '32px', textTransform: 'uppercase' }}>
+          召唤按钮设计测试
+        </h1>
+
+        {/* ===== 方向A: 霓虹线条 ===== */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
+          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>A — 霓虹线条 · 纯文字 + hover底边滑线</div>
+          <div style={{ display: 'flex', gap: '0', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '16px' }}>
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div style={{ color: 'rgba(255,255,255,0.85)', fontFamily: 'Orbitron, monospace', fontSize: '0.65rem', letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '6px', borderBottom: '1px solid transparent', transition: 'all 0.2s', display: 'inline-block' }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.color = '#fff'; (e.target as HTMLElement).style.borderBottomColor = 'rgba(0,212,255,0.7)' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.85)'; (e.target as HTMLElement).style.borderBottomColor = 'transparent' }}
+              >确定</div>
+            </div>
+            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.08)' }} />
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div style={{ color: 'rgba(255,255,255,0.4)', fontFamily: 'Orbitron, monospace', fontSize: '0.65rem', letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '6px', borderBottom: '1px solid transparent', transition: 'all 0.2s', display: 'inline-block' }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.8)'; (e.target as HTMLElement).style.borderBottomColor = 'rgba(168,85,247,0.6)' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.4)'; (e.target as HTMLElement).style.borderBottomColor = 'transparent' }}
+              >再抽</div>
+            </div>
+          </div>
+          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0 }}>hover看效果 · 底边霓虹线滑入</p>
+        </div>
+
+        {/* ===== 方向B: 全息框架嵌入 ===== */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
+          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>B — 全息框架嵌入 · 按钮是帧的一部分</div>
+          <div style={{ position: 'relative', border: '1px solid rgba(0,212,255,0.15)', borderRadius: '12px', padding: '20px 16px 16px', background: 'rgba(0,0,0,0.3)' }}>
+            <div style={{ position: 'absolute', top: '-1px', left: '10%', right: '10%', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)' }} />
+            <div style={{ textAlign: 'center', marginBottom: '16px', color: 'rgba(255,255,255,0.5)', fontSize: '0.62rem', fontFamily: 'Orbitron, monospace', letterSpacing: '1px' }}>SSR 角色名</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+              <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', padding: '8px', transition: 'all 0.2s', borderRadius: '6px' }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(0,212,255,0.08)'; (e.target as HTMLElement).style.color = '#00d4ff' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)' }}
+              >确定</button>
+              <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', padding: '8px', transition: 'all 0.2s', borderRadius: '6px' }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(168,85,247,0.08)'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.65)' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.3)' }}
+              >再抽</button>
+            </div>
+          </div>
+          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: '12px 0 0' }}>按钮嵌在帧底边，像卡面印刷的 UI</p>
+        </div>
+
+        {/* ===== 方向C: 浮动微胶囊 ===== */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
+          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>C — 浮动微胶囊 · 小芯片上浮</div>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
+            <button style={{ padding: '8px 20px', background: 'rgba(255,107,157,0.1)', border: '1px solid rgba(255,107,157,0.25)', borderRadius: '20px', color: 'rgba(255,200,220,0.95)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.34,1.56,0.64,1)', boxShadow: '0 0 12px rgba(255,107,157,0.06)' }}
+              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,107,157,0.18)'; el.style.borderColor = 'rgba(255,107,157,0.5)'; el.style.boxShadow = '0 0 20px rgba(255,107,157,0.2)'; el.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,107,157,0.1)'; el.style.borderColor = 'rgba(255,107,157,0.25)'; el.style.boxShadow = '0 0 12px rgba(255,107,157,0.06)'; el.style.transform = 'translateY(0)' }}
+              onMouseDown={e => { const el = e.target as HTMLElement; el.style.transform = 'scale(0.95) translateY(0)' }}
+            >确定</button>
+            <button style={{ padding: '8px 20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', color: 'rgba(255,255,255,0.38)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', fontWeight: 500, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.34,1.56,0.64,1)' }}
+              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,255,255,0.07)'; el.style.borderColor = 'rgba(255,255,255,0.22)'; el.style.color = 'rgba(255,255,255,0.65)'; el.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,255,255,0.03)'; el.style.borderColor = 'rgba(255,255,255,0.1)'; el.style.color = 'rgba(255,255,255,0.38)'; el.style.transform = 'translateY(0)' }}
+              onMouseDown={e => { const el = e.target as HTMLElement; el.style.transform = 'scale(0.95) translateY(0)' }}
+            >再抽</button>
+          </div>
+          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0, textAlign: 'center' }}>hover上浮 · 弹性曲线 · 像高级app的chips</p>
+        </div>
+
+        {/* ===== 方向D: 纯文字 + 底边短线 ===== */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
+          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>D — 纯文字 · 最克制 · hover加粗+底边细线</div>
+          <div style={{ display: 'flex', gap: '0', justifyContent: 'center', alignItems: 'center', marginBottom: '16px', gap: '24px' }}>
+            <div style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'Orbitron, monospace', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '4px', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
+              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.92)'; el.style.fontWeight = '700'; el.style.borderBottomColor = 'rgba(255,255,255,0.5)' }}
+              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.55)'; el.style.fontWeight = '400'; el.style.borderBottomColor = 'transparent' }}
+            >确定</div>
+            <div style={{ color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '4px', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
+              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.6)'; el.style.fontWeight = '500'; el.style.borderBottomColor = 'rgba(255,255,255,0.3)' }}
+              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.3)'; el.style.fontWeight = '400'; el.style.borderBottomColor = 'transparent' }}
+            >再抽</div>
+          </div>
+          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0, textAlign: 'center' }}>最克制 · 需要正确的字重字间距才高级</p>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '8px' }}>
+          <button
+            onClick={() => navigate('/home')}
+            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1px', padding: '8px 16px', cursor: 'pointer' }}
+          >返回首页</button>
+        </div>
+      </div>
+    )
+  }
+
   // ============ StaminaShopPage ============
   const StaminaShopPage = () => {
     const [currency, setCurrency] = useState<any>(null)
@@ -5044,6 +5268,7 @@ function App() {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/stamina" element={<StaminaShopPage />} />
           <Route path="/avatar-test" element={<AvatarTestPage />} />
+          <Route path="/gacha-btn-test" element={<GachaButtonTestPage />} />
         </Routes>
       </main>
       {location.pathname !== '/login' && location.pathname !== '/register' && <BottomNav />}
