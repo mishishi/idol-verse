@@ -920,6 +920,52 @@
   }
 }
 
+/* ═══════════════════════════════════════
+   STAR BREATHE (Constellation Map)
+   ═══════════════════════════════════════ */
+@keyframes star-breathe {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* ═══════════════════════════════════════
+   RESULT CARD RARITY GLOW (Constellation Map)
+   ═══════════════════════════════════════ */
+.result-card.rarity-UR {
+  border: 2px solid rgba(255,215,0,0.9);
+  box-shadow:
+    0 0 20px rgba(255,215,0,0.8),
+    0 0 40px rgba(255,215,0,0.4),
+    0 0 60px rgba(255,170,0,0.2),
+    inset 0 0 20px rgba(255,215,0,0.2);
+  animation: star-breathe 2.5s ease-in-out infinite;
+}
+
+.result-card.rarity-SSR {
+  border: 2px solid rgba(126,184,218,0.8);
+  box-shadow:
+    0 0 15px rgba(126,184,218,0.6),
+    0 0 30px rgba(126,184,218,0.3),
+    inset 0 0 15px rgba(126,184,218,0.15);
+  animation: star-breathe 3s ease-in-out infinite;
+}
+
+.result-card.rarity-SR {
+  border: 2px solid rgba(200,200,208,0.6);
+  box-shadow: 0 0 10px rgba(200,200,208,0.3), inset 0 0 10px rgba(200,200,208,0.1);
+  animation: star-breathe 3.5s ease-in-out infinite;
+}
+
+.result-card.rarity-R {
+  border: 2px solid rgba(138,138,150,0.5);
+  box-shadow: 0 0 6px rgba(138,138,150,0.2);
+}
+
+.result-card.rarity-N {
+  border: 2px solid rgba(106,106,120,0.4);
+  box-shadow: 0 0 3px rgba(106,106,120,0.15);
+}
+
 /* ---- UR gold particle explosion ---- */
 .ur-particle-explosion {
   position: absolute;
