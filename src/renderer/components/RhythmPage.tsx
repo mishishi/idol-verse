@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Icon } from './common/Icon'
 import { useAudio } from '../hooks/useAudio'
 
@@ -52,7 +53,8 @@ const CENTER_X = 200
 const CENTER_Y = 200
 const TRAVEL_TIME = 5000
 
-export default function RhythmPage({ token, onBack, showToast }: { token: string; onBack: () => void; showToast?: (message: string, type?: 'success' | 'error' | 'info') => void }) {
+export default function RhythmPage({ token, showToast }: { token: string; showToast?: (message: string, type?: 'success' | 'error' | 'info') => void }) {
+  const navigate = useNavigate()
   const audio = useAudio()
   const [view, setView] = useState<'list' | 'playing' | 'result'>('list')
   const [songs, setSongs] = useState<Song[]>([])

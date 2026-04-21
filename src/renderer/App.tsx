@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useNavigate, useLocation, useParams, Routes, Route } from 'react-router-dom'
 import { useDebounce } from './hooks/useDebounce'
 import { LoadingSpinner } from './components/common/LoadingSpinner'
 import './styles/base.css'
@@ -36,7 +37,8 @@ interface User {
 type Page = 'login' | 'register' | 'home' | 'gacha' | 'gallery' | 'inventory' | 'support' | 'detail' | 'friends' | 'daily' | 'ranking' | 'pass' | 'rhythm' | 'calendar' | 'stamina' | 'avatar-test'
 
 function App() {
-  const [page, setPage] = useState<Page>('login')
+  const location = useLocation()
+  const navigate = useNavigate()
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [loginLoading, setLoginLoading] = useState(false)
@@ -90,17 +92,17 @@ function App() {
     if (savedToken && savedUser) {
       setToken(savedToken)
       setUser(JSON.parse(savedUser))
-      setPage('home')
+      navigate('/home')
     }
     setAuthLoaded(true)
   }, [])
 
   useEffect(() => {
-    if (token && page !== 'login' && page !== 'register') {
+    if (token && location.pathname !== '/login' && location.pathname !== '/register') {
       fetchCurrency()
       fetchPendingRequests()
     }
-  }, [token, page])
+  }, [token, location.pathname])
 
   // Mouse parallax for global star background
   useEffect(() => {
@@ -127,7 +129,7 @@ function App() {
       setUser(data.user)
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
-      setPage('home')
+      navigate('/home')
     } catch (err: any) { addToast(err.message, 'error') }
     finally { setLoginLoading(false) }
   }
@@ -144,7 +146,7 @@ function App() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || '注册失败')
       addToast(`账号 ${username} 注册成功！请登录`, 'success')
-      setPage('login')
+      navigate('/login')
     } catch (err: any) { addToast(err.message, 'error') }
     finally { setRegisterLoading(false) }
   }
@@ -154,7 +156,7 @@ function App() {
     setUser(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    setPage('login')
+    navigate('/login')
   }
 
   // Star particle data — generated once per mount
@@ -250,7 +252,7 @@ function App() {
           </button>
 
           <div className="auth-link-row">
-            没有账号？<span onClick={() => { setPage('register'); setUsername(''); setPassword('') }}>立即注册</span>
+            没有账号？<span onClick={() => { navigate('/register'); setUsername(''); setPassword('') }}>立即注册</span>
           </div>
         </div>
       </div>
@@ -433,7 +435,7 @@ function App() {
             </button>
 
             <div className="auth-link-row">
-              已有账号？<span onClick={() => { setPage('login'); setUsername(''); setPassword(''); setConfirm('') }}>返回登录</span>
+              已有账号？<span onClick={() => { navigate('/login'); setUsername(''); setPassword(''); setConfirm('') }}>返回登录</span>
             </div>
           </div>
         </div>
@@ -548,27 +550,27 @@ function App() {
               <div className="action-card-title">召唤抽卡</div>
               <div className="action-card-sub">抽取心仪偶像</div>
             </div>
-            <div className="action-card-new" onClick={() => setPage('support')}>
+            <div className="action-card-new" onClick={() => navigate('/support')}>
               <div className="action-card-icon"><Icon name="temple" size={26} /></div>
               <div className="action-card-title">应援殿</div>
               <div className="action-card-sub">放置产出资源</div>
             </div>
-            <div className="action-card-new" onClick={() => setPage('gallery')}>
+            <div className="action-card-new" onClick={() => navigate('/gallery')}>
               <div className="action-card-icon"><Icon name="book" size={26} /></div>
               <div className="action-card-title">偶像图鉴</div>
               <div className="action-card-sub">查看所有偶像</div>
             </div>
-            <div className="action-card-new" onClick={() => setPage('inventory')}>
+            <div className="action-card-new" onClick={() => navigate('/inventory')}>
               <div className="action-card-icon"><Icon name="backpack" size={26} /></div>
               <div className="action-card-title">我的背包</div>
               <div className="action-card-sub">已拥有偶像</div>
             </div>
-            <div className="action-card-new" onClick={() => setPage('friends')}>
+            <div className="action-card-new" onClick={() => navigate('/friends')}>
               <div className="action-card-icon"><Icon name="users" size={26} /></div>
               <div className="action-card-title">好友系统</div>
               <div className="action-card-sub">社交互动</div>
             </div>
-            <div className="action-card-new" onClick={() => setPage('ranking')}>
+            <div className="action-card-new" onClick={() => navigate('/ranking')}>
               <div className="action-card-icon"><Icon name="chart" size={26} /></div>
               <div className="action-card-title">排行榜</div>
               <div className="action-card-sub">实力排行</div>
@@ -586,19 +588,19 @@ function App() {
               <div className="scroll-card-title">春日限定</div>
               <div className="scroll-card-desc">UR概率UP</div>
             </div>
-            <div className="scroll-card" onClick={() => setPage('daily')}>
+            <div className="scroll-card" onClick={() => navigate('/daily')}>
               <div className="scroll-card-glow" />
               <div className="scroll-card-icon"><Icon name="clipboard" size={28} /></div>
               <div className="scroll-card-title">每日任务</div>
               <div className="scroll-card-desc">获取奖励</div>
             </div>
-            <div className="scroll-card" onClick={() => setPage('pass')}>
+            <div className="scroll-card" onClick={() => navigate('/pass')}>
               <div className="scroll-card-glow" />
               <div className="scroll-card-icon"><Icon name="ticket" size={28} /></div>
               <div className="scroll-card-title">通行证</div>
               <div className="scroll-card-desc">赛季奖励</div>
             </div>
-            <div className="scroll-card" onClick={() => setPage('stamina')}>
+            <div className="scroll-card" onClick={() => navigate('/stamina')}>
               <div className="scroll-card-glow" />
               <div className="scroll-card-icon"><Icon name="stamina" size={28} /></div>
               <div className="scroll-card-title">购买体力</div>
@@ -608,15 +610,15 @@ function App() {
         </div>
 
         <div className="home-quickbar">
-          <div className="quickbar-item active" onClick={() => setPage('home')}>
+          <div className="quickbar-item active" onClick={() => navigate('/home')}>
             <Icon name="home" size={22} />
             <span className="quickbar-label">首页</span>
           </div>
-          <div className="quickbar-item" onClick={() => setPage('ranking')}>
+          <div className="quickbar-item" onClick={() => navigate('/ranking')}>
             <Icon name="chart" size={22} />
             <span className="quickbar-label">排行</span>
           </div>
-          <div className="quickbar-item" onClick={() => setPage('daily')}>
+          <div className="quickbar-item" onClick={() => navigate('/daily')}>
             <Icon name="clipboard" size={22} />
             <span className="quickbar-label">任务</span>
           </div>
@@ -1541,7 +1543,7 @@ function App() {
                 <div
                   key={char.character_id}
                   className={`idol-card rarity-${char.rarity} ${!obtained ? 'idol-card-locked' : ''}`}
-                  onClick={() => obtained && setPage('inventory')}
+                  onClick={() => obtained && navigate('/inventory')}
                   style={{ cursor: obtained ? 'pointer' : 'default' }}
                 >
                   <div className="idol-card-rarity" style={{ color: rarityColor, textShadow: `0 0 10px ${rarityColor}` }}>{char.rarity}</div>
@@ -1743,7 +1745,7 @@ function App() {
             <div className="inv-empty-icon">🌟</div>
             <div className="inv-empty-title">星光收藏夹是空的</div>
             <div className="inv-empty-desc">还没有收集到任何偶像，快去召唤吧！</div>
-            <button className="btn btn-primary" onClick={() => setPage('gacha')}>前往召唤</button>
+            <button className="btn btn-primary" onClick={() => navigate('/gacha')}>前往召唤</button>
           </div>
         ) : filtered.length === 0 ? (
           <div className="inventory-empty">
@@ -1762,10 +1764,7 @@ function App() {
                   key={char.id}
                   className={`idol-card rarity-${char.rarity} ${canSynth ? 'can-synth' : ''} ${isHighRarity ? 'high-rarity' : ''} card-enter`}
                   style={{ animationDelay: `${i * 40}ms` }}
-                  onClick={() => {
-                    ;(window as any).selectedCharId = char.id
-                    setPage('detail')
-                  }}
+                  onClick={() => navigate(`/detail/${char.id}`)}
                 >
                   <div className="idol-card-rarity">{char.rarity}</div>
                   {canSynth && <div className="idol-card-synth-badge">可合成</div>}
@@ -1849,7 +1848,7 @@ function App() {
       })
     }
 
-    const charId = (window as any).selectedCharId
+    const { charId } = useParams<{ charId: string }>()
 
     const refreshCharData = () => {
       fetch(`${API_BASE}/cultivation/characters/${charId}`, {
@@ -3849,8 +3848,8 @@ function App() {
                       className={`ranking-item ${getRankClass(idol.rank)} ${isSupported ? 'is-supported' : ''} ${isHighlighted ? 'highlight-flash' : ''} ranking-item-clickable`}
                       role="row"
                       tabIndex={0}
-                      onClick={() => { ;(window as any).selectedCharId = idol.character_id; setPage('detail') }}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ;(window as any).selectedCharId = idol.character_id; setPage('detail') } }}
+                      onClick={() => navigate(`/detail/${idol.character_id}`)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/detail/${idol.character_id}`) } }}
                       aria-label={`${idol.rank}名 ${idol.name} 稀有度${idol.rarity} 应援${idol.amount}能量`}
                     >
                       <div className="ranking-position">{getRankBadge(idol.rank)}</div>
@@ -4414,7 +4413,7 @@ function App() {
       <div className="avatar-test-page">
         <div className="page-header">
           <h2>🎭 角色动画测试</h2>
-          <button className="btn-back" onClick={() => setPage('home')}>返回</button>
+          <button className="btn-back" onClick={() => navigate('/home')}>返回</button>
         </div>
 
         <div className="avatar-test-grid avatar-test-grid-wide">
@@ -4547,7 +4546,7 @@ function App() {
     return (
       <div className="idol-page stamina-page-wrapper">
         {/* Back button */}
-        <button className="stamina-back-btn" onClick={() => setPage('home')}>
+        <button className="stamina-back-btn" onClick={() => navigate('/home')}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
           返回
         </button>
@@ -4799,7 +4798,7 @@ function App() {
                 </div>
                 <div className="nav-cmd-divider"/>
                 <div className="nav-cmd-section">
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('friends'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/friends'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M17 21V19C17 17.9 16.1 17 15 17H9C7.9 17 7 17.9 7 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                       <circle cx="12" cy="10" r="4" stroke="currentColor" strokeWidth="2"/>
@@ -4808,7 +4807,7 @@ function App() {
                     </svg>
                     <span>好友</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('daily'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/daily'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M9 11L3 11L3 17L21 17L21 7L15 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       <path d="M14 3L21 3L21 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4817,23 +4816,23 @@ function App() {
                     </svg>
                     <span>任务</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('ranking'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/ranking'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 21V11M12 21V7M16 21V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>应援榜</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('stamina'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/stamina'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <span>体力商店</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('calendar'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/calendar'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/></svg>
                     <span>签到日历</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('pass'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/pass'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M21 7L12 3L3 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <span>通行证</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('avatar-test'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/avatar-test'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/><path d="M6 21V19C6 16.8 8.8 15 12 15C15.2 15 18 16.8 18 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>动画测试</span>
                   </button>
@@ -4887,7 +4886,7 @@ function App() {
           </div>
         </div>
         <div className="bottom-nav-items">
-        <div className={`bottom-nav-item ${page === 'home' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); setPage('home') }}>
+        <div className={`bottom-nav-item ${location.pathname === '/home' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/home') }}>
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M3 9L12 2L21 9V20C21 20.5 20.5 21 20 21H4C3.5 21 3 20.5 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4896,7 +4895,7 @@ function App() {
           </span>
           <span className="bottom-nav-label">首页</span>
         </div>
-        <div className={`bottom-nav-item ${page === 'inventory' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); setPage('inventory') }}>
+        <div className={`bottom-nav-item ${location.pathname === '/inventory' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/inventory') }}>
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M20 7L12 3L4 7V17L12 21L20 17V7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4907,7 +4906,7 @@ function App() {
           </span>
           <span className="bottom-nav-label">背包</span>
         </div>
-        <div className={`bottom-nav-item ${page === 'support' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); setPage('support') }}>
+        <div className={`bottom-nav-item ${location.pathname === '/support' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/support') }}>
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M3 21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -4919,7 +4918,7 @@ function App() {
           </span>
           <span className="bottom-nav-label">应援</span>
         </div>
-        <div className={`bottom-nav-item ${page === 'rhythm' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); setPage('rhythm') }}>
+        <div className={`bottom-nav-item ${location.pathname === '/rhythm' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/rhythm') }}>
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M9 18V5L21 3V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4953,22 +4952,22 @@ function App() {
                 </div>
                 <div className="nav-cmd-divider"/>
                 <div className="nav-cmd-section">
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('friends'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/friends'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 21V19C17 17.9 16.1 17 15 17H9C7.9 17 7 17.9 7 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="10" r="4" stroke="currentColor" strokeWidth="2"/><path d="M21 21V19C20.9 18.4 20.6 17.9 20.1 17.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.7"/><path d="M21 14C21 12.3 19.7 11 18 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.7"/></svg>
                     <span>好友</span>
                     {pendingRequestsCount > 0 && (
                       <span className="friend-request-badge">{pendingRequestsCount > 99 ? '99+' : pendingRequestsCount}</span>
                     )}
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('daily'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/daily'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 11L3 11L3 17L21 17L21 7L15 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 3L21 3L21 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="9" y1="15" x2="15" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>任务</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('ranking'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/ranking'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 21V11M12 21V7M16 21V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>应援榜</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); setPage('avatar-test'); setCmdOpen(false) }}>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/avatar-test'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/><path d="M6 21V19C6 16.8 8.8 15 12 15C15.2 15 18 16.8 18 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>动画测试</span>
                   </button>
@@ -4998,26 +4997,28 @@ function App() {
       <>
       <div className="starfield" />
       <div className="floating-particles" />
-      {page !== 'login' && page !== 'register' && <NavBar />}
+      {location.pathname !== '/login' && location.pathname !== '/register' && <NavBar />}
       <main id="main-content" aria-label="页面内容">
-        {page === 'login' && <LoginPage />}
-        {page === 'register' && <RegisterPage />}
-        {page === 'home' && <HomePage />}
-        {page === 'gacha' && <GachaPage onCurrencyUpdate={fetchCurrency} />}
-        {page === 'gallery' && <GalleryPage />}
-        {page === 'inventory' && <InventoryPage />}
-        {page === 'support' && <SupportHallPage />}
-        {page === 'detail' && <CharacterDetailPage />}
-        {page === 'friends' && <FriendsPage />}
-        {page === 'daily' && <DailyPage />}
-        {page === 'ranking' && <RankingPage />}
-        {page === 'pass' && <PassPage />}
-        {page === 'rhythm' && <RhythmPage token={token!} onBack={() => setPage('home')} />}
-        {page === 'calendar' && <CalendarPage />}
-        {page === 'stamina' && <StaminaShopPage />}
-        {page === 'avatar-test' && <AvatarTestPage />}
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/gacha" element={<GachaPage onCurrencyUpdate={fetchCurrency} />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/support" element={<SupportHallPage />} />
+          <Route path="/detail/:charId" element={<CharacterDetailPage />} />
+          <Route path="/friends" element={<FriendsPage />} />
+          <Route path="/daily" element={<DailyPage />} />
+          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/pass" element={<PassPage />} />
+          <Route path="/rhythm" element={<RhythmPage token={token!} />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/stamina" element={<StaminaShopPage />} />
+          <Route path="/avatar-test" element={<AvatarTestPage />} />
+        </Routes>
       </main>
-      {page !== 'login' && page !== 'register' && <BottomNav />}
+      {location.pathname !== '/login' && location.pathname !== '/register' && <BottomNav />}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       </>
       )}
