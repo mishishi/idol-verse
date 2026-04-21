@@ -2860,6 +2860,13 @@
 
   .gacha-drawer-overlay .result-card-btn {
     margin-top: 16px;
+    padding: 14px 24px 13px;
+    font-size: 0.95rem;
+  }
+
+  .gacha-drawer-overlay .multi-summary-actions {
+    gap: 16px;
+    padding: 12px 8px;
   }
 }
 
