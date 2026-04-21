@@ -415,6 +415,21 @@ function App() {
 
     return (
       <div className="home-page">
+        {/* Star dust ambient effect */}
+        <div className="star-dust">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="star-dust-particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${2 + Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </div>
         {/* Hero Banner */}
         <div className="home-hero-banner">
           <div className="hero-banner-glow" />
@@ -1000,7 +1015,9 @@ function App() {
                       ) : null}
                       <div className="holo-card-image-fallback hidden">{char.name?.charAt(0) || '?'}</div>
                       <div className="holo-card-name">{char.name}</div>
-                      <div className="holo-card-rarity">{char.rarity}</div>
+                      <div className="card-rarity-area">
+                        <span className={`rarity-tag ${char.rarity}`}>{char.rarity}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
