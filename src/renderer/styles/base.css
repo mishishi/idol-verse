@@ -31,9 +31,23 @@
   --rarity-ur-1: #ffd700;
   --rarity-ur-2: #ff6b00;
 
-  /* Accent */
+  /* Brand & Accent */
+  --brand-primary: #ff6b9d;
   --accent-pink: linear-gradient(135deg, #ff6b9d, #c44569);
   --accent-pink-solid: #ff6b9d;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-solid: #00d4ff;
+  --accent-purple: #a855f7;
+  --accent-purple-solid: #a855f7;
+  --accent-green: #00ff88;
+  --accent-green-solid: #00ff88;
+  --accent-gold: #ffd700;
+  --accent-gold-solid: #ffd700;
+
+  /* Surface (Glass) */
+  --surface-glass: rgba(255, 255, 255, 0.03);
+  --surface-glass-hover: rgba(255, 255, 255, 0.06);
+  --surface-glass-active: rgba(255, 255, 255, 0.08);
 
   /* Currency */
   --currency-stone: #ffb8d0;
@@ -65,7 +79,26 @@
   --text-4xl:  32px;
   --text-5xl:  40px;
   --text-6xl:  48px;
+
+  /* Semantic Type Scale */
+  --text-hero:    clamp(2rem, 5vw, 3rem);
+  --text-heading: clamp(1.25rem, 3vw, 1.75rem);
+  --text-subhead: 1.125rem;
+  --text-label:   0.8125rem; /* 13px — minimum readable label */
+  --text-caption: 0.6875rem; /* 11px — minimum readable caption */
+  --text-micro:   0.625rem;  /* 10px — decorative/ticker only */
 }
+
+/* ============ Semantic Type Scale Classes ============ */
+.text-hero    { font-size: var(--text-hero); font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 2px; }
+.text-heading { font-size: var(--text-heading); font-family: 'Orbitron', sans-serif; font-weight: 700; }
+.text-subhead { font-size: var(--text-subhead); font-weight: 600; }
+.text-label   { font-size: var(--text-label); letter-spacing: 0.5px; }
+.text-caption { font-size: var(--text-caption); color: var(--text-secondary); }
+.text-micro   { font-size: var(--text-micro); letter-spacing: 1px; opacity: 0.7; }
+
+/* Orbitron minimum size enforcement */
+font-family: 'Orbitron', sans-serif { font-size: 0.7rem; }
 
 /* ============ Base Styles ============ */
 * {
