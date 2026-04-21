@@ -10,8 +10,8 @@
   /* Background */
   --bg-primary: #0a0a1a;
   --bg-secondary: #1a0a2e;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --bg-card: rgba(255, 255, 255, 0.07);
+  --bg-card-hover: rgba(255, 255, 255, 0.10);
 
   /* Text */
   --text-primary: #ffffff;
@@ -19,8 +19,8 @@
   --text-muted: rgba(255, 255, 255, 0.4);
 
   /* Borders */
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(255, 255, 255, 0.2);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-hover: rgba(255, 255, 255, 0.16);
 
   /* Rarity Colors */
   --rarity-n: #a0a0a0;

@@ -159,42 +159,12 @@ function App() {
     navigate('/login')
   }
 
-  // Star particle data — generated once per mount
-  const starParticles = useMemo(() => {
-    return Array.from({ length: 18 }, (_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      size: Math.random() * 2.5 + 0.5,
-      twinkleDur: `${Math.random() * 3 + 2}s`,
-      twinkleDelay: `${Math.random() * 4}s`,
-    }))
-  }, [])
-
   const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPw, setShowPw] = useState(false)
     return (
     <div className="auth-page">
-      {/* Star particles */}
-      <div className="star-particles">
-        {starParticles.map(p => (
-          <div
-            key={p.id}
-            className="star-particle"
-            style={{
-              left: p.left, top: p.top,
-              width: p.size, height: p.size,
-              '--twinkle-dur': p.twinkleDur,
-              '--twinkle-delay': p.twinkleDelay,
-            } as React.CSSProperties}
-          />
-        ))}
-        {/* Single shooting star */}
-        <div className="shooting-star" style={{ top: '20%', left: '15%', animationDuration: '6s', animationDelay: '0s' }} />
-      </div>
-
       {/* Central portal */}
       <div className="portal-container">
         <div className="portal-ring" />
@@ -292,23 +262,6 @@ function App() {
 
     return (
       <div className="auth-page">
-        {/* Star particles */}
-        <div className="star-particles">
-          {starParticles.map(p => (
-            <div
-              key={p.id}
-              className="star-particle"
-              style={{
-                left: p.left, top: p.top,
-                width: p.size, height: p.size,
-                '--twinkle-dur': p.twinkleDur,
-                '--twinkle-delay': p.twinkleDelay,
-              } as React.CSSProperties}
-            />
-          ))}
-          <div className="shooting-star" style={{ top: '20%', left: '60%', animationDuration: '6s', animationDelay: '0s' }} />
-        </div>
-
         <div className="portal-container">
           <div className="portal-ring" />
           <div className="portal-ring-2" />
@@ -443,6 +396,7 @@ function App() {
 
   const HomePage = () => {
     const [homeStats, setHomeStats] = useState({ character_count: 0, total_gacha: 0, login_streak: 0 })
+    const [homeStatsLoading, setHomeStatsLoading] = useState(true)
     const [showGachaDrawer, setShowGachaDrawer] = useState(false)
 
     useEffect(() => {
@@ -455,32 +409,12 @@ function App() {
           total_gacha: d.total_gacha || 0,
           login_streak: d.login_streak || 0
         })
-      }).catch(console.error)
+        setHomeStatsLoading(false)
+      }).catch(() => setHomeStatsLoading(false))
     }, [token])
-
-    const stars = useMemo(() =>
-      Array.from({ length: 15 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: Math.random() * 2 + 1,
-        dur: (Math.random() * 3 + 2).toFixed(1),
-        delay: (Math.random() * 4).toFixed(1),
-      })), [])
 
     return (
       <div className="home-page">
-        <div className="star-particles">
-          {stars.map(s => (
-            <div key={s.id} className="star-particle" style={{
-              left: s.left, top: s.top,
-              width: s.size, height: s.size,
-              ['--twinkle-dur' as string]: `${s.dur}s`,
-              ['--twinkle-delay' as string]: `${s.delay}s`,
-            }} />
-          ))}
-        </div>
-
         {/* Hero Banner */}
         <div className="home-hero-banner">
           <div className="hero-banner-glow" />
@@ -491,7 +425,7 @@ function App() {
               <div className="hero-banner-title">春日限定召唤</div>
               <div className="hero-banner-desc">UR偶像概率UP！还剩3天</div>
             </div>
-            <button className="hero-banner-btn" onClick={() => setShowGachaDrawer(true)}>立即召唤</button>
+            <button className="hero-banner-btn" onClick={() => setShowGachaDrawer(true)} aria-label="立即召唤，参与春日限定活动">立即召唤</button>
           </div>
         </div>
 
@@ -534,7 +468,7 @@ function App() {
           </div>
         </div>
 
-        {homeStats.character_count === 0 && (
+        {!homeStatsLoading && homeStats.character_count === 0 && (
           <div className="empty-state">
             <div className="empty-icon">🌟</div>
             <div className="empty-title">还没有偶像</div>
@@ -546,67 +480,141 @@ function App() {
         )}
 
         {/* Quick Actions Grid */}
-        <div className="home-actions-section">
-          <div className="section-title">✦ 快速入口</div>
-          <div className="actions-grid">
-            <div className="action-card-new" onClick={() => setShowGachaDrawer(true)}>
-              <div className="action-card-icon"><Icon name="slot" size={26} /></div>
-              <div className="action-card-title">召唤抽卡</div>
-              <div className="action-card-sub">抽取心仪偶像</div>
-            </div>
-            <div className="action-card-new" onClick={() => navigate('/support')}>
-              <div className="action-card-icon"><Icon name="temple" size={26} /></div>
-              <div className="action-card-title">应援殿</div>
-              <div className="action-card-sub">放置产出资源</div>
-            </div>
-            <div className="action-card-new" onClick={() => navigate('/gallery')}>
-              <div className="action-card-icon"><Icon name="book" size={26} /></div>
-              <div className="action-card-title">偶像图鉴</div>
-              <div className="action-card-sub">查看所有偶像</div>
-            </div>
-            <div className="action-card-new" onClick={() => navigate('/stamina')}>
-              <div className="action-card-icon"><Icon name="stamina" size={26} /></div>
-              <div className="action-card-title">体力购买</div>
-              <div className="action-card-sub">能量补给站</div>
+        <section aria-label="快速入口">
+          <div className="home-actions-section">
+            <div className="section-title">✦ 快速入口</div>
+            <div className="actions-grid">
+              <div
+                className="action-card-new"
+                tabIndex={0}
+                role="button"
+                onClick={() => setShowGachaDrawer(true)}
+                onKeyDown={e => e.key === 'Enter' && setShowGachaDrawer(true)}
+                aria-label="召唤抽卡"
+              >
+                <div className="action-card-icon"><Icon name="slot" size={26} /></div>
+                <div className="action-card-title">召唤抽卡</div>
+                <div className="action-card-sub">抽取心仪偶像</div>
+              </div>
+              <div
+                className="action-card-new"
+                tabIndex={0}
+                role="button"
+                onClick={() => navigate('/support')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/support')}
+                aria-label="应援殿"
+              >
+                <div className="action-card-icon"><Icon name="temple" size={26} /></div>
+                <div className="action-card-title">应援殿</div>
+                <div className="action-card-sub">放置产出资源</div>
+              </div>
+              <div
+                className="action-card-new"
+                tabIndex={0}
+                role="button"
+                onClick={() => navigate('/gallery')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/gallery')}
+                aria-label="偶像图鉴"
+              >
+                <div className="action-card-icon"><Icon name="book" size={26} /></div>
+                <div className="action-card-title">偶像图鉴</div>
+                <div className="action-card-sub">查看所有偶像</div>
+              </div>
+              <div
+                className="action-card-new"
+                tabIndex={0}
+                role="button"
+                onClick={() => navigate('/stamina')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/stamina')}
+                aria-label="体力购买"
+              >
+                <div className="action-card-icon"><Icon name="stamina" size={26} /></div>
+                <div className="action-card-title">体力购买</div>
+                <div className="action-card-sub">能量补给站</div>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Scroll Sections */}
-        <div className="home-scroll-section">
-          <div className="section-title">✦ 限时活动</div>
-          <div className="scroll-track">
-            <div className="scroll-card primary" onClick={() => setShowGachaDrawer(true)}>
-              <div className="scroll-card-glow" />
-              <div className="scroll-card-icon"><Icon name="sparkle" size={28} /></div>
-              <div className="scroll-card-title">春日限定</div>
-              <div className="scroll-card-desc">UR概率UP</div>
-            </div>
-            <div className="scroll-card" onClick={() => navigate('/daily')}>
-              <div className="scroll-card-glow" />
-              <div className="scroll-card-icon"><Icon name="clipboard" size={28} /></div>
-              <div className="scroll-card-title">每日任务</div>
-              <div className="scroll-card-desc">获取奖励</div>
-            </div>
-            <div className="scroll-card" onClick={() => navigate('/pass')}>
-              <div className="scroll-card-glow" />
-              <div className="scroll-card-icon"><Icon name="ticket" size={28} /></div>
-              <div className="scroll-card-title">通行证</div>
-              <div className="scroll-card-desc">赛季奖励</div>
+        <section aria-label="限时活动">
+          <div className="home-scroll-section">
+            <div className="section-title">✦ 限时活动</div>
+            <div className="scroll-track">
+              <div
+                className="scroll-card primary"
+                tabIndex={0}
+                role="button"
+                onClick={() => setShowGachaDrawer(true)}
+                onKeyDown={e => e.key === 'Enter' && setShowGachaDrawer(true)}
+                aria-label="春日限定召唤，UR概率UP"
+              >
+                <div className="scroll-card-glow" />
+                <div className="scroll-card-icon"><Icon name="sparkle" size={28} /></div>
+                <div className="scroll-card-title">春日限定</div>
+                <div className="scroll-card-desc">UR概率UP</div>
+              </div>
+              <div
+                className="scroll-card"
+                tabIndex={0}
+                role="button"
+                onClick={() => navigate('/daily')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/daily')}
+                aria-label="每日任务"
+              >
+                <div className="scroll-card-glow" />
+                <div className="scroll-card-icon"><Icon name="clipboard" size={28} /></div>
+                <div className="scroll-card-title">每日任务</div>
+                <div className="scroll-card-desc">获取奖励</div>
+              </div>
+              <div
+                className="scroll-card"
+                tabIndex={0}
+                role="button"
+                onClick={() => navigate('/pass')}
+                onKeyDown={e => e.key === 'Enter' && navigate('/pass')}
+                aria-label="通行证，赛季奖励"
+              >
+                <div className="scroll-card-glow" />
+                <div className="scroll-card-icon"><Icon name="ticket" size={28} /></div>
+                <div className="scroll-card-title">通行证</div>
+                <div className="scroll-card-desc">赛季奖励</div>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <div className="home-quickbar">
-          <div className="quickbar-item active" onClick={() => navigate('/home')}>
+          <div
+            className="quickbar-item active"
+            tabIndex={0}
+            role="button"
+            onClick={() => navigate('/home')}
+            onKeyDown={e => e.key === 'Enter' && navigate('/home')}
+            aria-label="首页"
+          >
             <Icon name="home" size={22} />
             <span className="quickbar-label">首页</span>
           </div>
-          <div className="quickbar-item" onClick={() => navigate('/ranking')}>
+          <div
+            className="quickbar-item"
+            tabIndex={0}
+            role="button"
+            onClick={() => navigate('/ranking')}
+            onKeyDown={e => e.key === 'Enter' && navigate('/ranking')}
+            aria-label="排行"
+          >
             <Icon name="chart" size={22} />
             <span className="quickbar-label">排行</span>
           </div>
-          <div className="quickbar-item" onClick={() => navigate('/daily')}>
+          <div
+            className="quickbar-item"
+            tabIndex={0}
+            role="button"
+            onClick={() => navigate('/daily')}
+            onKeyDown={e => e.key === 'Enter' && navigate('/daily')}
+            aria-label="任务"
+          >
             <Icon name="clipboard" size={22} />
             <span className="quickbar-label">任务</span>
           </div>
@@ -2838,7 +2846,7 @@ function App() {
         <div className={`tab-content-wrapper tab-content-${activeTab}`} key={activeTab}>
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '60px 20px' }}>
-            <LoadingSpinner />
+            <Skeleton variant="list" count={3} />
           </div>
         ) : activeTab === 'friends' ? (
           <>
@@ -4874,7 +4882,14 @@ function App() {
           </div>
         </div>
         <div className="bottom-nav-items">
-        <div className={`bottom-nav-item ${location.pathname === '/home' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/home') }}>
+        <div
+          className={`bottom-nav-item ${location.pathname === '/home' ? 'active' : ''}`}
+          tabIndex={0}
+          role="button"
+          onClick={() => { audio.playUIClick(); navigate('/home') }}
+          onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/home'))}
+          aria-label="首页"
+        >
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M3 9L12 2L21 9V20C21 20.5 20.5 21 20 21H4C3.5 21 3 20.5 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4883,7 +4898,14 @@ function App() {
           </span>
           <span className="bottom-nav-label">首页</span>
         </div>
-        <div className={`bottom-nav-item ${location.pathname === '/inventory' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/inventory') }}>
+        <div
+          className={`bottom-nav-item ${location.pathname === '/inventory' ? 'active' : ''}`}
+          tabIndex={0}
+          role="button"
+          onClick={() => { audio.playUIClick(); navigate('/inventory') }}
+          onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/inventory'))}
+          aria-label="背包"
+        >
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M20 7L12 3L4 7V17L12 21L20 17V7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4894,7 +4916,14 @@ function App() {
           </span>
           <span className="bottom-nav-label">背包</span>
         </div>
-        <div className={`bottom-nav-item ${location.pathname === '/support' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/support') }}>
+        <div
+          className={`bottom-nav-item ${location.pathname === '/support' ? 'active' : ''}`}
+          tabIndex={0}
+          role="button"
+          onClick={() => { audio.playUIClick(); navigate('/support') }}
+          onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/support'))}
+          aria-label="应援"
+        >
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M3 21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -4906,7 +4935,14 @@ function App() {
           </span>
           <span className="bottom-nav-label">应援</span>
         </div>
-        <div className={`bottom-nav-item ${location.pathname === '/rhythm' ? 'active' : ''}`} onClick={() => { audio.playUIClick(); navigate('/rhythm') }}>
+        <div
+          className={`bottom-nav-item ${location.pathname === '/rhythm' ? 'active' : ''}`}
+          tabIndex={0}
+          role="button"
+          onClick={() => { audio.playUIClick(); navigate('/rhythm') }}
+          onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/rhythm'))}
+          aria-label="演出"
+        >
           <span className="bottom-nav-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M9 18V5L21 3V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -4984,7 +5020,6 @@ function App() {
       ) : (
       <>
       <div className="starfield" />
-      <div className="floating-particles" />
       {location.pathname !== '/login' && location.pathname !== '/register' && <NavBar />}
       <main id="main-content" aria-label="页面内容">
         <Routes>

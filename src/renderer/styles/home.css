@@ -13,9 +13,9 @@ background:#020008;
 .home-page::before{
 content:'';position:fixed;inset:0;z-index:0;
 background:
-  radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180,40,180,0.18) 0%, transparent 60%),
-  radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,80,200,0.15) 0%, transparent 60%),
-  radial-gradient(ellipse 50% 50% at 50% 10%, rgba(255,60,160,0.12) 0%, transparent 55%);
+  radial-gradient(ellipse 80% 60% at 20% 20%, rgba(160,30,160,0.12) 0%, transparent 60%),
+  radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,60,160,0.10) 0%, transparent 60%),
+  radial-gradient(ellipse 50% 50% at 50% 10%, rgba(255,50,140,0.08) 0%, transparent 55%);
 animation:nebulaDrift 20s ease-in-out infinite;
 }
 @media(prefers-reduced-motion:no-preference){
@@ -147,12 +147,11 @@ cursor:pointer;
 transition:all 0.25s ease;
 }
 .action-card-new:hover{
-transform:translateY(-3px);
 border-color:rgba(255,107,157,0.3);
-box-shadow:0 8px 28px rgba(0,0,0,0.3),0 0 20px rgba(255,107,157,0.1);
+box-shadow:0 0 12px rgba(255,107,157,0.2);
 }
 .action-card-new:active{
-transform:translateY(1px) scale(0.97);
+transform:scale(0.97);
 box-shadow:none;
 }
 .action-card-icon{
@@ -355,12 +354,11 @@ scroll-snap-align:start;
 transition:all 0.3s ease;
 }
 .scroll-card:hover{
-transform:translateY(-4px);
 border-color:rgba(255,107,157,0.4);
-box-shadow:0 12px 40px rgba(0,0,0,0.4),0 0 30px rgba(255,107,157,0.15);
+box-shadow:0 0 12px rgba(255,107,157,0.2);
 }
 .scroll-card:active{
-transform:translateY(1px) scale(0.98);
+transform:scale(0.97);
 box-shadow:none;
 }
 .scroll-card.primary{

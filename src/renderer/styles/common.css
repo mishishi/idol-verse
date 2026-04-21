@@ -363,29 +363,6 @@
   to { transform: translateY(0); opacity: 1; }
 }}
 
-/* ============ Gacha Animation ============ */
-.gacha-spin {
-  animation: gachaSpin 2s ease-in-out;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-@keyframes gachaSpin {
-  0% { transform: rotateY(0deg); }
-  50% { transform: rotateY(180deg); }
-  100% { transform: rotateY(360deg); }
-}}
-
-/* ============ Glow Pulse Animation ============ */
-.glow-pulse {
-  animation: glowPulse 2s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 157, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.8); }
-}}
-
 /* ============ Gacha Card Reveal ============ */
 .gacha-reveal {
   animation: gachaReveal 0.8s ease-out forwards;
@@ -405,17 +382,6 @@
     transform: scale(1) rotateY(0deg);
     opacity: 1;
   }
-}}
-
-/* ============ Float Animation ============ */
-.float-animation {
-  animation: floatAnimation 3s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-@keyframes floatAnimation {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
 }}
 
 /* ============ Grid Layouts ============ */
