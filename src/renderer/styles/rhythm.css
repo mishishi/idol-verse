@@ -117,7 +117,7 @@
 
 .stage-eyebrow {
   font-family: 'Orbitron', monospace;
-  font-size: 0.6rem;
+  font-size: var(--text-caption);
   font-weight: 400;
   letter-spacing: 5px;
   color: rgba(255,107,157,0.5);
@@ -181,7 +181,7 @@
 
 .pod-label {
   font-family: 'Orbitron', monospace;
-  font-size: 0.6rem;
+  font-size: var(--text-caption);
   letter-spacing: 3px;
   color: rgba(255,200,100,0.5);
   text-transform: uppercase;

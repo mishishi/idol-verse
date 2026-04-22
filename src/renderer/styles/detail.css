@@ -652,6 +652,35 @@
   box-shadow: 0 0 40px rgba(255, 0, 255, 0.6);
 }
 
+.outfit-section-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(196, 69, 105, 0.08));
+  border: 1px solid rgba(255, 107, 157, 0.25);
+  border-radius: 14px;
+  color: var(--accent-pink-solid);
+  font-size: 0.85rem;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.outfit-section-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(196, 69, 105, 0.15));
+  border-color: rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.2);
+}
+
+.outfit-section-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
 
 /* ============ Unlocks Section ============ */
 .unlock-item {

@@ -978,12 +978,33 @@
   color: #ffd700;
   font-family: 'Orbitron', sans-serif;
   text-shadow: 0 0 20px rgba(255,215,0,0.6);
+  transition: color 0.4s, text-shadow 0.4s;
+}
+
+.pass-days-left.urgent {
+  color: #ff6b3d;
+  text-shadow: 0 0 20px rgba(255,107,61,0.7), 0 0 40px rgba(255,107,61,0.3);
+  animation: passUrgencyPulse 1.4s ease-in-out infinite;
+}
+
+.pass-days-left.urgent span {
+  color: rgba(255,107,61,0.7);
+}
+
+.pass-status-card.urgent {
+  border-color: rgba(255,107,61,0.4);
+  animation: passCardUrgent 2s ease-in-out infinite;
+}
+
+.pass-status-card.urgent::after {
+  background: linear-gradient(135deg, rgba(255,107,61,0.06), transparent 50%, rgba(255,107,61,0.04));
 }
 
 .pass-days-left span {
   font-size: var(--text-sm);
   color: var(--text-secondary);
   margin-left: 2px;
+  transition: color 0.4s;
 }
 
 .pass-daily-section {
@@ -1222,6 +1243,16 @@
   0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.4); }
   50% { box-shadow: 0 0 20px rgba(255,215,0,0.7); }
 }}
+
+@keyframes passUrgencyPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.03); }
+}
+
+@keyframes passCardUrgent {
+  0%, 100% { box-shadow: 0 0 30px rgba(255,107,61,0.1); }
+  50% { box-shadow: 0 0 50px rgba(255,107,61,0.25), 0 0 8px rgba(255,107,61,0.15) inset; }
+}
 
 .success-msg {
   background: rgba(0,255,136,0.1);
@@ -1647,17 +1678,19 @@
    HOLOGRAPHIC TRANSMISSION TOAST
    ================================================ */
 
-/* Container — fixed center, flex column */
+/* Container — fixed bottom-right, flex column */
 .toast-container {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 24px;
+  right: 24px;
+  left: auto;
+  top: auto;
+  transform: none;
   z-index: 10000;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 12px;
   width: min(460px, calc(100vw - 32px));
   max-width: 460px;
@@ -1851,7 +1884,7 @@
 
 .toast-label {
   font-family: 'Orbitron', 'Share Tech Mono', monospace;
-  font-size: 0.6rem;
+  font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 2.5px;
   text-transform: uppercase;
@@ -1967,4 +2000,196 @@
   .toast-border-glow { animation: none; opacity: 0.2; }
   .toast-status-dot { animation: none; }
   .toast-icon-wrap { animation: none; }
+}
+
+/* ===== Achievement Unlock Popup ===== */
+.ach-unlock-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  animation: achOverlayIn 0.3s ease-out;
+}
+
+.ach-unlock-popup {
+  position: relative;
+  width: 280px;
+  padding: 36px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(160deg, rgba(18, 10, 30, 0.98), rgba(10, 6, 22, 0.99));
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  border-radius: 4px;
+  overflow: hidden;
+  animation: achPopIn 0.55s cubic-bezier(0.16, 1.6, 0.3, 1) forwards;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 0 100px rgba(255, 140, 0, 0.1);
+}
+
+.ach-unlock-bg-glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ach-unlock-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ach-unlock-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #ffd700;
+  animation: achStarDrift 2s ease-in-out infinite;
+  opacity: 0;
+}
+
+.ach-unlock-star:nth-child(1) { top: 15%; left: 20%; }
+.ach-unlock-star:nth-child(2) { top: 25%; left: 75%; }
+.ach-unlock-star:nth-child(3) { top: 60%; left: 10%; }
+.ach-unlock-star:nth-child(4) { top: 70%; left: 85%; }
+.ach-unlock-star:nth-child(5) { top: 40%; left: 5%; }
+.ach-unlock-star:nth-child(6) { top: 80%; left: 40%; }
+.ach-unlock-star:nth-child(7) { top: 10%; left: 55%; }
+.ach-unlock-star:nth-child(8) { top: 50%; left: 90%; }
+
+.ach-unlock-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255, 215, 0, 0.6);
+  border-style: solid;
+}
+.ach-unlock-corner-tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+.ach-unlock-corner-tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+.ach-unlock-corner-bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+.ach-unlock-corner-br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+.ach-unlock-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(255, 215, 0, 0.7);
+  text-transform: uppercase;
+  animation: achBadgeShine 2s ease-in-out infinite;
+}
+
+.ach-unlock-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.08));
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffd700;
+  animation: achIconGlow 1.5s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.ach-unlock-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.ach-unlock-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-align: center;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.5);
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  animation: achTitlePulse 1.8s ease-in-out infinite;
+}
+
+.ach-unlock-subtitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.ach-unlock-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ach-unlock-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+.ach-unlock-close:active { transform: scale(0.9); }
+
+@keyframes achOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes achPopIn {
+  0% { transform: scale(0.4) translateY(30px); opacity: 0; }
+  60% { transform: scale(1.06) translateY(-4px); opacity: 1; }
+  80% { transform: scale(0.97) translateY(2px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes achStarDrift {
+  0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+  25% { opacity: 0.9; transform: translateY(-8px) scale(1.5); }
+  75% { opacity: 0.4; transform: translateY(-3px) scale(1); }
+}
+
+@keyframes achBadgeShine {
+  0%, 100% { opacity: 0.6; text-shadow: none; }
+  50% { opacity: 1; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
+}
+
+@keyframes achIconGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+  50% { box-shadow: 0 0 32px rgba(255, 215, 0, 0.4), 0 0 8px rgba(255, 215, 0, 0.2) inset; }
+}
+
+@keyframes achTitlePulse {
+  0%, 100% { text-shadow: 0 0 16px rgba(255, 215, 0, 0.5); }
+  50% { text-shadow: 0 0 28px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 140, 0, 0.3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ach-unlock-overlay,
+  .ach-unlock-popup,
+  .ach-unlock-star,
+  .ach-unlock-badge,
+  .ach-unlock-icon,
+  .ach-unlock-title { animation: none !important; }
 }

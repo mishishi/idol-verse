@@ -91,14 +91,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!token) return
     fetch(`${API_BASE}/user/currency`, {
       headers: { 'Authorization': `Bearer ${token}` }
-    }).then(r => r.json()).catch(() => {})
+    }).then(r => r.json()).catch((err) => { console.error('fetchCurrency failed:', err) })
   }, [token])
 
   const fetchPendingRequests = useCallback(() => {
     if (!token) return
     fetch(`${API_BASE}/friends/requests`, {
       headers: { 'Authorization': `Bearer ${token}` }
-    }).then(r => r.json()).catch(() => {})
+    }).then(r => r.json()).catch((err) => { console.error('fetchPendingRequests failed:', err) })
   }, [token])
 
   return (

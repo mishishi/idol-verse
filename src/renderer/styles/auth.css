@@ -296,6 +296,7 @@
 .holo-username-status.checking { color: var(--text-muted); }
 .holo-username-status.available { color: #00ff88; }
 .holo-username-status.taken { color: #ff4466; }
+.holo-username-status.error { color: #ff8800; }
 
 /* === Password Strength Meter === */
 .pw-strength-wrap {

@@ -730,7 +730,7 @@
 
 .nav-cmd-section-label {
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.6rem;
+  font-size: var(--text-caption);
   font-weight: 700;
   letter-spacing: 2px;
   color: rgba(255, 255, 255, 0.3);
@@ -938,6 +938,10 @@
   flex-shrink: 0;
 }
 
+.bnv-currency-item span {
+  text-shadow: 0 0 6px currentColor;
+}
+
 .bnv-currency-item.stone {
   color: var(--currency-stone, #ffb8d0);
   text-shadow: 0 0 8px rgba(255, 184, 208, 0.4);
@@ -968,6 +972,53 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 8px 0;
+}
+
+/* Primary nav item (Home) — larger, more prominent */
+.bottom-nav-item.primary {
+  position: relative;
+}
+
+.bottom-nav-item.primary .bottom-nav-icon {
+  font-size: 1.65rem;
+}
+
+.bottom-nav-item.primary .bottom-nav-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Active primary gets stronger glow */
+.bottom-nav-item.primary.active .bottom-nav-icon {
+  transform: scale(1.25);
+  filter: drop-shadow(0 0 14px rgba(255, 107, 157, 1));
+}
+
+.bottom-nav-item.primary.active::before {
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff6b9d, #ffd700, transparent);
+}
+
+/* Secondary nav items — more subdued */
+.bottom-nav-item.secondary .bottom-nav-icon {
+  font-size: 1.25rem;
+  opacity: 0.75;
+}
+
+.bottom-nav-item.secondary .bottom-nav-label {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+.bottom-nav-item.secondary.active .bottom-nav-icon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.85));
+}
+
+.bottom-nav-item.secondary.active::before {
+  width: 24px;
 }
 
 .bottom-nav-icon {
@@ -1319,24 +1370,41 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: linear-gradient(135deg, #ff6b9d, #ff3366, #c44569);
+  background-size: 200% 200%;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
   font-family: 'Orbitron', sans-serif;
-  border-radius: 9px;
+  border-radius: 10px;
   margin-left: 6px;
-  box-shadow: 0 0 8px rgba(255, 107, 157, 0.6);
-  animation: badgePulse 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(255, 107, 157, 0.7), 0 0 20px rgba(255, 51, 102, 0.3);
+  animation: badgeBounce 1.6s ease-in-out infinite;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-@keyframes badgePulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(255, 107, 157, 0.6); }
-  50% { box-shadow: 0 0 14px rgba(255, 107, 157, 0.9); }
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.7), 0 0 20px rgba(255, 51, 102, 0.3);
+  }
+  30% {
+    transform: scale(1.15);
+    box-shadow: 0 0 16px rgba(255, 107, 157, 0.9), 0 0 28px rgba(255, 51, 102, 0.5);
+  }
+  60% {
+    transform: scale(0.95);
+    box-shadow: 0 0 8px rgba(255, 107, 157, 0.5), 0 0 16px rgba(255, 51, 102, 0.2);
+  }
 }}
+
+@media (prefers-reduced-motion: reduce) {
+  .friend-request-badge { animation: none; }
+}
 
 /* ============ Message Board ============ */

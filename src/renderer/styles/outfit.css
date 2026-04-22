@@ -207,6 +207,18 @@
 }
 
 /* ============ Outfit Modal Redesign ============ */
+.outfit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
 .outfit-modal-v2 {
   max-width: 720px;
   max-height: 85vh;
@@ -427,6 +439,90 @@
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 152, 0, 0.2));
   color: var(--rarity-ur-1);
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+/* Outfit modal inner container for detail page */
+.outfit-modal-v2-inner {
+  background: linear-gradient(180deg, rgba(20, 10, 40, 0.98) 0%, rgba(10, 10, 30, 0.98) 100%);
+  border: 1px solid rgba(255, 107, 157, 0.2);
+  border-radius: 24px;
+  overflow: hidden;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Outfit card image and text */
+.outfit-card-image {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outfit-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outfit-card-placeholder {
+  font-size: 2rem;
+}
+
+.outfit-card-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.outfit-card-rarity {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+/* Equipped badge */
+.equipped-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: linear-gradient(135deg, #00ccff, #0099cc);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 0 14px 0 8px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 204, 255, 0.4);
+}
+
+/* Locked overlay */
+.outfit-locked-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
 }
 
 .outfit-default-crown {

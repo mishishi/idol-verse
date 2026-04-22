@@ -48,10 +48,24 @@ function App() {
   const [toasts, setToasts] = useState<ToastItem[]>([])
   const [authLoaded, setAuthLoaded] = useState(false)
   const [showGuide, setShowGuide] = useState(false)
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
+  const [isOffline, setIsOffline] = useState(!navigator.onLine)
+
+  // Network offline/online detection
+  useEffect(() => {
+    const handleOffline = () => setIsOffline(true)
+    const handleOnline = () => setIsOffline(false)
+    window.addEventListener('offline', handleOffline)
+    window.addEventListener('online', handleOnline)
+    return () => { window.removeEventListener('offline', handleOffline); window.removeEventListener('online', handleOnline) }
+  }, [])
 
   const addToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = generateToastId()
-    setToasts(prev => [...prev, { id, message, type }])
+    setToasts(prev => {
+      const updated = [{ id, message, type }, ...prev]
+      return updated.slice(0, 5) // max 5 toasts
+    })
   }, [])
   const removeToast = useCallback((id: number) => {
     setToasts(prev => prev.filter(t => t.id !== id))
@@ -157,10 +171,15 @@ function App() {
   }
 
   const handleLogout = () => {
+    setLogoutConfirmOpen(true)
+  }
+
+  const confirmLogout = () => {
     setToken(null)
     setUser(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    setLogoutConfirmOpen(false)
     navigate('/login')
   }
 
@@ -183,7 +202,9 @@ function App() {
           <div className="auth-subtitle">LOGIN TO THE UNIVERSE</div>
 
           <div className="holo-field">
+            <label htmlFor="login-username" className="sr-only">用户名 / USERNAME</label>
             <input
+              id="login-username"
               className="holo-input"
               placeholder="用户名 / USERNAME"
               value={username}
@@ -194,7 +215,9 @@ function App() {
           </div>
 
           <div className="holo-field">
+            <label htmlFor="login-password" className="sr-only">密码 / PASSWORD</label>
             <input
+              id="login-password"
               className="holo-input"
               type={showPw ? 'text' : 'password'}
               placeholder="密码 / PASSWORD"
@@ -252,7 +275,7 @@ function App() {
     const [confirm, setConfirm] = useState('')
     const [showPw, setShowPw] = useState(false)
     const [showConfirm, setShowConfirm] = useState(false)
-    const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'ok' | 'taken'>('idle')
+    const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'ok' | 'taken' | 'error'>('idle')
     const debouncedUsername = useDebounce(username, 400)
     const pwStrength = calcPwStrength(password)
 
@@ -262,7 +285,7 @@ function App() {
       fetch(`${API_BASE}/auth/check-username?username=${encodeURIComponent(debouncedUsername)}`)
         .then(r => r.json())
         .then(d => setUsernameStatus(d.available ? 'ok' : 'taken'))
-        .catch(() => setUsernameStatus('idle'))
+        .catch(() => { addToast('用户名检查失败，请稍后重试', 'error'); setUsernameStatus('error') })
     }, [debouncedUsername])
 
     return (
@@ -279,7 +302,9 @@ function App() {
 
             {/* Username */}
             <div className="holo-field">
+              <label htmlFor="register-username" className="sr-only">用户名 / USERNAME</label>
               <input
+                id="register-username"
                 className="holo-input"
                 placeholder="用户名 / USERNAME"
                 value={username}
@@ -307,11 +332,18 @@ function App() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                 </span>
               )}
+              {usernameStatus === 'error' && (
+                <span className="holo-username-status error">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                </span>
+              )}
             </div>
 
             {/* Password */}
             <div className="holo-field">
+              <label htmlFor="register-password" className="sr-only">密码 / PASSWORD</label>
               <input
+                id="register-password"
                 className="holo-input"
                 type={showPw ? 'text' : 'password'}
                 placeholder="密码 / PASSWORD"
@@ -352,7 +384,9 @@ function App() {
 
             {/* Confirm password */}
             <div className="holo-field">
+              <label htmlFor="register-confirm" className="sr-only">确认密码 / CONFIRM</label>
               <input
+                id="register-confirm"
                 className="holo-input"
                 type={showConfirm ? 'text' : 'password'}
                 placeholder="确认密码 / CONFIRM"
@@ -381,7 +415,7 @@ function App() {
 
             <button
               className="holo-submit-btn green"
-              disabled={registerLoading || usernameStatus === 'taken'}
+              disabled={registerLoading || usernameStatus === 'taken' || usernameStatus === 'error'}
               onClick={() => {
                 if (password !== confirm) { addToast('两次密码不一致', 'error'); return }
                 handleRegister(username, password)
@@ -425,7 +459,7 @@ function App() {
         headers: { 'Authorization': `Bearer ${token}` }
       }).then(r => r.json()).then(d => {
         setOwnedCharacters(Array.isArray(d) ? d : (d.characters || []))
-      }).catch(() => {})
+      }).catch(() => { addToast('无法加载角色数据', 'error') })
     }, [token])
 
     return (
@@ -523,6 +557,15 @@ function App() {
         </div>
 
         {/* Core Stats */}
+        {homeStats.character_count === 0 && homeStats.login_streak === 0 && homeStats.total_gacha === 0 && !homeStatsLoading ? (
+          <div className="home-stats-center">
+            <div className="empty-state" style={{ padding: '32px 24px', gap: 8 }}>
+              <div className="empty-icon" style={{ fontSize: '2.5rem' }}>🌟</div>
+              <div className="empty-title" style={{ fontSize: 'var(--text-label)', color: 'var(--text-secondary)' }}>开始你的偶像之旅</div>
+              <div className="empty-desc">前往召唤试试手气吧！</div>
+            </div>
+          </div>
+        ) : (
         <div className="home-stats-center">
           <div className="stat-big">
             <div className="stat-big-value">{homeStats.character_count}</div>
@@ -539,6 +582,7 @@ function App() {
             <div className="stat-big-label">总召唤</div>
           </div>
         </div>
+        )}
 
         {/* Star Map - Celestial Star Atlas */}
         {ownedCharacters.length > 0 && (
@@ -1245,6 +1289,9 @@ function App() {
     const doGacha = async () => {
       if (pulling) return
       setPulling(true)
+      // Save currency for rollback in case of mid-operation failure
+      const prevStone = currency.holy_stone
+      const prevTicket = currency.summon_ticket
       try {
         const res = await fetch(`${API_BASE}/gacha/single`, {
           method: 'POST',
@@ -1266,8 +1313,11 @@ function App() {
         setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
         // Refresh navbar currency after modal closes
         setNeedsNavBarRefresh(true)
-      } catch (err: any) { addToast(err.message, 'error') }
-      finally { setPulling(false) }
+      } catch (err: any) {
+        // Rollback currency on any failure after API success
+        setCurrency(() => ({ holy_stone: prevStone, summon_ticket: prevTicket }))
+        addToast(err.message, 'error')
+      } finally { setPulling(false) }
     }
 
     // Play SSR/UR sound when modal opens
@@ -1297,6 +1347,9 @@ function App() {
     const doMultiGacha = async () => {
       if (multiPulling) return
       setMultiPulling(true)
+      // Save currency for rollback in case of mid-operation failure
+      const prevStone = currency.holy_stone
+      const prevTicket = currency.summon_ticket
       try {
         const res = await fetch(`${API_BASE}/gacha/multi`, {
           method: 'POST',
@@ -1321,8 +1374,11 @@ function App() {
         setPityStatus((prev: any) => ({ ...prev, pity_count: data.pity_count }))
         // Refresh navbar currency after modal closes
         setNeedsNavBarRefresh(true)
-      } catch (err: any) { addToast(err.message, 'error') }
-      finally { setMultiPulling(false) }
+      } catch (err: any) {
+        // Rollback currency on any failure after API success
+        setCurrency(() => ({ holy_stone: prevStone, summon_ticket: prevTicket }))
+        addToast(err.message, 'error')
+      } finally { setMultiPulling(false) }
     }
 
     const insufficientCurrency = useTicket ? currency.summon_ticket < 1 : currency.holy_stone < 10
@@ -2131,6 +2187,9 @@ function App() {
     const [justUnlockedMilestone, setJustUnlockedMilestone] = useState<number | null>(null)
     const [showStoryModal, setShowStoryModal] = useState(false)
     const [currentStory, setCurrentStory] = useState<any>(null)
+    const [showOutfitModal, setShowOutfitModal] = useState(false)
+    const [outfitList, setOutfitList] = useState<any[]>([])
+    const [loadingOutfits, setLoadingOutfits] = useState(false)
     const prevIntimacyRef = useRef<number>(1)
 
     // TTS helper — use Edge TTS API for natural-sounding Chinese voice
@@ -2252,6 +2311,52 @@ function App() {
         if (!res.ok) throw new Error(data.error)
         setCharData({ ...charData, fragment_count: charData.fragment_count - synthesisCost + 1 })
         audio.playLevelUp()
+      } catch (err: any) { addToast(err.message, 'error') }
+    }
+
+    const fetchOutfits = async () => {
+      setLoadingOutfits(true)
+      try {
+        const res = await fetch(`${API_BASE}/outfits/${charData.character_id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        setOutfitList(data.outfits || [])
+      } catch (err: any) {
+        addToast(err.message, 'error')
+        setOutfitList([])
+      } finally {
+        setLoadingOutfits(false)
+      }
+    }
+
+    const handleEquipOutfit = async (outfitId: number) => {
+      try {
+        const res = await fetch(`${API_BASE}/user/outfits/${outfitId}/equip`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ characterId: charData.character_id })
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        setCharData({ ...charData, equipped_outfit: outfitList.find((o: any) => o.id === outfitId) })
+        refreshCharData()
+        addToast('服装已装备', 'success')
+      } catch (err: any) { addToast(err.message, 'error') }
+    }
+
+    const handleUnequipOutfit = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/user/outfits/${charData.character_id}/unequip`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        setCharData({ ...charData, equipped_outfit: null })
+        refreshCharData()
+        addToast('服装已卸下', 'success')
       } catch (err: any) { addToast(err.message, 'error') }
     }
 
@@ -2390,6 +2495,16 @@ function App() {
               </button>
             </div>
           )}
+
+          {(charData?.total_outfits > 0) && (
+            <button
+              className="outfit-section-btn"
+              onClick={() => { fetchOutfits(); setShowOutfitModal(true); }}
+            >
+              <Icon name="sparkles" size={14} color="var(--accent-pink-solid)" />
+              <span>查看服装 {charData?.equipped_outfit ? '(已装备)' : ''}</span>
+            </button>
+          )}
         </div>
 
         <div className="cult-section">
@@ -2499,7 +2614,7 @@ function App() {
         )}
 
         {showStoryModal && currentStory && (
-          <div className="story-modal-overlay" onClick={() => setShowStoryModal(false)}>
+          <div className="story-modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowStoryModal(false)}>
             <div className="story-modal-content" onClick={(e) => e.stopPropagation()}>
               <button className="story-modal-close" onClick={() => setShowStoryModal(false)}>×</button>
               <div className="story-modal-header">
@@ -2515,6 +2630,64 @@ function App() {
               <div className="story-modal-footer">
                 <span className="story-modal-hint">与 {charData?.name} 的亲密度达到 {currentStory.milestone} 级时解锁</span>
               </div>
+            </div>
+          </div>
+        )}
+
+        {showOutfitModal && (
+          <div className="outfit-overlay" onClick={() => setShowOutfitModal(false)}>
+            <div className="outfit-modal-v2" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>✦ 角色服装</h3>
+                <button className="modal-close" onClick={() => setShowOutfitModal(false)}>×</button>
+              </div>
+
+              {loadingOutfits ? (
+                <div style={{ padding: '40px 28px' }}>
+                  <Skeleton variant="card-grid" count={4} />
+                </div>
+              ) : (
+                <div className="outfit-grid-v2">
+                  {outfitList.map((outfit: any) => {
+                    const isEquipped = charData?.equipped_outfit?.id === outfit.id
+                    return (
+                      <div
+                        key={outfit.id}
+                        className={`outfit-card-v2 ${outfit.is_default ? 'rarity-N' : `rarity-${outfit.rarity}`} ${!outfit.owned ? 'locked' : ''} ${isEquipped ? 'equipped' : ''}`}
+                        onClick={() => {
+                          if (!outfit.owned) {
+                            addToast('未拥有该服装', 'error')
+                            return
+                          }
+                          if (isEquipped) {
+                            handleUnequipOutfit()
+                          } else {
+                            handleEquipOutfit(outfit.id)
+                          }
+                        }}
+                      >
+                        {isEquipped && <div className="equipped-badge">已装备</div>}
+                        <div className="outfit-card-image">
+                          {outfit.image_path ? (
+                            <img src={outfit.image_path} alt={outfit.name} />
+                          ) : (
+                            <div className="outfit-card-placeholder">👗</div>
+                          )}
+                        </div>
+                        <div className="outfit-card-name">{outfit.name}</div>
+                        <div className="outfit-card-rarity">{outfit.rarity}</div>
+                        {!outfit.owned && <div className="outfit-locked-overlay">🔒</div>}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {outfitList.length === 0 && !loadingOutfits && (
+                <div style={{ padding: '40px 28px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  暂无服装数据
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -2817,7 +2990,7 @@ function App() {
         </div>
 
         {showSelect !== null && (
-          <div className="support-modal-overlay" role="dialog" aria-modal="true" aria-label="选择偶像" onClick={() => setShowSelect(null)}>
+          <div className="support-modal-overlay" role="dialog" aria-modal="true" aria-label="选择偶像" onClick={(e) => e.target === e.currentTarget && setShowSelect(null)}>
             <div className="support-modal" onClick={e => e.stopPropagation()}>
               {/* Corner brackets */}
               <div className="sm-corner sm-corner-tl" />
@@ -3266,7 +3439,14 @@ function App() {
               {/* Search Dropdown */}
               {showSearchDropdown && (
                 <div className="star-catalog-results">
-                  {searchResults.length === 0 ? (
+                  {searching ? (
+                    <div className="star-catalog-empty">
+                      <div className="star-catalog-empty-icon">
+                        <div className="auth-loading" style={{ width: 20, height: 20 }} />
+                      </div>
+                      <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>搜索星际坐标中...</div>
+                    </div>
+                  ) : searchResults.length === 0 ? (
                     <div className="star-catalog-empty">
                       <div className="star-catalog-empty-icon">🔭</div>
                       <div>未找到星际访客</div>
@@ -3546,6 +3726,8 @@ function App() {
     const [resetCountdown, setResetCountdown] = useState('')
     const [achFilter, setAchFilter] = useState<'all' | 'gacha' | 'collect' | 'login' | 'friend'>('all')
     const [justClaimed, setJustClaimed] = useState<Set<number>>(new Set())
+    const [achUnlockPopup, setAchUnlockPopup] = useState<{ id: number; title: string; icon: string } | null>(null)
+    const prevAchievementsRef = useRef<any[]>([])
 
     // Countdown to next daily reset (midnight)
     useEffect(() => {
@@ -3571,8 +3753,18 @@ function App() {
         fetch(`${API_BASE}/daily/tasks`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
         fetch(`${API_BASE}/achievements`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json())
       ]).then(([tasksData, achData]) => {
+        const newAchievements = achData.achievements || []
+        // Detect newly unlocked achievements
+        const prevMap = new Map(prevAchievementsRef.current.map(a => [a.id, a]))
+        const newlyUnlocked = newAchievements.find(a =>
+          a.unlocked && !a.claimed && prevMap.has(a.id) && !prevMap.get(a.id).unlocked
+        )
+        if (newlyUnlocked) {
+          setAchUnlockPopup({ id: newlyUnlocked.id, title: newlyUnlocked.title, icon: newlyUnlocked.icon })
+        }
+        prevAchievementsRef.current = newAchievements
         setTasks(tasksData.tasks || [])
-        setAchievements(achData.achievements || [])
+        setAchievements(newAchievements)
         setLoading(false)
       }).catch((e) => { console.error('Failed to load daily data:', e); setLoading(false) })
     }
@@ -3862,6 +4054,38 @@ function App() {
             )}
           </div>
           </>
+        )}
+
+        {/* Achievement Unlock Popup */}
+        {achUnlockPopup && (
+          <div className="ach-unlock-overlay" onClick={() => setAchUnlockPopup(null)} role="dialog" aria-modal="true" aria-label="成就解锁">
+            <div className="ach-unlock-popup" onClick={e => e.stopPropagation()}>
+              <div className="ach-unlock-bg-glow" />
+              <div className="ach-unlock-starfield">
+                {[...Array(8)].map((_, i) => (
+                  <span key={i} className="ach-unlock-star" style={{ animationDelay: `${i * 0.12}s` }}>.</span>
+                ))}
+              </div>
+              <div className="ach-unlock-corner ach-unlock-corner-tl" />
+              <div className="ach-unlock-corner ach-unlock-corner-tr" />
+              <div className="ach-unlock-corner ach-unlock-corner-bl" />
+              <div className="ach-unlock-corner ach-unlock-corner-br" />
+              <div className="ach-unlock-badge">ACHIEVEMENT</div>
+              <div className="ach-unlock-icon">
+                {achUnlockPopup.icon === 'gacha' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M12 13v2M8 18h8M10 16h4"/></svg>}
+                {achUnlockPopup.icon === 'collect' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>}
+                {achUnlockPopup.icon === 'login' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>}
+                {achUnlockPopup.icon === 'friend' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>}
+                {achUnlockPopup.icon === 'rhythm' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><circle cx="8" cy="7" r="2.5"/><circle cx="20" cy="9" r="2.5"/><path d="M5.5 17.5C3 15 3 11 5.5 8.5M8 7C8 7 12 5 12 9s4 2 4 6"/></svg>}
+                {!['gacha','collect','login','friend','rhythm'].includes(achUnlockPopup.icon) && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
+              </div>
+              <div className="ach-unlock-title">{achUnlockPopup.title}</div>
+              <div className="ach-unlock-subtitle">已解锁</div>
+              <button className="ach-unlock-close" onClick={() => setAchUnlockPopup(null)} aria-label="关闭">
+                <svg viewBox="0 0 10 10" fill="none"><path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+          </div>
         )}
       </div>
     )
@@ -4538,7 +4762,7 @@ function App() {
         <h2 className="page-title">成长通行证</h2>
 
         {/* Pass Status Card */}
-        <div className={`pass-status-card ${passStatus?.active ? 'active' : 'inactive'}`}>
+        <div className={`pass-status-card ${passStatus?.active ? 'active' : 'inactive'} ${(passStatus?.active && passStatus?.days_remaining <= 5) ? 'urgent' : ''}`}>
           {passStatus?.active ? (
             <>
               <div className="pass-status-header">
@@ -4547,7 +4771,7 @@ function App() {
                   <div className="pass-title">月卡会员</div>
                   <div className="pass-expiry">有效期至 {new Date(passStatus.expires_at).toLocaleDateString('zh-CN')}</div>
                 </div>
-                <div className="pass-days-left">{passStatus.days_remaining}<span>天</span></div>
+                <div className={`pass-days-left ${passStatus.days_remaining <= 5 ? 'urgent' : ''}`}>{passStatus.days_remaining}<span>天</span></div>
               </div>
               <div className="pass-daily-section">
                 <div className="pass-daily-info">
@@ -4669,6 +4893,8 @@ function App() {
     const [year, setYear] = useState(new Date().getFullYear())
     const [month, setMonth] = useState(new Date().getMonth() + 1)
     const [loading, setLoading] = useState(true)
+    const [signInStatus, setSignInStatus] = useState<{ signed: boolean; consecutive_days: number; total_days: number }>({ signed: false, consecutive_days: 1, total_days: 0 })
+    const [signingIn, setSigningIn] = useState(false)
 
     const fetchRecords = async () => {
       setLoading(true)
@@ -4685,6 +4911,36 @@ function App() {
     }
 
     useEffect(() => { fetchRecords() }, [year, month])
+
+    const fetchSignInStatus = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/daily/signin`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        setSignInStatus({ signed: data.signed || false, consecutive_days: data.consecutive_days || 1, total_days: data.total_days || 0 })
+      } catch {}
+    }
+
+    useEffect(() => { fetchSignInStatus() }, [])
+
+    const handleSignIn = async () => {
+      if (signInStatus.signed || signingIn) return
+      setSigningIn(true)
+      try {
+        const res = await fetch(`${API_BASE}/daily/signin`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        setSignInStatus(prev => ({ ...prev, signed: true }))
+        fetchSignInStatus()
+        addToast(`签到成功！获得 ${data.reward?.amount || 10} 圣像石`, 'success')
+        audio.playLevelUp()
+      } catch (err: any) { addToast(err.message, 'error') }
+      finally { setSigningIn(false) }
+    }
 
     const prevMonth = () => {
       if (month === 1) { setYear(y => y - 1); setMonth(12) }
@@ -4725,6 +4981,60 @@ function App() {
       <div className="idol-page">
         <div className="section-header">
           <h2 className="section-title">签到日历</h2>
+        </div>
+
+        {/* 7-Day Check-In Reward Track */}
+        <div className="checkin-track-card">
+          <div className="checkin-track-header">
+            <div className="checkin-track-title">本周签到</div>
+            <div className="checkin-track-total">累计 {signInStatus.total_days} 天</div>
+          </div>
+          <div className="checkin-days-row">
+            {[
+              { day: 1, reward: 10, type: 'stone', label: '10' },
+              { day: 2, reward: 15, type: 'stone', label: '15' },
+              { day: 3, reward: 1, type: 'ticket', label: '票' },
+              { day: 4, reward: 20, type: 'stone', label: '20' },
+              { day: 5, reward: 25, type: 'stone', label: '25' },
+              { day: 6, reward: 1, type: 'ticket', label: '票' },
+              { day: 7, reward: 50, type: 'stone', label: '50' },
+            ].map(item => {
+              const isPast = item.day < signInStatus.consecutive_days
+              const isCurrent = item.day === signInStatus.consecutive_days
+              const isClaimed = isPast || signInStatus.signed && item.day === signInStatus.consecutive_days
+              return (
+                <div key={item.day} className={`checkin-day-item ${isPast ? 'past' : ''} ${isCurrent ? 'current' : ''} ${isClaimed && item.day !== signInStatus.consecutive_days ? 'claimed' : ''}`}>
+                  <div className="checkin-day-dot">
+                    {isPast || (signInStatus.signed && isCurrent) ? (
+                      <span className="checkin-check">✓</span>
+                    ) : isCurrent ? (
+                      <span className="checkin-fire">●</span>
+                    ) : (
+                      <span className="checkin-empty">○</span>
+                    )}
+                  </div>
+                  <div className="checkin-day-num">第{item.day}天</div>
+                  <div className="checkin-day-reward">
+                    {item.type === 'stone' && <span className="reward-stone">{item.label}石</span>}
+                    {item.type === 'ticket' && <span className="reward-ticket">票×{item.label}</span>}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <button
+            className={`checkin-btn ${signInStatus.signed ? 'signed' : ''}`}
+            onClick={handleSignIn}
+            disabled={signInStatus.signed || signingIn}
+          >
+            {signInStatus.signed ? (
+              <>✓ 已签到</>
+            ) : signingIn ? (
+              <>签到中...</>
+            ) : (
+              <>🎁 立即签到</>
+            )}
+          </button>
         </div>
 
         <div className="calendar-card">
@@ -4841,7 +5151,7 @@ function App() {
     return (
       <div className="settings-page">
         <div className="page-header">
-          <button className="back-btn" onClick={() => navigate(-1)} aria-label="返回">
+          <button className="back-btn" onClick={() => { if (window.history.length > 1) navigate(-1); else navigate('/home') }} aria-label="返回">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           <h1 className="page-title">设置</h1>
@@ -4945,7 +5255,7 @@ function App() {
 
           {/* Logout */}
           <section className="settings-section">
-            <button className="settings-logout-btn" onClick={handleLogout}>
+            <button className="settings-logout-btn" onClick={() => setLogoutConfirmOpen(true)}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 21H5C4 21 3 20 3 19V5C3 4 4 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
               退出登录
             </button>
@@ -5065,7 +5375,7 @@ function App() {
     return (
       <div className="shop-page">
         <div className="page-header">
-          <button className="back-btn" onClick={() => navigate(-1)} aria-label="返回">
+          <button className="back-btn" onClick={() => { if (window.history.length > 1) navigate(-1); else navigate('/home') }} aria-label="返回">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           <h1 className="page-title">商城</h1>
@@ -5529,6 +5839,7 @@ function App() {
                 <div className="nav-cmd-section">
                   <div className="nav-cmd-section-label">音频</div>
                   <button
+                    aria-pressed={audio.bgmEnabled}
                     className={`nav-cmd-item ${audio.bgmEnabled ? 'on' : 'off'}`}
                     onClick={() => { audio.toggleBgm(); audio.playUIClick() }}
                   >
@@ -5541,6 +5852,7 @@ function App() {
                     <span className="nav-cmd-status">{audio.bgmEnabled ? '开' : '关'}</span>
                   </button>
                   <button
+                    aria-pressed={audio.sfxEnabled}
                     className={`nav-cmd-item ${audio.sfxEnabled ? 'on' : 'off'}`}
                     onClick={() => { audio.toggleSfx(); audio.playUIClick() }}
                   >
@@ -5598,7 +5910,7 @@ function App() {
                   </button>
                 </div>
                 <div className="nav-cmd-divider"/>
-                <button className="nav-cmd-item nav-cmd-logout" onClick={() => { audio.playUIClick(); handleLogout(); setCmdOpen(false) }}>
+                <button className="nav-cmd-item nav-cmd-logout" onClick={() => { audio.playUIClick(); setLogoutConfirmOpen(true); setCmdOpen(false) }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M9 21H5C4 21 3 20 3 19V5C3 4 4 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -5632,24 +5944,25 @@ function App() {
       <nav className="bottom-nav" aria-label="底部导航">
         {/* Currency strip - always visible on mobile */}
         <div className="bottom-nav-currency">
-          <div className="bnv-currency-item" title="圣像石">
+          <div className="bnv-currency-item stone" title="圣像石">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 9L12 16L22 9L12 2Z" fill="#00ccff" opacity="0.9"/><path d="M2 15L12 22L22 15" stroke="#00ccff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/><path d="M2 12L12 19L22 12" stroke="#00ccff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5"/></svg>
             <span>{currency.holy_stone.toLocaleString()}</span>
           </div>
-          <div className="bnv-currency-item" title="召唤券">
+          <div className="bnv-currency-item ticket" title="召唤券">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="#ffd700" strokeWidth="1.8"/><path d="M3 9H21" stroke="#ffd700" strokeWidth="1.5" opacity="0.7"/><circle cx="16" cy="14" r="2" fill="#ffd700" opacity="0.8"/></svg>
             <span>{currency.summon_ticket}</span>
           </div>
-          <div className="bnv-currency-item" title="体力">
+          <div className="bnv-currency-item stamina" title="体力">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#ff6b9d" stroke="#ff6b9d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             <span>{currency.stamina || 0}/{currency.max_stamina || 120}</span>
           </div>
         </div>
         <div className="bottom-nav-items">
         <div
-          className={`bottom-nav-item ${location.pathname === '/home' ? 'active' : ''}`}
+          className={`bottom-nav-item primary ${location.pathname === '/home' ? 'active' : ''}`}
           tabIndex={0}
           role="button"
+          aria-current={location.pathname === '/home' ? 'page' : undefined}
           onClick={() => { audio.playUIClick(); navigate('/home') }}
           onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/home'))}
           aria-label="首页"
@@ -5663,9 +5976,10 @@ function App() {
           <span className="bottom-nav-label">首页</span>
         </div>
         <div
-          className={`bottom-nav-item ${location.pathname === '/inventory' ? 'active' : ''}`}
+          className={`bottom-nav-item secondary ${location.pathname === '/inventory' ? 'active' : ''}`}
           tabIndex={0}
           role="button"
+          aria-current={location.pathname === '/inventory' ? 'page' : undefined}
           onClick={() => { audio.playUIClick(); navigate('/inventory') }}
           onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/inventory'))}
           aria-label="背包"
@@ -5681,9 +5995,10 @@ function App() {
           <span className="bottom-nav-label">背包</span>
         </div>
         <div
-          className={`bottom-nav-item ${location.pathname === '/support' ? 'active' : ''}`}
+          className={`bottom-nav-item secondary ${location.pathname === '/support' ? 'active' : ''}`}
           tabIndex={0}
           role="button"
+          aria-current={location.pathname === '/support' ? 'page' : undefined}
           onClick={() => { audio.playUIClick(); navigate('/support') }}
           onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/support'))}
           aria-label="应援"
@@ -5700,9 +6015,10 @@ function App() {
           <span className="bottom-nav-label">应援</span>
         </div>
         <div
-          className={`bottom-nav-item ${location.pathname === '/rhythm' ? 'active' : ''}`}
+          className={`bottom-nav-item secondary ${location.pathname === '/rhythm' ? 'active' : ''}`}
           tabIndex={0}
           role="button"
+          aria-current={location.pathname === '/rhythm' ? 'page' : undefined}
           onClick={() => { audio.playUIClick(); navigate('/rhythm') }}
           onKeyDown={e => e.key === 'Enter' && (audio.playUIClick(), navigate('/rhythm'))}
           aria-label="演出"
@@ -5729,11 +6045,11 @@ function App() {
               <div className="nav-cmd-popover bottom-nav-cmd-popover">
                 <div className="nav-cmd-section">
                   <div className="nav-cmd-section-label">音频</div>
-                  <button className={`nav-cmd-item ${audio.bgmEnabled ? 'on' : 'off'}`} onClick={() => { audio.toggleBgm(); audio.playUIClick() }}>
+                  <button aria-pressed={audio.bgmEnabled} className={`nav-cmd-item ${audio.bgmEnabled ? 'on' : 'off'}`} onClick={() => { audio.toggleBgm(); audio.playUIClick() }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18V5L21 3V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="2"/><circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="2"/></svg>
                     <span>背景音乐</span><span className="nav-cmd-status">{audio.bgmEnabled ? '开' : '关'}</span>
                   </button>
-                  <button className={`nav-cmd-item ${audio.sfxEnabled ? 'on' : 'off'}`} onClick={() => { audio.toggleSfx(); audio.playUIClick() }}>
+                  <button aria-pressed={audio.sfxEnabled} className={`nav-cmd-item ${audio.sfxEnabled ? 'on' : 'off'}`} onClick={() => { audio.toggleSfx(); audio.playUIClick() }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" opacity="0.8"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>音效</span><span className="nav-cmd-status">{audio.sfxEnabled ? '开' : '关'}</span>
                   </button>
@@ -5777,7 +6093,7 @@ function App() {
                   </button>
                 </div>
                 <div className="nav-cmd-divider"/>
-                <button className="nav-cmd-item nav-cmd-logout" onClick={() => { audio.playUIClick(); handleLogout(); setCmdOpen(false) }}>
+                <button className="nav-cmd-item nav-cmd-logout" onClick={() => { audio.playUIClick(); setLogoutConfirmOpen(true); setCmdOpen(false) }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 21H5C4 21 3 20 3 19V5C3 4 4 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                   <span>退出登录</span>
                 </button>
@@ -5822,9 +6138,33 @@ function App() {
           <Route path="/shop" element={<ShopPage />} />
         </Routes>
       </main>
+
+      {/* Network offline banner */}
+      {isOffline && (
+        <div className="offline-banner" role="alert" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.56 9M1.42 9a15.91 15.91 0 014.7-2.88M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+          <span>网络已断开，请检查您的连接</span>
+        </div>
+      )}
+
       {showGuide && <OnboardingGuide />}
       {location.pathname !== '/login' && location.pathname !== '/register' && <BottomNav />}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+
+      {/* Logout confirmation dialog */}
+      {logoutConfirmOpen && (
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setLogoutConfirmOpen(false)} role="dialog" aria-modal="true" aria-labelledby="logout-confirm-title">
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ textAlign: 'center', maxWidth: 360 }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>🚪</div>
+            <h3 id="logout-confirm-title" style={{ fontFamily: 'Orbitron,sans-serif', fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 8 }}>确认退出登录</h3>
+            <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)', marginBottom: 28 }}>确定要退出当前账号吗？</p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+              <button onClick={() => setLogoutConfirmOpen(false)} style={{ padding: '10px 28px', borderRadius: 12, border: '1px solid var(--border-default)', background: 'var(--surface-glass)', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: 'var(--text-base)' }}>取消</button>
+              <button onClick={confirmLogout} style={{ padding: '10px 28px', borderRadius: 12, border: 'none', background: 'linear-gradient(135deg, #ff6b9d, #c44569)', color: '#fff', cursor: 'pointer', fontSize: 'var(--text-base)', fontWeight: 600, boxShadow: '0 0 20px rgba(255,107,157,0.3)' }}>确认退出</button>
+            </div>
+          </div>
+        </div>
+      )}
       </>
       )}
     </div>

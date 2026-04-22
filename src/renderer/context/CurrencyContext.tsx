@@ -41,7 +41,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
           max_stamina: data.max_stamina || 120
         })
       }
-    }).catch(() => {})
+    }).catch((err) => { console.error('fetchCurrency failed:', err) })
   }, [token])
 
   return (
