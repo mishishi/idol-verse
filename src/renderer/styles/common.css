@@ -1009,3 +1009,139 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ============ Onboarding Guide ============ */
+.guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.guide-highlight-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+.guide-tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(20, 10, 40, 0.98), rgba(10, 5, 25, 0.98));
+  border: 1px solid rgba(0, 204, 255, 0.4);
+  border-radius: 16px;
+  padding: 20px 24px;
+  width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 204, 255, 0.2), 0 0 0 1px rgba(0, 204, 255, 0.1);
+  pointer-events: all;
+  animation: guideAppear 0.3s ease;
+}
+
+@keyframes guideAppear {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.guide-tooltip-bottom {
+  bottom: 80px;
+}
+
+.guide-tooltip-top {
+  top: 80px;
+}
+
+.guide-step-indicator {
+  font-size: 11px;
+  color: rgba(0, 204, 255, 0.7);
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.guide-tooltip-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.guide-tooltip-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.guide-tooltip-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.guide-skip-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: all;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.guide-skip-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.guide-next-btn {
+  background: linear-gradient(135deg, #00ccff, #0088ff);
+  border: none;
+  color: #000;
+  padding: 7px 20px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: all;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.guide-next-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 204, 255, 0.4);
+}
+
+.guide-next-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.guide-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.guide-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.guide-dot.active {
+  background: #00ccff;
+  box-shadow: 0 0 8px rgba(0, 204, 255, 0.8);
+  transform: scale(1.2);
+}

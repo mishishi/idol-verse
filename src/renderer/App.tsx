@@ -47,6 +47,7 @@ function App() {
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
   const [toasts, setToasts] = useState<ToastItem[]>([])
   const [authLoaded, setAuthLoaded] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
 
   const addToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = generateToastId()
@@ -129,6 +130,10 @@ function App() {
       setUser(data.user)
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
+      // Show onboarding guide for new users (not in localStorage yet)
+      if (!localStorage.getItem('hasSeenGuide')) {
+        setShowGuide(true)
+      }
       navigate('/home')
     } catch (err: any) { addToast(err.message, 'error') }
     finally { setLoginLoading(false) }
@@ -4871,6 +4876,26 @@ function App() {
             </div>
           </section>
 
+          {/* Guide Reset */}
+          <section className="settings-section">
+            <h2 className="settings-section-title">新手引导</h2>
+            <div className="settings-card">
+              <button
+                className="settings-logout-btn"
+                style={{ justifyContent: 'center', gap: 8 }}
+                onClick={() => {
+                  localStorage.removeItem('hasSeenGuide')
+                  setShowGuide(true)
+                  navigate('/home')
+                  addToast('已重新显示新手引导', 'info')
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                重新显示新手引导
+              </button>
+            </div>
+          </section>
+
           {/* About Section */}
           <section className="settings-section">
             <h2 className="settings-section-title">关于</h2>
@@ -5288,6 +5313,84 @@ function App() {
     )
   }
 
+  // ============ Onboarding Guide ============
+  const OnboardingGuide = () => {
+    const [step, setStep] = useState(0)
+    const totalSteps = 4
+
+    const steps = [
+      {
+        target: '.home-currency-strip',
+        title: '资源一览',
+        desc: '圣像石用于召唤和购买体力，召唤券可免费召唤，体力用于演奏玩法',
+        position: 'bottom'
+      },
+      {
+        target: '.hero-banner-btn',
+        title: '召唤偶像',
+        desc: '点击这里召唤心仪的偶像角色，不同稀有度概率不同',
+        position: 'bottom'
+      },
+      {
+        target: '.home-star-map',
+        title: '我的星图',
+        desc: '这里展示你获得的所有偶像，点击星点可查看详情并互动',
+        position: 'top'
+      },
+      {
+        target: '.home-actions-section',
+        title: '快速入口',
+        desc: '应援殿放置偶像获取资源，图鉴查看所有角色，排行了解全服竞争',
+        position: 'top'
+      }
+    ]
+
+    const handleNext = () => {
+      if (step < totalSteps - 1) {
+        setStep(step + 1)
+      } else {
+        localStorage.setItem('hasSeenGuide', 'true')
+        setShowGuide(false)
+      }
+    }
+
+    const handleSkip = () => {
+      localStorage.setItem('hasSeenGuide', 'true')
+      setShowGuide(false)
+    }
+
+    const currentStep = steps[step]
+
+    return (
+      <div className="guide-overlay">
+        {/* Highlight overlay */}
+        <div className="guide-highlight-mask" />
+
+        {/* Tooltip card */}
+        <div className={`guide-tooltip guide-tooltip-${currentStep.position}`}>
+          <div className="guide-step-indicator">
+            {step + 1} / {totalSteps}
+          </div>
+          <div className="guide-tooltip-title">{currentStep.title}</div>
+          <div className="guide-tooltip-desc">{currentStep.desc}</div>
+          <div className="guide-tooltip-actions">
+            <button className="guide-skip-btn" onClick={handleSkip}>跳过</button>
+            <button className="guide-next-btn" onClick={handleNext}>
+              {step < totalSteps - 1 ? '下一步' : '完成'}
+            </button>
+          </div>
+        </div>
+
+        {/* Dot indicators */}
+        <div className="guide-dots">
+          {steps.map((_, i) => (
+            <span key={i} className={`guide-dot ${i === step ? 'active' : ''}`} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   const NavBar = () => {
     const [cmdOpen, setCmdOpen] = useState(false)
     const cmdRef = useRef<HTMLDivElement>(null)
@@ -5687,6 +5790,7 @@ function App() {
           <Route path="/shop" element={<ShopPage />} />
         </Routes>
       </main>
+      {showGuide && <OnboardingGuide />}
       {location.pathname !== '/login' && location.pathname !== '/register' && <BottomNav />}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       </>
