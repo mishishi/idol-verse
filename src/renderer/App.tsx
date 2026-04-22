@@ -427,7 +427,7 @@ function App() {
       <div className="home-page">
         {/* Star dust ambient effect */}
         <div className="star-dust">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {Array.from({ length: 15 }).map((_, i) => (
             <div
               key={i}
               className="star-dust-particle"

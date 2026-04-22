@@ -2658,7 +2658,7 @@
 
 .gacha-drawer-btn-cost {
   font-size: 0.68rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-secondary);
   letter-spacing: 0.5px;
   font-family: 'Noto Sans SC', sans-serif;
 }

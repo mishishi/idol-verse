@@ -456,7 +456,7 @@
   background: transparent;
   border: none;
   border-radius: 10px;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-secondary);
   font-family: 'Noto Sans SC', sans-serif;
   font-size: var(--text-base);
   font-weight: 600;
@@ -619,7 +619,7 @@
   gap: 14px;
   padding: 16px 18px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border-subtle);
   border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -745,7 +745,7 @@
 
 .daily-item-desc {
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.5);
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
@@ -968,7 +968,7 @@
 
 .pass-expiry {
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.5);
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -982,7 +982,7 @@
 
 .pass-days-left span {
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.5);
+  color: var(--text-secondary);
   margin-left: 2px;
 }
 
@@ -992,7 +992,7 @@
   justify-content: space-between;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .pass-daily-info {
@@ -1145,7 +1145,7 @@
   color: rgba(255,255,255,0.9);
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .pass-missions-header span:first-child {
@@ -1170,7 +1170,7 @@
   margin-bottom: 16px;
   padding: 14px 16px;
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border-subtle);
   border-radius: 14px;
 }
 
