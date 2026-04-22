@@ -55,8 +55,6 @@ router.get('/songs', authMiddleware, (req, res) => {
     })
 
     res.json({ songs: songsWithDuration })
-
-    res.json({ songs })
   } catch (err) {
     console.error('Get songs error:', err)
     res.status(500).json({ error: '获取歌曲列表失败' })

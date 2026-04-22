@@ -5,7 +5,7 @@ function authHeaders(token: string) {
 }
 
 export async function doGacha(token: string, useTicket: boolean = false) {
-  const res = await fetch(`${API_BASE}/gacha/draw`, {
+  const res = await fetch(`${API_BASE}/gacha/single`, {
     method: 'POST',
     headers: authHeaders(token),
     body: JSON.stringify({ use_ticket: useTicket })
@@ -14,7 +14,7 @@ export async function doGacha(token: string, useTicket: boolean = false) {
 }
 
 export async function doMultiGacha(token: string, useTicket: boolean = false) {
-  const res = await fetch(`${API_BASE}/gacha/draw-multi`, {
+  const res = await fetch(`${API_BASE}/gacha/multi`, {
     method: 'POST',
     headers: authHeaders(token),
     body: JSON.stringify({ use_ticket: useTicket })
@@ -23,6 +23,6 @@ export async function doMultiGacha(token: string, useTicket: boolean = false) {
 }
 
 export async function fetchPityStatus(token: string) {
-  const res = await fetch(`${API_BASE}/gacha/pity-status`, { headers: authHeaders(token) })
+  const res = await fetch(`${API_BASE}/gacha/status`, { headers: authHeaders(token) })
   return res.json()
 }
