@@ -4774,7 +4774,7 @@ function App() {
         try {
           const [currencyRes, userRes] = await Promise.all([
             fetch(`${API_BASE}/user/currency`, { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch(`${API_BASE}/user/me`, { headers: { 'Authorization': `Bearer ${token}` } })
+            fetch(`${API_BASE}/user/profile`, { headers: { 'Authorization': `Bearer ${token}` } })
           ])
           const currencyData = await currencyRes.json()
           const userData = await userRes.json()
