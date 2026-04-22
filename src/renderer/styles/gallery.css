@@ -2265,6 +2265,10 @@
   background: rgba(139, 92, 246, 0.15);
 }
 
+.constellation-node:active {
+  transform: scale(0.96);
+}
+
 .constellation-node.active .cn-icon {
   transform: scale(1.15);
 }

@@ -1839,6 +1839,11 @@
   animation: btnConfirmPulse 1s ease-in-out infinite;
 }
 
+.result-confirm-btn:active {
+  transform: scale(0.96);
+  animation: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
 @keyframes btnConfirmPulse {
   0%, 100% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.6), 0 6px 25px rgba(0, 0, 0, 0.3); }

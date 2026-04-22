@@ -464,6 +464,9 @@ transition:all 0.25s ease;
 .home-daily-row:hover{
 border-color:rgba(255,107,157,0.25);
 }
+.home-daily-row:active{
+transform:translateY(1px) scale(0.98);
+}
 .daily-row-icon{
 width:36px;height:36px;
 display:flex;align-items:center;justify-content:center;
@@ -588,6 +591,9 @@ transform:scale(1.08);
 border-color:rgba(255,107,157,0.4);
 box-shadow:0 0 25px rgba(255,107,157,0.2);
 }
+.stat-satellite:active{
+transform:scale(0.97);
+}
 .sat-1{top:0;left:50%;transform:translateX(-50%)}
 .sat-2{bottom:20px;right:-10px}
 .sat-3{bottom:20px;left:-10px}
@@ -679,6 +685,7 @@ cursor:pointer;padding:6px 20px;border-radius:14px;transition:all 0.3s ease;
 }
 .quickbar-item:hover{background:rgba(255,107,157,0.1)}
 .quickbar-item.active{background:rgba(255,107,157,0.15)}
+.quickbar-item:active{transform:scale(0.95)}
 .quickbar-icon{font-size:1.4rem}
 .quickbar-label{font-size:0.6rem;color:var(--text-muted);letter-spacing:1px}
 .quickbar-item.active .quickbar-label{color:var(--brand-primary)}

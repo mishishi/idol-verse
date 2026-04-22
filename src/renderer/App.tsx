@@ -2637,6 +2637,15 @@ function App() {
           </div>
         </div>
 
+        {/* Empty state — all slots vacant */}
+        {hallData?.slots?.every((s: any) => !s.character_id) && !loading && (
+          <div className="empty-state">
+            <div className="empty-icon">🏛️</div>
+            <div className="empty-title">应援殿空无一物</div>
+            <div className="empty-desc">点击空槽位，放置你的第一位偶像</div>
+          </div>
+        )}
+
         <div className="hall-slots-grid">
           {hallData?.slots?.map((slot: any, idx: number) => (
             <div

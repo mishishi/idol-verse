@@ -50,13 +50,9 @@
   --surface-glass-active: rgba(255, 255, 255, 0.08);
 
   /* Semantic Text Colors */
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --text-muted: rgba(255, 255, 255, 0.4);
   --text-disabled: rgba(255, 255, 255, 0.25);
 
   /* Semantic Border Colors */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-default: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.2);
 
   /* Currency */
