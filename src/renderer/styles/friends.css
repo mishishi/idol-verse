@@ -574,7 +574,7 @@
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;

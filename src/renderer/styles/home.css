@@ -19,10 +19,10 @@ background:
 animation:nebulaDrift 20s ease-in-out infinite;
 }
 @media(prefers-reduced-motion:no-preference){
-@keyframes nebulaDrift{
-0%,100%{transform:scale(1) rotate(0deg);opacity:1}
-50%{transform:scale(1.08) rotate(3deg);opacity:0.85}
-}}
+@keyframes nebulaDrift {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50%       { transform: scale(1.08) rotate(3deg); opacity: 0.85; }
+}
 
 /* ============ Star Particles ============ */
 .star-particles{
@@ -33,10 +33,10 @@ position:absolute;border-radius:50%;background:#fff;
 }
 @media(prefers-reduced-motion:no-preference){
 .star-particle{animation:starTwinkle var(--twinkle-dur,3s) ease-in-out infinite var(--twinkle-delay,0s)}
-@keyframes starTwinkle{
-0%,100%{opacity:0.2;transform:scale(1)}
-50%{opacity:1;transform:scale(1.4)}
-}}
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.4); }
+}
 
 /* ═══════════════════════════════════════
    STAR DUST (Homepage ambient particles)
@@ -58,6 +58,81 @@ position:absolute;border-radius:50%;background:#fff;
 @keyframes star-twinkle {
   0%, 100% { opacity: 0.2; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.3); }
+}
+
+/* ============ Announcement Banner ============ */
+.home-announcement {
+  position: relative;
+  z-index: 10;
+  margin: 12px 20px 0;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.08), rgba(255, 107, 157, 0.08)), rgba(5, 3, 18, 0.8);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+.announcement-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 215, 0, 0.15);
+  border-radius: 8px;
+  color: #ffd700;
+}
+.announcement-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.announcement-scroll {
+  display: flex;
+  gap: 40px;
+  animation: scrollAnnounce 20s linear infinite;
+  white-space: nowrap;
+}
+.announcement-scroll:hover {
+  animation-play-state: paused;
+}
+.announcement-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-caption);
+  color: var(--text-primary);
+}
+.announcement-item .announce-badge {
+  padding: 2px 6px;
+  background: rgba(255, 59, 48, 0.8);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+}
+.announcement-item .announce-badge.new {
+  background: rgba(255, 215, 0, 0.9);
+  color: #000;
+}
+.announcement-item .announce-text {
+  color: var(--text-secondary);
+}
+.announcement-item .announce-link {
+  color: var(--accent-primary, #00ccff);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.announcement-item .announce-link:hover {
+  opacity: 0.8;
+}
+@keyframes scrollAnnounce {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ============ Hero Banner ============ */
@@ -559,10 +634,10 @@ box-shadow:0 0 40px rgba(255,107,157,0.2),inset 0 0 30px rgba(255,107,157,0.05);
 animation:corePulse 3s ease-in-out infinite;
 }
 @media(prefers-reduced-motion:no-preference){
-@keyframes corePulse{
-0%,100%{box-shadow:0 0 40px rgba(255,107,157,0.2),inset 0 0 30px rgba(255,107,157,0.05)}
-50%{box-shadow:0 0 60px rgba(255,107,157,0.35),inset 0 0 40px rgba(255,107,157,0.1)}
-}}
+@keyframes corePulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(255,107,157,0.2), inset 0 0 30px rgba(255,107,157,0.05); }
+  50%       { box-shadow: 0 0 60px rgba(255,107,157,0.35), inset 0 0 40px rgba(255,107,157,0.1); }
+}
 .stat-main-value{
 font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;
 background:linear-gradient(135deg,var(--brand-primary),var(--accent-cyan-solid));

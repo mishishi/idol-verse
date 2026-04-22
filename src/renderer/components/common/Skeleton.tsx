@@ -1,9 +1,11 @@
 import React from 'react'
 
 interface SkeletonProps {
-  variant?: 'card-grid' | 'list' | 'text' | 'avatar' | 'stat' | 'ranking-list'
+  variant?: 'card-grid' | 'list' | 'text' | 'avatar' | 'stat' | 'ranking-list' | 'circular'
   count?: number
   className?: string
+  width?: number | string
+  height?: number | string
 }
 
 /** Shimmer keyframes injected once */
@@ -69,9 +71,19 @@ const ShimmerCSS = () => (
 export const Skeleton: React.FC<SkeletonProps> = ({
   variant = 'text',
   count = 1,
-  className = ''
+  className = '',
+  width,
+  height
 }) => {
   const items = Array.from({ length: count }, (_, i) => i)
+  const style = {
+    ...(width !== undefined && {
+      width: typeof width === 'number' ? `${width}px` : width
+    }),
+    ...(height !== undefined && {
+      height: typeof height === 'number' ? `${height}px` : height
+    })
+  }
 
   if (variant === 'card-grid') {
     return (
@@ -150,6 +162,18 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     )
   }
 
+  if (variant === 'circular') {
+    return (
+      <>
+        <ShimmerCSS />
+        <div
+          className={`skeleton-base skeleton-circular ${className}`}
+          style={{ borderRadius: '50%', ...style }}
+        />
+      </>
+    )
+  }
+
   if (variant === 'stat') {
     return (
       <>
@@ -169,7 +193,11 @@ export const Skeleton: React.FC<SkeletonProps> = ({
       <ShimmerCSS />
       <div className={`skeleton-text ${className}`}>
         {items.map(i => (
-          <div key={i} className="skeleton-line skeleton-base" style={{ height: 14, marginBottom: 8 }} />
+          <div
+            key={i}
+            className="skeleton-line skeleton-base"
+            style={{ height: 14, marginBottom: 8, ...style }}
+          />
         ))}
       </div>
     </>

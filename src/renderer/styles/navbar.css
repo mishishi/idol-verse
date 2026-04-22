@@ -1035,7 +1035,7 @@
 }
 
 .bottom-nav-item:hover .bottom-nav-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 /* Back button in bottom nav */
@@ -1046,7 +1046,7 @@
 }
 
 .bottom-nav-back .bottom-nav-icon {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 

@@ -34,7 +34,7 @@ interface User {
   username: string
 }
 
-type Page = 'login' | 'register' | 'home' | 'gacha' | 'gallery' | 'inventory' | 'support' | 'detail' | 'friends' | 'daily' | 'ranking' | 'pass' | 'rhythm' | 'calendar' | 'stamina' | 'avatar-test'
+type Page = 'login' | 'register' | 'home' | 'gacha' | 'gallery' | 'inventory' | 'support' | 'detail' | 'friends' | 'daily' | 'ranking' | 'pass' | 'rhythm' | 'calendar' | 'stamina' | 'settings' | 'shop'
 
 function App() {
   const location = useLocation()
@@ -439,6 +439,43 @@ function App() {
               }}
             />
           ))}
+        </div>
+        {/* Announcement Banner */}
+        <div className="home-announcement">
+          <div className="announcement-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+          <div className="announcement-track">
+            <div className="announcement-scroll">
+              <div className="announcement-item">
+                <span className="announce-badge new">新</span>
+                <span>春日限定召唤开启！UR偶像概率UP中</span>
+                <span className="announce-link" onClick={() => navigate('/gacha')}>立即参与</span>
+              </div>
+              <div className="announcement-item">
+                <span className="announce-badge">活动</span>
+                <span>每日签到可得双倍奖励</span>
+              </div>
+              <div className="announcement-item">
+                <span className="announce-badge">公告</span>
+                <span>新版本1.0.1将于下周更新</span>
+              </div>
+              {/* Duplicate for seamless loop */}
+              <div className="announcement-item">
+                <span className="announce-badge new">新</span>
+                <span>春日限定召唤开启！UR偶像概率UP中</span>
+                <span className="announce-link" onClick={() => navigate('/gacha')}>立即参与</span>
+              </div>
+              <div className="announcement-item">
+                <span className="announce-badge">活动</span>
+                <span>每日签到可得双倍奖励</span>
+              </div>
+              <div className="announcement-item">
+                <span className="announce-badge">公告</span>
+                <span>新版本1.0.1将于下周更新</span>
+              </div>
+            </div>
+          </div>
         </div>
         {/* Hero Banner */}
         <div className="home-hero-banner">
@@ -2077,6 +2114,8 @@ function App() {
     const [showAvatarPopup, setShowAvatarPopup] = useState(false)
     const [avatarAnimClass, setAvatarAnimClass] = useState('')
     const [justUnlockedMilestone, setJustUnlockedMilestone] = useState<number | null>(null)
+    const [showStoryModal, setShowStoryModal] = useState(false)
+    const [currentStory, setCurrentStory] = useState<any>(null)
     const prevIntimacyRef = useRef<number>(1)
 
     // TTS helper — use Edge TTS API for natural-sounding Chinese voice
@@ -2323,9 +2362,27 @@ function App() {
             const isJustUnlocked = justUnlockedMilestone === vl.milestone
             if (vl.category === 'story') {
               return (
-                <div key={vl.milestone} className="unlock-chapter">
-                  <div className="unlock-chapter-title"><Icon name="book" size={14} /> {vl.title}</div>
-                  <div className="unlock-chapter-content">{vl.content}</div>
+                <div
+                  key={vl.milestone}
+                  className={`unlock-item ${isUnlocked ? 'unlocked' : 'locked'} ${isJustUnlocked ? 'just-unlocked' : ''}`}
+                  onClick={() => {
+                    if (!isUnlocked) return
+                    setCurrentStory(vl)
+                    setShowStoryModal(true)
+                  }}
+                >
+                  <span className="unlock-icon">
+                    {isUnlocked ? <Icon name="book" size={14} /> : <Icon name="lock" size={14} />}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div className="unlock-label">角色故事</div>
+                    {isUnlocked && <span className="unlock-voice-lines">{vl.title}</span>}
+                  </div>
+                  {!isUnlocked && (
+                    <span className="unlock-progress-hint">
+                      Lv.{vl.milestone}解锁 (还差{vl.milestone - (charData?.intimacy_level || 1)}级)
+                    </span>
+                  )}
                 </div>
               )
             }
@@ -2400,6 +2457,27 @@ function App() {
               />
               <div className="avatar-popup-name">{charData?.name}</div>
               <div className="avatar-popup-rarity">{charData?.rarity}</div>
+            </div>
+          </div>
+        )}
+
+        {showStoryModal && currentStory && (
+          <div className="story-modal-overlay" onClick={() => setShowStoryModal(false)}>
+            <div className="story-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="story-modal-close" onClick={() => setShowStoryModal(false)}>×</button>
+              <div className="story-modal-header">
+                <div className="story-modal-chapter">Chapter {currentStory.milestone}</div>
+                <div className="story-modal-title">{currentStory.title}</div>
+              </div>
+              <div className="story-modal-divider" />
+              <div className="story-modal-body">
+                {currentStory.content.split('\n').map((paragraph: string, idx: number) => (
+                  paragraph.trim() ? <p key={idx}>{paragraph}</p> : null
+                ))}
+              </div>
+              <div className="story-modal-footer">
+                <span className="story-modal-hint">与 {charData?.name} 的亲密度达到 {currentStory.milestone} 级时解锁</span>
+              </div>
             </div>
           </div>
         )}
@@ -3539,6 +3617,7 @@ function App() {
         case 'collect': return <Icon name="book" size={18} />
         case 'login': return <Icon name="calendar" size={18} />
         case 'friend': return <Icon name="users" size={18} />
+        case 'rhythm': return <Icon name="music" size={18} />
         default: return <Icon name="star" size={18} />
       }
     }
@@ -3550,12 +3629,13 @@ function App() {
       ? achievements
       : achievements.filter(a => a.icon === achFilter)
 
-    const filterTabs: { key: 'all' | 'gacha' | 'collect' | 'login' | 'friend', label: string }[] = [
+    const filterTabs: { key: 'all' | 'gacha' | 'collect' | 'login' | 'friend' | 'rhythm', label: string }[] = [
       { key: 'all', label: '全部' },
       { key: 'gacha', label: '抽卡' },
       { key: 'collect', label: '收集' },
       { key: 'login', label: '登录' },
       { key: 'friend', label: '社交' },
+      { key: 'rhythm', label: '演奏' },
     ]
 
     if (loading) return <div className="idol-page"><Skeleton variant="list" count={8} /></div>
@@ -3690,11 +3770,13 @@ function App() {
                      achFilter === 'gacha' ? '继续应援偶像，解锁抽卡成就' :
                      achFilter === 'collect' ? '收集更多偶像，解锁收集成就' :
                      achFilter === 'login' ? '坚持每日登录，累积登录成就' :
-                     '添加好友互动，解锁社交成就'}
+                     achFilter === 'friend' ? '添加好友互动，解锁社交成就' :
+                     '开始演奏，解锁演奏成就'}
                   </div>
                   <div className="ach-empty-hint">
                     {achFilter === 'all' ? '完成每日任务可解锁成就' :
                      achFilter === 'friend' ? '赠送/索要体力可加速进度' :
+                     achFilter === 'rhythm' ? '演奏歌曲可累计进度' :
                      '继续加油，星光不负赶路人'}
                   </div>
                 </div>
@@ -4641,186 +4723,357 @@ function App() {
             <span className="cal-legend-item"><span className="cal-dot today" />今日</span>
           </div>
         </div>
+
+        {/* Reward Preview */}
+        <div className="cal-reward-preview">
+          <div className="section-header">
+            <h2 className="section-title">本月奖励</h2>
+          </div>
+          <div className="cal-reward-grid">
+            {[
+              { day: 1, reward: '50 神圣石', type: 'holy_stone' },
+              { day: 3, reward: '召唤券 x1', type: 'ticket' },
+              { day: 7, reward: '100 神圣石', type: 'holy_stone' },
+              { day: 14, reward: '限定头像框', type: 'special' },
+              { day: 21, reward: '200 神圣石', type: 'holy_stone' },
+              { day: 28, reward: 'SSR角色碎片 x5', type: 'character' },
+            ].map(item => {
+              const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(item.day).padStart(2, '0')}`
+              const isClaimed = records.includes(dateStr)
+              const isToday = isCurrentMonth && item.day === today.getDate()
+              return (
+                <div key={item.day} className={`cal-reward-item ${isClaimed ? 'claimed' : ''} ${isToday ? 'today' : ''}`}>
+                  <div className="cal-reward-day">第{item.day}天</div>
+                  <div className="cal-reward-icon">
+                    {item.type === 'holy_stone' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2" fill="rgba(0,204,255,0.1)"/></svg>}
+                    {item.type === 'ticket' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#ff69b4" strokeWidth="2" fill="rgba(255,105,180,0.1)"/><path d="M12 8V16M8 12H16" stroke="#ff69b4" strokeWidth="2" strokeLinecap="round"/></svg>}
+                    {item.type === 'special' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#ffd700" strokeWidth="2" fill="rgba(255,215,0,0.1)"/></svg>}
+                    {item.type === 'character' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="5" stroke="#a855f7" strokeWidth="2" fill="rgba(168,85,247,0.1)"/><path d="M4 20C4 16 8 14 12 14C16 14 20 16 20 20" stroke="#a855f7" strokeWidth="2" strokeLinecap="round"/></svg>}
+                  </div>
+                  <div className="cal-reward-name">{item.reward}</div>
+                  {isClaimed && <div className="cal-reward-badge">已领取</div>}
+                  {isToday && !isClaimed && <div className="cal-reward-badge today">可领取</div>}
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     )
   }
 
-  // ============ AvatarTestPage ============
-  const AvatarTestPage = () => {
-    const [avatarAnims, setAvatarAnims] = useState<Record<string, string>>({})
-    const [chars, setChars] = useState<any[]>([])
-    const [floatingChar, setFloatingChar] = useState<any>(null)
-    const [floatingAnim, setFloatingAnim] = useState('')
+
+  // ============ SettingsPage ============
+  const SettingsPage = () => {
+    const [userStats, setUserStats] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-      fetch(`${API_BASE}/characters`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) setChars(data)
-        })
-        .catch((e) => { console.error('Failed to fetch chars:', e) })
-    }, [token])
-
-    const triggerAnim = (charId: string, trigger: string, char?: any) => {
-      setAvatarAnims(prev => ({ ...prev, [charId]: `anim-${trigger}` }))
-      setTimeout(() => {
-        setAvatarAnims(prev => ({ ...prev, [charId]: '' }))
-      }, 1000)
-      // Also show floating mini avatar
-      if (char) {
-        setFloatingChar(char)
-        setFloatingAnim(`anim-${trigger}`)
-        setTimeout(() => {
-          setFloatingChar(null)
-          setFloatingAnim('')
-        }, 1000)
+      const fetchStats = async () => {
+        setLoading(true)
+        try {
+          const [currencyRes, userRes] = await Promise.all([
+            fetch(`${API_BASE}/user/currency`, { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch(`${API_BASE}/user/me`, { headers: { 'Authorization': `Bearer ${token}` } })
+          ])
+          const currencyData = await currencyRes.json()
+          const userData = await userRes.json()
+          setUserStats({
+            ...currencyData,
+            username: userData?.username,
+            login_streak: userData?.login_streak,
+            created_at: userData?.created_at
+          })
+        } catch (e) {
+          console.error('Failed to fetch user stats:', e)
+        } finally {
+          setLoading(false)
+        }
       }
-    }
+      fetchStats()
+    }, [])
 
-    const getImagePath = (char: any) => {
-      if (!char?.image_path) return null
-      return `http://localhost:3001${char.image_path}`
+    const handleLogout = () => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      setToken(null)
+      setUser(null)
+      navigate('/login')
     }
 
     return (
-      <div className="avatar-test-page">
+      <div className="settings-page">
         <div className="page-header">
-          <h2>🎭 角色动画测试</h2>
-          <button className="btn-back" onClick={() => navigate('/home')}>返回</button>
+          <button className="back-btn" onClick={() => navigate(-1)} aria-label="返回">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <h1 className="page-title">设置</h1>
         </div>
 
-        <div className="avatar-test-grid avatar-test-grid-wide">
-          {chars.map(char => (
-            <div key={char.id} className="avatar-test-card">
-              <div className="avatar-test-name">{char.name}</div>
-              <div className={`char-detail-avatar-frame idle ${avatarAnims[char.id] || ''}`}>
-                {getImagePath(char) ? (
-                  <img
-                    src={getImagePath(char)}
-                    alt={char.name}
-                    className="char-detail-avatar char-detail-avatar-original"
-                  />
-                ) : (
-                  <div className="char-detail-avatar-fallback">{char.name?.[0] || '?'}</div>
-                )}
+        <div className="settings-content">
+          {/* Account Section */}
+          <section className="settings-section">
+            <h2 className="settings-section-title">账号信息</h2>
+            <div className="settings-card">
+              {loading ? (
+                <div className="settings-loading">
+                  <Skeleton variant="text" count={3} />
+                </div>
+              ) : (
+                <>
+                  <div className="settings-row">
+                    <span className="settings-label">用户名</span>
+                    <span className="settings-value">{userStats?.username || '--'}</span>
+                  </div>
+                  <div className="settings-row">
+                    <span className="settings-label">登录天数</span>
+                    <span className="settings-value highlight">{userStats?.login_streak || 0} 天</span>
+                  </div>
+                  <div className="settings-row">
+                    <span className="settings-label">注册时间</span>
+                    <span className="settings-value">{userStats?.created_at ? new Date(userStats.created_at).toLocaleDateString('zh-CN') : '--'}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
+
+          {/* Audio Section */}
+          <section className="settings-section">
+            <h2 className="settings-section-title">音频设置</h2>
+            <div className="settings-card">
+              <div className="settings-row">
+                <div className="settings-row-left">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18V5L21 3V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="2"/><circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="2"/></svg>
+                  <span className="settings-label">背景音乐</span>
+                </div>
+                <button
+                  className={`toggle-switch ${audio.bgmEnabled ? 'on' : 'off'}`}
+                  onClick={() => { audio.toggleBgm(); audio.playUIClick() }}
+                  aria-pressed={audio.bgmEnabled}
+                >
+                  <span className="toggle-knob" />
+                </button>
               </div>
-              <div className="avatar-test-btns">
-                <button onClick={() => triggerAnim(char.id, 'shake', char)} className="anim-btn shake">摇晃</button>
-                <button onClick={() => triggerAnim(char.id, 'blush', char)} className="anim-btn blush">脸红</button>
-                <button onClick={() => triggerAnim(char.id, 'wave', char)} className="anim-btn wave">挥手</button>
+              <div className="settings-row">
+                <div className="settings-row-left">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" opacity="0.8"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  <span className="settings-label">音效</span>
+                </div>
+                <button
+                  className={`toggle-switch ${audio.sfxEnabled ? 'on' : 'off'}`}
+                  onClick={() => { audio.toggleSfx(); audio.playUIClick() }}
+                  aria-pressed={audio.sfxEnabled}
+                >
+                  <span className="toggle-knob" />
+                </button>
               </div>
             </div>
-          ))}
+          </section>
+
+          {/* About Section */}
+          <section className="settings-section">
+            <h2 className="settings-section-title">关于</h2>
+            <div className="settings-card">
+              <div className="settings-row">
+                <span className="settings-label">游戏版本</span>
+                <span className="settings-value">1.0.0</span>
+              </div>
+              <div className="settings-row">
+                <span className="settings-label">客户端</span>
+                <span className="settings-value">Web</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Logout */}
+          <section className="settings-section">
+            <button className="settings-logout-btn" onClick={handleLogout}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 21H5C4 21 3 20 3 19V5C3 4 4 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              退出登录
+            </button>
+          </section>
+        </div>
+      </div>
+    )
+  }
+
+  // ============ ShopPage ============
+  const ShopPage = () => {
+    const [currency, setCurrency] = useState<any>(null)
+    const [buying, setBuying] = useState<string | null>(null)
+    const [confirmPack, setConfirmPack] = useState<any>(null)
+    const [purchaseSuccess, setPurchaseSuccess] = useState<string | null>(null)
+    const [activeTab, setActiveTab] = useState<'holy_stone' | 'summon' | 'special'>('holy_stone')
+
+    const fetchCurrency = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/user/currency`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        setCurrency(data)
+      } catch {}
+    }
+
+    useEffect(() => { fetchCurrency() }, [])
+
+    const holyStonePacks = [
+      { id: 'hs_1', amount: 60, cost: 6, label: '60 神圣石', desc: '限时优惠', originalCost: 8, accent: 'accent-gold', popular: false },
+      { id: 'hs_2', amount: 350, cost: 30, label: '350 神圣石', desc: '赠送50 神圣石', originalCost: null, accent: 'accent-cyan', popular: true },
+      { id: 'hs_3', amount: 1200, cost: 98, label: '1200 神圣石', desc: '赠送200 神圣石 (限时9折)', originalCost: 108, accent: 'accent-pink', popular: false },
+      { id: 'hs_4', amount: 2500, cost: 198, label: '2500 神圣石', desc: '赠送500 神圣石 (限时8折)', originalCost: 248, accent: 'accent-gold', popular: false },
+      { id: 'hs_5', amount: 6500, cost: 488, label: '6500 神圣石', desc: '赠送1500 神圣石 (限时7.5折)', originalCost: 648, accent: 'accent-purple', popular: false },
+      { id: 'hs_6', amount: 20000, cost: 1398, label: '20000 神圣石', desc: '赠送6000 神圣石 (限时7折)', originalCost: 1998, accent: 'accent-rainbow', popular: false },
+    ]
+
+    const summonPacks = [
+      { id: 'sum_1', amount: 1, cost: 30, label: '单抽召唤券 x1', desc: '限定召唤一次', accent: 'accent-gold', popular: false },
+      { id: 'sum_2', amount: 10, cost: 280, label: '十连召唤券 x10', desc: '限时赠送1张', originalCost: 300, accent: 'accent-cyan', popular: true },
+      { id: 'sum_3', amount: 30, cost: 800, label: '月卡召唤券 x30', desc: '每日赠送10张', accent: 'accent-pink', popular: false },
+    ]
+
+    const specialPacks = [
+      { id: 'sp_1', amount: 1, cost: 68, label: '新手礼包', desc: '包含SSR角色+1000神圣石', originalCost: 128, accent: 'accent-gold', popular: true, badge: 'HOT' },
+      { id: 'sp_2', amount: 1, cost: 128, label: '限定角色礼包', desc: '必得当期限定角色', accent: 'accent-pink', popular: false, badge: '限定' },
+      { id: 'sp_3', amount: 1, cost: 298, label: '豪华礼包', desc: '包含UR角色+2000神圣石', originalCost: 498, accent: 'accent-rainbow', popular: false, badge: '豪华' },
+    ]
+
+    const handleBuyClick = (pack: any) => {
+      const holyStone = currency?.holy_stone || 0
+      if (holyStone < pack.cost) {
+        addToast('神圣石不足，无法购买', 'error')
+        return
+      }
+      setConfirmPack(pack)
+    }
+
+    const handleConfirmBuy = async () => {
+      if (!confirmPack) return
+      const packId = confirmPack.id
+      setBuying(packId)
+      setConfirmPack(null)
+      try {
+        const res = await fetch(`${API_BASE}/user/buy-item`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item_id: packId, item_type: 'shop' })
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        addToast('购买成功！', 'success')
+        audio.playLevelUp()
+        setPurchaseSuccess(packId)
+        setTimeout(() => setPurchaseSuccess(null), 2000)
+        fetchCurrency()
+      } catch (e: any) {
+        addToast(e.message || '购买失败', 'error')
+      } finally {
+        setBuying(null)
+      }
+    }
+
+    const renderPacks = (packs: any[]) => (
+      <div className="shop-grid">
+        {packs.map(pack => (
+          <div key={pack.id} className={`shop-card ${pack.accent ? 'accent-' + pack.accent : ''} ${purchaseSuccess === pack.id ? 'purchased' : ''}`}>
+            {pack.popular && <div className="shop-badge popular">荐</div>}
+            {pack.badge && <div className="shop-badge special">{pack.badge}</div>}
+            <div className="shop-card-icon">
+              {pack.id.startsWith('hs') && <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2" fill="rgba(0,204,255,0.1)"/></svg>}
+              {pack.id.startsWith('sum') && <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#ff69b4" strokeWidth="2" fill="rgba(255,105,180,0.1)"/><path d="M12 8V16M8 12H16" stroke="#ff69b4" strokeWidth="2" strokeLinecap="round"/></svg>}
+              {pack.id.startsWith('sp') && <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="rgba(255,215,0,0.1)"/></svg>}
+            </div>
+            <div className="shop-card-label">{pack.label}</div>
+            <div className="shop-card-desc">{pack.desc}</div>
+            {pack.originalCost && (
+              <div className="shop-card-original">原价 {pack.originalCost}</div>
+            )}
+            <div className="shop-card-price">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2"/></svg>
+              {pack.cost}
+            </div>
+            <button
+              className={`shop-buy-btn ${purchaseSuccess === pack.id ? 'success' : ''} ${currency?.holy_stone < pack.cost ? 'disabled' : ''}`}
+              disabled={buying !== null || currency?.holy_stone < pack.cost}
+              onClick={() => handleBuyClick(pack)}
+            >
+              {buying === pack.id ? '购买中...' : purchaseSuccess === pack.id ? '已购买' : '购买'}
+            </button>
+          </div>
+        ))}
+      </div>
+    )
+
+    return (
+      <div className="shop-page">
+        <div className="page-header">
+          <button className="back-btn" onClick={() => navigate(-1)} aria-label="返回">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <h1 className="page-title">商城</h1>
+          <div className="shop-currency-display">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2"/></svg>
+            <span>{currency?.holy_stone ?? '--'}</span>
+          </div>
         </div>
 
-        {/* Floating mini avatar */}
-        {floatingChar && (
-          <div className="floating-mini-avatar">
-            <img
-              src={getImagePath(floatingChar) || undefined}
-              alt={floatingChar.name}
-              className={`floating-mini-img ${floatingAnim}`}
-            />
+        <div className="shop-tabs">
+          <button className={`shop-tab ${activeTab === 'holy_stone' ? 'active' : ''}`} onClick={() => setActiveTab('holy_stone')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="currentColor" strokeWidth="2"/></svg>
+            神圣石
+          </button>
+          <button className={`shop-tab ${activeTab === 'summon' ? 'active' : ''}`} onClick={() => setActiveTab('summon')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M12 8V16M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            召唤券
+          </button>
+          <button className={`shop-tab ${activeTab === 'special' ? 'active' : ''}`} onClick={() => setActiveTab('special')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" strokeWidth="2"/></svg>
+            限定礼包
+          </button>
+        </div>
+
+        <div className="shop-content">
+          {activeTab === 'holy_stone' && renderPacks(holyStonePacks)}
+          {activeTab === 'summon' && renderPacks(summonPacks)}
+          {activeTab === 'special' && renderPacks(specialPacks)}
+        </div>
+
+        {confirmPack && (
+          <div className="shop-confirm-overlay" onClick={() => setConfirmPack(null)}>
+            <div className="shop-confirm-modal" onClick={e => e.stopPropagation()}>
+              <h3>确认购买</h3>
+              <div className="shop-confirm-item">
+                <div className="shop-confirm-icon">
+                  {confirmPack.id.startsWith('hs') && <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2" fill="rgba(0,204,255,0.1)"/></svg>}
+                  {confirmPack.id.startsWith('sum') && <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#ff69b4" strokeWidth="2" fill="rgba(255,105,180,0.1)"/><path d="M12 8V16M8 12H16" stroke="#ff69b4" strokeWidth="2" strokeLinecap="round"/></svg>}
+                  {confirmPack.id.startsWith('sp') && <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="rgba(255,215,0,0.1)"/></svg>}
+                </div>
+                <div className="shop-confirm-info">
+                  <div className="shop-confirm-name">{confirmPack.label}</div>
+                  <div className="shop-confirm-desc">{confirmPack.desc}</div>
+                </div>
+              </div>
+              <div className="shop-confirm-price">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#00ccff" strokeWidth="2"/></svg>
+                <span>{confirmPack.cost}</span>
+              </div>
+              <div className="shop-confirm-balance">
+                剩余: {currency?.holy_stone || 0} 神圣石 → {(currency?.holy_stone || 0) - confirmPack.cost} 神圣石
+              </div>
+              <div className="shop-confirm-actions">
+                <button className="btn-secondary" onClick={() => setConfirmPack(null)}>取消</button>
+                <button className="btn-primary" onClick={handleConfirmBuy} disabled={buying !== null}>
+                  {buying !== null ? '购买中...' : '确认购买'}
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
     )
   }
 
-  // ============ GachaButtonTestPage ============
-  const GachaButtonTestPage = () => {
-    return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%)', padding: '32px 16px 80px' }}>
-        <h1 style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Orbitron, monospace', fontSize: '0.75rem', textAlign: 'center', letterSpacing: '3px', marginBottom: '32px', textTransform: 'uppercase' }}>
-          召唤按钮设计测试
-        </h1>
-
-        {/* ===== 方向A: 霓虹线条 ===== */}
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
-          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>A — 霓虹线条 · 纯文字 + hover底边滑线</div>
-          <div style={{ display: 'flex', gap: '0', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '16px' }}>
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ color: 'rgba(255,255,255,0.85)', fontFamily: 'Orbitron, monospace', fontSize: '0.65rem', letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '6px', borderBottom: '1px solid transparent', transition: 'all 0.2s', display: 'inline-block' }}
-                onMouseEnter={e => { (e.target as HTMLElement).style.color = '#fff'; (e.target as HTMLElement).style.borderBottomColor = 'rgba(0,212,255,0.7)' }}
-                onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.85)'; (e.target as HTMLElement).style.borderBottomColor = 'transparent' }}
-              >确定</div>
-            </div>
-            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.08)' }} />
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ color: 'rgba(255,255,255,0.4)', fontFamily: 'Orbitron, monospace', fontSize: '0.65rem', letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '6px', borderBottom: '1px solid transparent', transition: 'all 0.2s', display: 'inline-block' }}
-                onMouseEnter={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.8)'; (e.target as HTMLElement).style.borderBottomColor = 'rgba(168,85,247,0.6)' }}
-                onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.4)'; (e.target as HTMLElement).style.borderBottomColor = 'transparent' }}
-              >再抽</div>
-            </div>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0 }}>hover看效果 · 底边霓虹线滑入</p>
-        </div>
-
-        {/* ===== 方向B: 全息框架嵌入 ===== */}
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
-          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>B — 全息框架嵌入 · 按钮是帧的一部分</div>
-          <div style={{ position: 'relative', border: '1px solid rgba(0,212,255,0.15)', borderRadius: '12px', padding: '20px 16px 16px', background: 'rgba(0,0,0,0.3)' }}>
-            <div style={{ position: 'absolute', top: '-1px', left: '10%', right: '10%', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)' }} />
-            <div style={{ textAlign: 'center', marginBottom: '16px', color: 'rgba(255,255,255,0.5)', fontSize: '0.62rem', fontFamily: 'Orbitron, monospace', letterSpacing: '1px' }}>SSR 角色名</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
-              <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', padding: '8px', transition: 'all 0.2s', borderRadius: '6px' }}
-                onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(0,212,255,0.08)'; (e.target as HTMLElement).style.color = '#00d4ff' }}
-                onMouseLeave={e => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)' }}
-              >确定</button>
-              <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', padding: '8px', transition: 'all 0.2s', borderRadius: '6px' }}
-                onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(168,85,247,0.08)'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.65)' }}
-                onMouseLeave={e => { (e.target as HTMLElement).style.background = 'none'; (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.3)' }}
-              >再抽</button>
-            </div>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: '12px 0 0' }}>按钮嵌在帧底边，像卡面印刷的 UI</p>
-        </div>
-
-        {/* ===== 方向C: 浮动微胶囊 ===== */}
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
-          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>C — 浮动微胶囊 · 小芯片上浮</div>
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
-            <button style={{ padding: '8px 20px', background: 'rgba(255,107,157,0.1)', border: '1px solid rgba(255,107,157,0.25)', borderRadius: '20px', color: 'rgba(255,200,220,0.95)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.34,1.56,0.64,1)', boxShadow: '0 0 12px rgba(255,107,157,0.06)' }}
-              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,107,157,0.18)'; el.style.borderColor = 'rgba(255,107,157,0.5)'; el.style.boxShadow = '0 0 20px rgba(255,107,157,0.2)'; el.style.transform = 'translateY(-2px)' }}
-              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,107,157,0.1)'; el.style.borderColor = 'rgba(255,107,157,0.25)'; el.style.boxShadow = '0 0 12px rgba(255,107,157,0.06)'; el.style.transform = 'translateY(0)' }}
-              onMouseDown={e => { const el = e.target as HTMLElement; el.style.transform = 'scale(0.95) translateY(0)' }}
-            >确定</button>
-            <button style={{ padding: '8px 20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', color: 'rgba(255,255,255,0.38)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', fontWeight: 500, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.34,1.56,0.64,1)' }}
-              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,255,255,0.07)'; el.style.borderColor = 'rgba(255,255,255,0.22)'; el.style.color = 'rgba(255,255,255,0.65)'; el.style.transform = 'translateY(-2px)' }}
-              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.background = 'rgba(255,255,255,0.03)'; el.style.borderColor = 'rgba(255,255,255,0.1)'; el.style.color = 'rgba(255,255,255,0.38)'; el.style.transform = 'translateY(0)' }}
-              onMouseDown={e => { const el = e.target as HTMLElement; el.style.transform = 'scale(0.95) translateY(0)' }}
-            >再抽</button>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0, textAlign: 'center' }}>hover上浮 · 弹性曲线 · 像高级app的chips</p>
-        </div>
-
-        {/* ===== 方向D: 纯文字 + 底边短线 ===== */}
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '20px' }}>
-          <div style={{ color: 'rgba(168,85,247,0.8)', fontSize: '0.6rem', marginBottom: '14px', fontFamily: 'Orbitron, monospace', letterSpacing: '2px' }}>D — 纯文字 · 最克制 · hover加粗+底边细线</div>
-          <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
-            <div style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'Orbitron, monospace', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '4px', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
-              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.92)'; el.style.fontWeight = '700'; el.style.borderBottomColor = 'rgba(255,255,255,0.5)' }}
-              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.55)'; el.style.fontWeight = '400'; el.style.borderBottomColor = 'transparent' }}
-            >确定</div>
-            <div style={{ color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', paddingBottom: '4px', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
-              onMouseEnter={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.6)'; el.style.fontWeight = '500'; el.style.borderBottomColor = 'rgba(255,255,255,0.3)' }}
-              onMouseLeave={e => { const el = e.target as HTMLElement; el.style.color = 'rgba(255,255,255,0.3)'; el.style.fontWeight = '400'; el.style.borderBottomColor = 'transparent' }}
-            >再抽</div>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.58rem', margin: 0, textAlign: 'center' }}>最克制 · 需要正确的字重字间距才高级</p>
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: '8px' }}>
-          <button
-            onClick={() => navigate('/home')}
-            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'rgba(255,255,255,0.3)', fontFamily: 'Orbitron, monospace', fontSize: '0.6rem', letterSpacing: '1px', padding: '8px 16px', cursor: 'pointer' }}
-          >返回首页</button>
-        </div>
-      </div>
-    )
-  }
 
   // ============ StaminaShopPage ============
   const StaminaShopPage = () => {
@@ -5192,6 +5445,10 @@ function App() {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <span>体力商店</span>
                   </button>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/shop'); setCmdOpen(false) }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6L18 2H6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 6H21" stroke="currentColor" strokeWidth="2"/><path d="M16 10C16 12.2 14.2 14 12 14C9.8 14 8 12.2 8 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                    <span>商城</span>
+                  </button>
                   <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/calendar'); setCmdOpen(false) }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/></svg>
                     <span>签到日历</span>
@@ -5200,9 +5457,9 @@ function App() {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M21 7L12 3L3 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     <span>通行证</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/avatar-test'); setCmdOpen(false) }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/><path d="M6 21V19C6 16.8 8.8 15 12 15C15.2 15 18 16.8 18 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-                    <span>动画测试</span>
+                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/settings'); setCmdOpen(false) }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" strokeWidth="2"/></svg>
+                    <span>设置</span>
                   </button>
                 </div>
                 <div className="nav-cmd-divider"/>
@@ -5363,10 +5620,7 @@ function App() {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 21V11M12 21V7M16 21V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
                     <span>应援榜</span>
                   </button>
-                  <button className="nav-cmd-item" onClick={() => { audio.playUIClick(); navigate('/avatar-test'); setCmdOpen(false) }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/><path d="M6 21V19C6 16.8 8.8 15 12 15C15.2 15 18 16.8 18 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-                    <span>动画测试</span>
-                  </button>
+                  
                 </div>
                 <div className="nav-cmd-divider"/>
                 <button className="nav-cmd-item nav-cmd-logout" onClick={() => { audio.playUIClick(); handleLogout(); setCmdOpen(false) }}>
@@ -5410,8 +5664,8 @@ function App() {
           <Route path="/rhythm" element={<RhythmPage token={token!} />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/stamina" element={<StaminaShopPage />} />
-          <Route path="/avatar-test" element={<AvatarTestPage />} />
-          <Route path="/gacha-btn-test" element={<GachaButtonTestPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/shop" element={<ShopPage />} />
         </Routes>
       </main>
       {location.pathname !== '/login' && location.pathname !== '/register' && <BottomNav />}

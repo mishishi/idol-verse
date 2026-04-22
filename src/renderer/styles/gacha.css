@@ -1127,10 +1127,6 @@
 /* ============================================================
    STAGE 2 & 3: CELESTIAL GATE RESULT — Card Reveal & Confirmation
    ============================================================ */
-  55%  { opacity: 1; transform: scale(1.06) translateY(-5px); }
-  75%  { transform: scale(0.97) translateY(2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
 
 /* =============================================
    CONSTELLATION GRID — stellar portal card grid
@@ -1927,7 +1923,7 @@
 .multi-card-counter {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 /* Gacha hint and error */

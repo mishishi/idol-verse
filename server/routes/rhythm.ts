@@ -2,6 +2,7 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import db, { saveDb } from '../db/sqlite'
 import { updateDailyProgress } from './daily'
+import { updateAchievementProgress } from './achievement'
 
 const router = Router()
 const JWT_SECRET = process.env.JWT_SECRET || 'idol-game-secret-key-2024'
@@ -210,6 +211,10 @@ router.post('/score/:songId', authMiddleware, (req, res) => {
     if (ticketReward > 0) {
       db.prepare('UPDATE user_currency SET summon_ticket = summon_ticket + ? WHERE user_id = ?').run(ticketReward, userId)
     }
+
+    // Update rhythm_count achievements
+    const totalPlays = (db.prepare('SELECT SUM(play_count) as total FROM rhythm_user_stats WHERE user_id = ?').get(userId) as any).total || 0
+    updateAchievementProgress(userId, 'rhythm_count', totalPlays)
 
     saveDb()
 

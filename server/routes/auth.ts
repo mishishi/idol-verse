@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import db, { saveDb } from '../db/sqlite'
 import { updateDailyProgress } from './daily'
+import { checkAchievements, updateAchievementProgress } from './achievement'
 
 const router = Router()
 const JWT_SECRET = process.env.JWT_SECRET || 'idol-game-secret-key-2024'
@@ -154,6 +155,11 @@ router.post('/login', async (req, res) => {
 
     // Record login in login_records table
     db.prepare('INSERT OR REPLACE INTO user_login_records (user_id, login_date, login_streak) VALUES (?, ?, ?)').run(user.id, today, newStreak)
+
+    // Update login_days achievements
+    updateAchievementProgress(user.id, 'login_days', newStreak)
+    // Also check other achievements
+    checkAchievements(user.id)
 
     saveDb()
 
