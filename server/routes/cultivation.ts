@@ -182,6 +182,63 @@ router.post('/characters/:id/skill-up', authMiddleware, (req, res) => {
   }
 })
 
+// Quick level up a character using holy_stone (bypasses fragment requirement)
+const HOLY_STONE_PER_QUICK_LEVEL = 3
+
+router.post('/characters/:id/quick-level-up', authMiddleware, (req, res) => {
+  try {
+    const userId = req.userId
+    const charId = parseInt(req.params.id)
+
+    // Get user's character
+    const userChar = db.prepare(`
+      SELECT uc.*, c.rarity FROM user_characters uc
+      JOIN characters c ON uc.character_id = c.character_id
+      WHERE uc.id = ? AND uc.user_id = ?
+    `).get(charId, userId) as any
+
+    if (!userChar) {
+      return res.status(404).json({ error: '角色不存在' })
+    }
+
+    const currentLevel = userChar.level || 1
+    if (currentLevel >= 80) {
+      return res.status(400).json({ error: '已达到最大等级' })
+    }
+
+    // Check holy_stone balance
+    const currency = db.prepare('SELECT holy_stone FROM user_currency WHERE user_id = ?').get(userId) as any
+    if (!currency || currency.holy_stone < HOLY_STONE_PER_QUICK_LEVEL) {
+      return res.status(400).json({ error: `圣像石不足，需要 ${HOLY_STONE_PER_QUICK_LEVEL} 圣像石` })
+    }
+
+    // Calculate exp needed for one level up
+    const expNeeded = EXP_CURVE[currentLevel - 1] - (userChar.exp || 0)
+    const newExp = (userChar.exp || 0) + expNeeded
+    const newLevel = getLevelForExp(newExp)
+
+    // Deduct holy_stone and update exp/level
+    db.prepare('UPDATE user_currency SET holy_stone = holy_stone - ? WHERE user_id = ?').run(HOLY_STONE_PER_QUICK_LEVEL, userId)
+    db.prepare(`
+      UPDATE user_characters
+      SET exp = ?,
+          level = ?
+      WHERE id = ?
+    `).run(newExp, newLevel, charId)
+    saveDb()
+
+    res.json({
+      success: true,
+      newLevel,
+      newExp,
+      holyStoneUsed: HOLY_STONE_PER_QUICK_LEVEL
+    })
+  } catch (err) {
+    console.error('Quick level up error:', err)
+    res.status(500).json({ error: '快速升级失败' })
+  }
+})
+
 // Get character details with cultivation info
 router.get('/characters/:id', authMiddleware, (req, res) => {
   try {

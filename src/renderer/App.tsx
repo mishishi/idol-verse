@@ -2210,6 +2210,20 @@ function App() {
       } catch (err: any) { addToast(err.message, 'error') }
     }
 
+    const handleQuickLevelUp = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/cultivation/characters/${charId}/quick-level-up`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error)
+        audio.playLevelUp()
+        refreshCharData()
+        addToast(`快速升级成功，消耗 ${data.holyStoneUsed} 圣像石`, 'success')
+      } catch (err: any) { addToast(err.message, 'error') }
+    }
+
     const handleIntimacyUp = async () => {
       try {
         const res = await fetch(`${API_BASE}/cultivation/characters/${charId}/intimacy-up`, {
@@ -2358,6 +2372,14 @@ function App() {
             >
               {charData?.level >= 80 ? <><Icon name="star" size={14} color="var(--rarity-ur-1)" /> 已满级 <Icon name="star" size={14} color="var(--rarity-ur-1)" /></> : `升级  消耗 ${charData?.fragments_needed || 0} 碎片`}
             </button>
+            {charData?.level < 80 && charData?.fragment_count < (charData?.fragments_needed || 0) && (
+              <button
+                className="quick-levelup-btn"
+                onClick={handleQuickLevelUp}
+              >
+                ⚡ 快速升级 (3 圣像石)
+              </button>
+            )}
           </div>
 
           {canSynthesize && (

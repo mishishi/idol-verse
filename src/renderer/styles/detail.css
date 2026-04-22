@@ -577,6 +577,32 @@
   box-shadow: none;
 }
 
+.quick-levelup-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.2));
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 12px;
+  color: var(--accent-gold-solid);
+  font-size: 0.8rem;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.quick-levelup-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 140, 0, 0.3));
+  border-color: rgba(255, 215, 0, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+}
+
+.quick-levelup-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
 
 /* ============ Synthesis Section ============ */
 .synthesis-row {

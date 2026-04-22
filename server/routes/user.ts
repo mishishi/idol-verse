@@ -211,6 +211,10 @@ router.post('/buy-item', authMiddleware, (req, res) => {
       'sp_1': { name: '特惠体力包', cost: 0, currency: 'rmb', reward: { type: 'stamina', amount: 300 } },
       'sp_2': { name: '豪华体力包', cost: 0, currency: 'rmb', reward: { type: 'stamina', amount: 1000 } },
       'sp_3': { name: '超级体力包', cost: 0, currency: 'rmb', reward: { type: 'stamina', amount: 3000 } },
+      // Cultivation packs (holy_stone purchases)
+      'cult_1': { name: '碎片小包', cost: 50, currency: 'holy_stone', reward: { type: 'fragment', amount: 5 } },
+      'cult_2': { name: '碎片中包', cost: 120, currency: 'holy_stone', reward: { type: 'fragment', amount: 15 } },
+      'cult_3': { name: '碎片大包', cost: 300, currency: 'holy_stone', reward: { type: 'fragment', amount: 40 } },
     }
 
     const item = shopItems[item_id]
@@ -218,23 +222,36 @@ router.post('/buy-item', authMiddleware, (req, res) => {
       return res.status(404).json({ error: '商品不存在' })
     }
 
-    // Check if item requires real money purchase (cost > 0 with rmb currency)
-    // For this game implementation, we handle free starter packs via holy_stone if cost is 0
-    // Actually, looking at the shop UI, items may use holy_stone as currency
-    // Let's re-read: the original issue is that buy-item 404s, meaning this route doesn't exist
-    // The shop page sends { item_id, item_type: 'shop' } - so item_type is always 'shop'
-    // For now, just give the reward directly (as if it's a gift/promo code system)
-    // A real implementation would check currency balance
-
     const currency = db.prepare('SELECT holy_stone, summon_ticket, stamina, max_stamina FROM user_currency WHERE user_id = ?').get(userId) as any
     if (!currency) {
       return res.status(404).json({ error: '用户货币信息不存在' })
     }
 
+    // Check and deduct currency for holy_stone purchases
+    if (item.currency === 'holy_stone') {
+      if (currency.holy_stone < item.cost) {
+        return res.status(400).json({ error: `圣像石不足，需要 ${item.cost} 圣像石` })
+      }
+      db.prepare('UPDATE user_currency SET holy_stone = holy_stone - ? WHERE user_id = ?').run(item.cost, userId)
+    }
+
     const { reward } = item
 
-    // Add rewards based on type
-    if (reward.type === 'holy_stone') {
+    // Note: fragment reward is handled specially below since it needs character context
+    // For now, give fragments directly to a random owned character or store as global
+    // Actually, let's add fragments to all owned characters proportionally
+    if (reward.type === 'fragment') {
+      // Add fragments to all owned characters proportionally
+      const ownedChars = db.prepare('SELECT id, fragment_count FROM user_characters WHERE user_id = ?').all(userId) as any[]
+      if (ownedChars.length > 0) {
+        const fragPerChar = Math.floor(reward.amount / ownedChars.length)
+        const remainder = reward.amount % ownedChars.length
+        for (let i = 0; i < ownedChars.length; i++) {
+          const extra = i < remainder ? 1 : 0
+          db.prepare('UPDATE user_characters SET fragment_count = fragment_count + ? WHERE id = ?').run(fragPerChar + extra, ownedChars[i].id)
+        }
+      }
+    } else if (reward.type === 'holy_stone') {
       db.prepare('UPDATE user_currency SET holy_stone = holy_stone + ? WHERE user_id = ?').run(reward.amount, userId)
     } else if (reward.type === 'summon_ticket') {
       db.prepare('UPDATE user_currency SET summon_ticket = summon_ticket + ? WHERE user_id = ?').run(reward.amount, userId)
