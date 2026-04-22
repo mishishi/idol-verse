@@ -1198,6 +1198,7 @@ function App() {
     const [multiRevealIndex, setMultiRevealIndex] = useState(0)
     const [multiAllRevealed, setMultiAllRevealed] = useState(false)
     const [needsNavBarRefresh, setNeedsNavBarRefresh] = useState(false)
+    const [revealSpeed, setRevealSpeed] = useState<'normal' | 'fast'>('normal')
 
     const fetchCurrency = async () => {
       try {
@@ -1219,26 +1220,27 @@ function App() {
 
     useEffect(() => { fetchCurrency(); fetchPityStatus() }, [])
 
-    // Auto-reveal cards one by one — first 3 fast (200ms), rest slower (500ms)
+    // Auto-reveal cards one by one — first 3 fast (200ms), rest slower (500ms), speed toggleable
+    const speedMultiplier = revealSpeed === 'fast' ? 0.1 : 1
     useEffect(() => {
       if (!showingMulti) return
       if (multiRevealIndex < 0) {
-        const t = setTimeout(() => setMultiRevealIndex(0), 300)
+        const t = setTimeout(() => setMultiRevealIndex(0), 300 * speedMultiplier)
         return () => clearTimeout(t)
       }
       if (multiRevealIndex < 3) {
-        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 200)
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 200 * speedMultiplier)
         return () => clearTimeout(t)
       }
       if (multiRevealIndex < 9) {
-        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 500)
+        const t = setTimeout(() => setMultiRevealIndex(i => i + 1), 500 * speedMultiplier)
         return () => clearTimeout(t)
       }
       if (multiRevealIndex === 9) {
-        const t = setTimeout(() => setMultiAllRevealed(true), 600)
+        const t = setTimeout(() => setMultiAllRevealed(true), 600 * speedMultiplier)
         return () => clearTimeout(t)
       }
-    }, [showingMulti, multiRevealIndex])
+    }, [showingMulti, multiRevealIndex, speedMultiplier])
 
     const doGacha = async () => {
       if (pulling) return
@@ -1307,6 +1309,7 @@ function App() {
         setMultiResults(data.characters)
         setMultiRevealIndex(-1)
         setMultiAllRevealed(false)
+        setRevealSpeed('normal')
         setShowingMulti(true)
         // Defer currency refresh to avoid interrupting modal render
         setTimeout(() => fetchCurrency(), 100)
@@ -1567,6 +1570,13 @@ function App() {
                       ))}
                     </div>
                     <div className="multi-progress-label">{Math.max(0, multiRevealIndex + 1)} / 10</div>
+                    <button
+                      className="multi-speed-toggle"
+                      onClick={() => setRevealSpeed(s => s === 'normal' ? 'fast' : 'normal')}
+                      aria-label={revealSpeed === 'normal' ? '加速' : '减速'}
+                    >
+                      {revealSpeed === 'normal' ? '⚡ 加速' : '🐢 减速'}
+                    </button>
                   </div>
                 )}
               </div>

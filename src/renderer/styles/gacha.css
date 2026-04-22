@@ -1455,6 +1455,67 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* Multi Progress Indicator */
+.multi-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+
+.multi-progress-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.multi-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: all 0.25s ease;
+}
+
+.multi-dot.active {
+  background: var(--accent-pink-solid);
+  box-shadow: 0 0 8px rgba(255, 107, 157, 0.8);
+}
+
+.multi-dot.highlight {
+  background: var(--accent-gold-solid);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.9);
+}
+
+.multi-progress-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 40px;
+}
+
+.multi-speed-toggle {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.65rem;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-speed-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.multi-speed-toggle:active {
+  transform: scale(0.95);
+}
+
 /* Result Card Button — Reused for multi (Design B: 全息框架嵌入) */
 .result-card-actions {
   display: flex;
