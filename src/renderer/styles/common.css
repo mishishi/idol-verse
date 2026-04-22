@@ -558,9 +558,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 24px;
+  padding: var(--space-2xl) var(--space-lg);
   text-align: center;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 .empty-state .empty-icon {
   font-size: 3rem;
@@ -576,5 +576,5 @@
   color: var(--text-muted);
 }
 .empty-state .empty-action {
-  margin-top: 8px;
+  margin-top: var(--space-sm);
 }
