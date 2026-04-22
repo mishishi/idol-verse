@@ -144,6 +144,84 @@ background:linear-gradient(to bottom,transparent,rgba(255,107,157,0.3),transpare
 margin:0 8px;
 }
 
+/* ═══════════════════════════════════════
+   STAR MAP — character constellation
+   ═══════════════════════════════════════ */
+.home-star-map {
+  position: relative;
+  padding: 0 16px 16px;
+  z-index: 10;
+}
+
+.star-map-container {
+  position: relative;
+  height: 200px;
+  background: radial-gradient(ellipse at center, rgba(126,184,218,0.03) 0%, transparent 70%);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.star-node {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease;
+}
+
+.star-node:hover { transform: translate(-50%, -50%) scale(1.2); }
+.star-node:active { transform: translate(-50%, -50%) scale(0.95); }
+
+.star-core {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: star-breathe 3s ease-in-out infinite;
+  transition: box-shadow 0.3s ease;
+}
+
+.star-node.rarity-UR .star-core {
+  background: radial-gradient(circle, #fff 0%, #ffd700 50%, #ff8c00 100%);
+  box-shadow: 0 0 8px #ffd700, 0 0 16px rgba(255,215,0,0.5);
+  width: 16px; height: 16px;
+}
+.star-node.rarity-SSR .star-core {
+  background: radial-gradient(circle, #fff 0%, #7eb8da 60%, #4a90c4 100%);
+  box-shadow: 0 0 6px #7eb8da, 0 0 12px rgba(126,184,218,0.4);
+}
+.star-node.rarity-SR .star-core {
+  background: #c8c8d0;
+  box-shadow: 0 0 4px rgba(200,200,208,0.5);
+  width: 10px; height: 10px;
+}
+.star-node.rarity-R .star-core {
+  background: #8a8a96;
+  box-shadow: 0 0 3px rgba(138,138,150,0.4);
+  width: 8px; height: 8px;
+}
+.star-node.rarity-N .star-core {
+  background: #6a6a78;
+  box-shadow: none;
+  width: 6px; height: 6px;
+}
+
+.star-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.star-node:hover .star-name { opacity: 1; }
+
 /* ============ Actions Grid ============ */
 .home-actions-section{
 position:relative;z-index:10;

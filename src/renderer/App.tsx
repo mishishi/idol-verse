@@ -398,6 +398,7 @@ function App() {
     const [homeStats, setHomeStats] = useState({ character_count: 0, total_gacha: 0, login_streak: 0 })
     const [homeStatsLoading, setHomeStatsLoading] = useState(true)
     const [showGachaDrawer, setShowGachaDrawer] = useState(false)
+    const [ownedCharacters, setOwnedCharacters] = useState<any[]>([])
 
     useEffect(() => {
       if (!token) return
@@ -411,6 +412,15 @@ function App() {
         })
         setHomeStatsLoading(false)
       }).catch(() => setHomeStatsLoading(false))
+    }, [token])
+
+    useEffect(() => {
+      if (!token) return
+      fetch(`${API_BASE}/user/characters`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).then(r => r.json()).then(d => {
+        setOwnedCharacters(d.characters || [])
+      }).catch(() => {})
     }, [token])
 
     return (
@@ -487,6 +497,30 @@ function App() {
             <div className="stat-big-label">总召唤</div>
           </div>
         </div>
+
+        {/* Star Map - Character Constellation */}
+        {ownedCharacters.length > 0 && (
+          <section aria-label="我的星图" className="home-star-map">
+            <div className="section-title">✦ 我的星图</div>
+            <div className="star-map-container">
+              {ownedCharacters.map((char, idx) => (
+                <button
+                  key={char.id || idx}
+                  className={`star-node rarity-${char.rarity}`}
+                  style={{
+                    left: `${15 + (idx % 5) * 18}%`,
+                    top: `${20 + Math.floor(idx / 5) * 30}%`,
+                  }}
+                  onClick={() => navigate(`/character/${char.id}`)}
+                  aria-label={`${char.name} ${char.rarity}`}
+                >
+                  <div className="star-core" />
+                  <div className="star-name">{char.name}</div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
 
         {!homeStatsLoading && homeStats.character_count === 0 && (
           <div className="empty-state">
