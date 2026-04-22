@@ -421,6 +421,34 @@ export async function initDb(): Promise<SqlJsDatabase> {
     db.run('CREATE INDEX IF NOT EXISTS idx_rhythm_scores_user_id ON rhythm_scores(user_id)')
     db.run('CREATE INDEX IF NOT EXISTS idx_rhythm_scores_song_id ON rhythm_scores(song_id)')
 
+    // Outfit system tables (migration-safe)
+    db.run(`
+      CREATE TABLE IF NOT EXISTS character_outfits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        character_id TEXT NOT NULL,
+        outfit_key TEXT NOT NULL,
+        name TEXT NOT NULL,
+        rarity TEXT NOT NULL CHECK (rarity IN ('N', 'R', 'SR', 'SSR', 'UR')),
+        image_path TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (character_id) REFERENCES characters(character_id)
+      )
+    `)
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS user_outfits (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        outfit_id INTEGER NOT NULL,
+        obtained_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (outfit_id) REFERENCES character_outfits(id)
+      )
+    `)
+
+    // Add equipped_outfit_id to user_characters if not exists
+    try { db.run("ALTER TABLE user_characters ADD COLUMN equipped_outfit_id INTEGER") } catch {}
+
     // Backfill pity_count for existing users from their actual gacha record count
     db.run(`
       UPDATE user_currency
