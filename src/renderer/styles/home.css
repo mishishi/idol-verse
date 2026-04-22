@@ -244,12 +244,14 @@ cursor:pointer;
 transition:all 0.25s ease;
 }
 .action-card-new:hover{
+transform:translateY(-2px);
+box-shadow:var(--shadow-md);
 background:rgba(18,18,42,0.95);
 border-color:rgba(255,215,0,0.3);
 }
 .action-card-new:active{
-transform:scale(0.97);
-box-shadow:none;
+transform:translateY(1px) scale(0.98);
+box-shadow:var(--shadow-sm);
 }
 .action-card-icon{
 width:44px;height:44px;
@@ -455,12 +457,13 @@ scroll-snap-align:start;
 transition:all 0.3s ease;
 }
 .scroll-card:hover{
+transform:translateY(-3px);
+box-shadow:var(--shadow-lg);
 border-color:rgba(255,107,157,0.4);
-box-shadow:0 0 12px rgba(255,107,157,0.2);
 }
 .scroll-card:active{
-transform:scale(0.97);
-box-shadow:none;
+transform:translateY(1px) scale(0.97);
+box-shadow:var(--shadow-sm);
 }
 .scroll-card.primary{
 border-color:rgba(255,107,157,0.3);

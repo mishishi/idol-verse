@@ -385,7 +385,7 @@
 
 .result-card-btn:active {
   color: rgba(0, 212, 255, 0.6);
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .result-card-btn-secondary {
@@ -428,7 +428,7 @@
 
 .result-card-btn-secondary:active {
   color: rgba(255, 255, 255, 0.4);
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .btn-shine { display: none; }
@@ -1520,7 +1520,7 @@
 
 .result-card-btn:active {
   color: rgba(0, 212, 255, 0.6);
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .result-card-btn-secondary {
@@ -1563,7 +1563,7 @@
 
 .result-card-btn-secondary:active {
   color: rgba(255, 255, 255, 0.4);
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .btn-shine { display: none; }
