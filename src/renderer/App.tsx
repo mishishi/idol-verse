@@ -997,6 +997,14 @@ function App() {
                   })}
                 </div>
               )}
+              {/* UR gold ray burst - 16 rays */}
+              {result.rarity === 'UR' && (
+                <div className="ur-ray-burst">
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <div key={i} className="ur-ray" />
+                  ))}
+                </div>
+              )}
               <div className="portal-ring">
                 <div className="portal-ring-1" />
                 <div className="portal-ring-2" />
@@ -1389,6 +1397,14 @@ function App() {
                   ))}
                 </div>
               </div>
+              {/* UR gold ray burst - 16 rays */}
+              {result.rarity === 'UR' && (
+                <div className="ur-ray-burst">
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <div key={i} className="ur-ray" />
+                  ))}
+                </div>
+              )}
               <div className="result-card-inner">
                 <div className="result-card-badge">{result.rarity}</div>
                 <div className="result-card-avatar-frame">

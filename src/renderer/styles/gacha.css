@@ -1009,6 +1009,58 @@
   }
 }
 
+/* ═══════════════════════════════════════
+   UR GOLD RAY BURST — 16 light rays
+   ═══════════════════════════════════════ */
+.ur-ray-burst {
+  position: absolute;
+  inset: -80px;
+  pointer-events: none;
+  z-index: 6;
+  animation: rayBurstIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.ur-ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(255,215,0,0.9) 0%, transparent 100%);
+  transform-origin: center bottom;
+  animation: rayPulse 1.5s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+.ur-ray:nth-child(1)  { transform: translate(-50%, -100%) rotate(0deg);    animation-delay: 0s; }
+.ur-ray:nth-child(2)  { transform: translate(-50%, -100%) rotate(22.5deg); animation-delay: 0.05s; }
+.ur-ray:nth-child(3)  { transform: translate(-50%, -100%) rotate(45deg);   animation-delay: 0.1s; }
+.ur-ray:nth-child(4)  { transform: translate(-50%, -100%) rotate(67.5deg); animation-delay: 0.15s; }
+.ur-ray:nth-child(5)  { transform: translate(-50%, -100%) rotate(90deg);   animation-delay: 0.2s; }
+.ur-ray:nth-child(6)  { transform: translate(-50%, -100%) rotate(112.5deg); animation-delay: 0.25s; }
+.ur-ray:nth-child(7)  { transform: translate(-50%, -100%) rotate(135deg);  animation-delay: 0.3s; }
+.ur-ray:nth-child(8)  { transform: translate(-50%, -100%) rotate(157.5deg); animation-delay: 0.35s; }
+.ur-ray:nth-child(9)  { transform: translate(-50%, -100%) rotate(180deg);  animation-delay: 0.4s; }
+.ur-ray:nth-child(10) { transform: translate(-50%, -100%) rotate(202.5deg); animation-delay: 0.45s; }
+.ur-ray:nth-child(11) { transform: translate(-50%, -100%) rotate(225deg);  animation-delay: 0.5s; }
+.ur-ray:nth-child(12) { transform: translate(-50%, -100%) rotate(247.5deg); animation-delay: 0.55s; }
+.ur-ray:nth-child(13) { transform: translate(-50%, -100%) rotate(270deg); animation-delay: 0.6s; }
+.ur-ray:nth-child(14) { transform: translate(-50%, -100%) rotate(292.5deg); animation-delay: 0.65s; }
+.ur-ray:nth-child(15) { transform: translate(-50%, -100%) rotate(315deg); animation-delay: 0.7s; }
+.ur-ray:nth-child(16) { transform: translate(-50%, -100%) rotate(337.5deg); animation-delay: 0.75s; }
+
+@keyframes rayBurstIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  60% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rayPulse {
+  0%, 100% { opacity: 0.6; height: 120px; }
+  50% { opacity: 1; height: 140px; }
+}
+
 /* ---- Stage 3: Continuous card glow breathing ---- */
 .gacha-result-card::after {
   content: '';
