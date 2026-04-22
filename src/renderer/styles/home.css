@@ -145,7 +145,7 @@ margin:0 8px;
 }
 
 /* ═══════════════════════════════════════
-   STAR MAP — character constellation
+   STAR MAP — celestial star atlas
    ═══════════════════════════════════════ */
 .home-star-map {
   position: relative;
@@ -153,12 +153,62 @@ margin:0 8px;
   z-index: 10;
 }
 
+/* Outer decorative frame - celestial quadrant style */
+.star-map-frame {
+  position: relative;
+  height: 220px;
+  background:
+    /* Corner decorations */
+    radial-gradient(circle at 0% 0%, rgba(126,184,218,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 100% 0%, rgba(255,215,0,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(255,215,0,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(126,184,218,0.08) 0%, transparent 50%),
+    /* Base gradient */
+    radial-gradient(ellipse at 50% 50%, rgba(20,20,50,0.9) 0%, rgba(5,5,20,0.95) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 60px rgba(0,0,0,0.5),
+    0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* Grid lines like a star chart */
+.star-map-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    /* Horizontal declination lines */
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* Corner tick marks like a celestial instrument */
+.star-map-frame::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
 .star-map-container {
   position: relative;
-  height: 200px;
-  background: radial-gradient(ellipse at center, rgba(126,184,218,0.03) 0%, transparent 70%);
-  border-radius: 12px;
-  overflow: hidden;
+  height: 100%;
+  padding: 20px;
+}
+
+/* Decorative background stars - varied sizes and opacities */
+.star-bg {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: twinkle 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .star-node {
@@ -168,59 +218,185 @@ margin:0 8px;
   cursor: pointer;
   padding: 0;
   transform: translate(-50%, -50%);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
 }
 
-.star-node:hover { transform: translate(-50%, -50%) scale(1.2); }
-.star-node:active { transform: translate(-50%, -50%) scale(0.95); }
-
-.star-core {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  animation: star-breathe 3s ease-in-out infinite;
-  transition: box-shadow 0.3s ease;
-}
-
-.star-node.rarity-UR .star-core {
-  background: radial-gradient(circle, #fff 0%, #ffd700 50%, #ff8c00 100%);
-  box-shadow: 0 0 8px #ffd700, 0 0 16px rgba(255,215,0,0.5);
-  width: 16px; height: 16px;
-}
-.star-node.rarity-SSR .star-core {
-  background: radial-gradient(circle, #fff 0%, #7eb8da 60%, #4a90c4 100%);
-  box-shadow: 0 0 6px #7eb8da, 0 0 12px rgba(126,184,218,0.4);
-}
-.star-node.rarity-SR .star-core {
-  background: #c8c8d0;
-  box-shadow: 0 0 4px rgba(200,200,208,0.5);
-  width: 10px; height: 10px;
-}
-.star-node.rarity-R .star-core {
-  background: #8a8a96;
-  box-shadow: 0 0 3px rgba(138,138,150,0.4);
-  width: 8px; height: 8px;
-}
-.star-node.rarity-N .star-core {
-  background: #6a6a78;
-  box-shadow: none;
-  width: 6px; height: 6px;
-}
-
-.star-name {
+/* Glow halo behind each star */
+.star-halo {
   position: absolute;
-  top: 100%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  margin-top: 4px;
-  font-size: 0.6rem;
-  color: rgba(255,255,255,0.6);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: halo-pulse 3s ease-in-out infinite;
   pointer-events: none;
 }
-.star-node:hover .star-name { opacity: 1; }
+
+.star-core {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  animation: star-breathe 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* Rarity: UR - Brilliant gold */
+.star-node.rarity-UR .star-halo {
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+}
+.star-node.rarity-UR .star-core {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle, #fff 0%, #ffd700 40%, #ff8c00 100%);
+  box-shadow:
+    0 0 10px #ffd700,
+    0 0 20px rgba(255,215,0,0.6),
+    0 0 30px rgba(255,215,0,0.3);
+}
+
+/* Rarity: SSR - Ice blue */
+.star-node.rarity-SSR .star-halo {
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(126,184,218,0.3) 0%, transparent 70%);
+}
+.star-node.rarity-SSR .star-core {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #fff 0%, #7eb8da 50%, #4a90c4 100%);
+  box-shadow:
+    0 0 8px #7eb8da,
+    0 0 16px rgba(126,184,218,0.5);
+}
+
+/* Rarity: SR - Silver white */
+.star-node.rarity-SR .star-halo {
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, rgba(200,200,220,0.2) 0%, transparent 70%);
+}
+.star-node.rarity-SR .star-core {
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #fff 0%, #c8c8d0 100%);
+  box-shadow: 0 0 6px rgba(200,200,208,0.6);
+}
+
+/* Rarity: R - Soft gray */
+.star-node.rarity-R .star-halo {
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle, rgba(138,138,150,0.15) 0%, transparent 70%);
+}
+.star-node.rarity-R .star-core {
+  width: 10px;
+  height: 10px;
+  background: #8a8a96;
+  box-shadow: 0 0 4px rgba(138,138,150,0.4);
+}
+
+/* Rarity: N - Dim */
+.star-node.rarity-N .star-halo {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(106,106,120,0.1) 0%, transparent 70%);
+}
+.star-node.rarity-N .star-core {
+  width: 8px;
+  height: 8px;
+  background: #6a6a78;
+  box-shadow: none;
+  animation: none;
+}
+
+/* Hover effects */
+.star-node:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 10;
+}
+.star-node:hover .star-core {
+  animation: none;
+  filter: brightness(1.3);
+}
+
+/* Constellation label */
+.star-label {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.star-label-name {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+  display: block;
+  text-align: center;
+}
+
+.star-label-rarity {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+  display: block;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.star-node:hover .star-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Keyframe animations */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes star-breathe {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes halo-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Star map footer hint */
+.star-map-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+
+.star-map-hint-icon {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: inline-block;
+}
 
 /* ============ Actions Grid ============ */
 .home-actions-section{

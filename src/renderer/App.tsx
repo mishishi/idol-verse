@@ -419,7 +419,7 @@ function App() {
       fetch(`${API_BASE}/user/characters`, {
         headers: { 'Authorization': `Bearer ${token}` }
       }).then(r => r.json()).then(d => {
-        setOwnedCharacters(d.characters || [])
+        setOwnedCharacters(Array.isArray(d) ? d : (d.characters || []))
       }).catch(() => {})
     }, [token])
 
@@ -498,26 +498,61 @@ function App() {
           </div>
         </div>
 
-        {/* Star Map - Character Constellation */}
+        {/* Star Map - Celestial Star Atlas */}
         {ownedCharacters.length > 0 && (
           <section aria-label="我的星图" className="home-star-map">
             <div className="section-title">✦ 我的星图</div>
-            <div className="star-map-container">
-              {ownedCharacters.map((char, idx) => (
-                <button
-                  key={char.id || idx}
-                  className={`star-node rarity-${char.rarity}`}
-                  style={{
-                    left: `${15 + (idx % 5) * 18}%`,
-                    top: `${20 + Math.floor(idx / 5) * 30}%`,
-                  }}
-                  onClick={() => navigate(`/character/${char.id}`)}
-                  aria-label={`${char.name} ${char.rarity}`}
-                >
-                  <div className="star-core" />
-                  <div className="star-name">{char.name}</div>
-                </button>
-              ))}
+            <div className="star-map-frame">
+              <div className="star-map-container">
+                {/* Decorative background stars - scattered across the map */}
+                <div className="star-bg" style={{left:'6%',top:'12%',width:1,height:1,animationDelay:'0s'}} />
+                <div className="star-bg" style={{left:'18%',top:'6%',width:2,height:2,animationDelay:'0.4s'}} />
+                <div className="star-bg" style={{left:'32%',top:'18%',width:1,height:1,animationDelay:'1.1s'}} />
+                <div className="star-bg" style={{left:'45%',top:'8%',width:1,height:1,animationDelay:'0.7s'}} />
+                <div className="star-bg" style={{left:'58%',top:'15%',width:2,height:2,animationDelay:'1.5s'}} />
+                <div className="star-bg" style={{left:'72%',top:'6%',width:1,height:1,animationDelay:'0.2s'}} />
+                <div className="star-bg" style={{left:'85%',top:'20%',width:2,height:2,animationDelay:'0.9s'}} />
+                <div className="star-bg" style={{left:'92%',top:'10%',width:1,height:1,animationDelay:'1.3s'}} />
+                <div className="star-bg" style={{left:'10%',top:'45%',width:1,height:1,animationDelay:'0.5s'}} />
+                <div className="star-bg" style={{left:'28%',top:'52%',width:2,height:2,animationDelay:'1.8s'}} />
+                <div className="star-bg" style={{left:'50%',top:'48%',width:1,height:1,animationDelay:'0.1s'}} />
+                <div className="star-bg" style={{left:'68%',top:'55%',width:1,height:1,animationDelay:'1.2s'}} />
+                <div className="star-bg" style={{left:'82%',top:'45%',width:2,height:2,animationDelay:'0.6s'}} />
+                <div className="star-bg" style={{left:'95%',top:'50%',width:1,height:1,animationDelay:'1.6s'}} />
+                <div className="star-bg" style={{left:'15%',top:'78%',width:1,height:1,animationDelay:'0.3s'}} />
+                <div className="star-bg" style={{left:'38%',top:'85%',width:2,height:2,animationDelay:'1.4s'}} />
+                <div className="star-bg" style={{left:'55%',top:'80%',width:1,height:1,animationDelay:'0.8s'}} />
+                <div className="star-bg" style={{left:'75%',top:'88%',width:1,height:1,animationDelay:'1.7s'}} />
+                <div className="star-bg" style={{left:'88%',top:'75%',width:2,height:2,animationDelay:'1.9s'}} />
+                <div className="star-bg" style={{left:'5%',top:'92%',width:1,height:1,animationDelay:'0.2s'}} />
+                <div className="star-bg" style={{left:'25%',top:'95%',width:1,height:1,animationDelay:'1.0s'}} />
+                <div className="star-bg" style={{left:'62%',top:'92%',width:2,height:2,animationDelay:'0.4s'}} />
+
+                {/* Character stars */}
+                {ownedCharacters.map((char, idx) => (
+                  <button
+                    key={char.id || idx}
+                    className={`star-node rarity-${char.rarity}`}
+                    style={{
+                      left: `${12 + (idx % 5) * 19}%`,
+                      top: `${18 + Math.floor(idx / 5) * 32}%`,
+                    }}
+                    onClick={() => navigate(`/detail/${char.id}`)}
+                    aria-label={`${char.name} ${char.rarity}`}
+                  >
+                    <div className="star-halo" />
+                    <div className="star-core" />
+                    <div className="star-label">
+                      <span className="star-label-name">{char.name}</span>
+                      <span className="star-label-rarity">{char.rarity}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="star-map-hint">
+              <span className="star-map-hint-icon" />
+              <span>点击星点查看角色详情</span>
             </div>
           </section>
         )}
