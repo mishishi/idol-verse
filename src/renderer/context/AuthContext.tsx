@@ -23,23 +23,17 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = localStorage.getItem('user')
+      return saved ? JSON.parse(saved) : null
+    } catch { return null }
+  })
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
   const [loginLoading, setLoginLoading] = useState(false)
   const [registerLoading, setRegisterLoading] = useState(false)
-  const [authLoaded, setAuthLoaded] = useState(false)
+  const [authLoaded, setAuthLoaded] = useState(true) // localStorage sync init, no loading needed
   const API_BASE = 'http://localhost:3001/api'
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token')
-    const savedUser = localStorage.getItem('user')
-    if (savedToken && savedUser) {
-      setToken(savedToken)
-      setUser(JSON.parse(savedUser))
-      navigate('/home')
-    }
-    setAuthLoaded(true)
-  }, [navigate])
 
   const handleLogin = useCallback(async (username: string, password: string) => {
     if (loginLoading) return
