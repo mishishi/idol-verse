@@ -392,12 +392,11 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({ onComplete }) => {
                     <Icon name="chart" size={16} />
                     <span>应援榜</span>
                   </button>
+                  <button className="nav-cmd-item" onClick={() => { try { audio.playUIClick() } catch(e) {}; navigate('/settings'); setCmdOpen(false) }}>
+                    <Icon name="settings" size={16} />
+                    <span>设置</span>
+                  </button>
                 </div>
-                <div className="nav-cmd-divider"/>
-                <button className="nav-cmd-item nav-cmd-logout" onClick={() => { try { audio.playUIClick() } catch(e) {}; onLogout(); setCmdOpen(false) }}>
-                  <Icon name="settings" size={16} />
-                  <span>退出登录</span>
-                </button>
               </div>
             )}
           </div>
@@ -413,6 +412,7 @@ export interface LayoutProps {
   children: React.ReactNode
   showGuide: boolean
   setShowGuide: (show: boolean) => void
+  onGuideComplete: () => void
   logoutConfirmOpen: boolean
   setLogoutConfirmOpen: (open: boolean) => void
   pendingRequestsCount: number
@@ -422,6 +422,7 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
   showGuide,
   setShowGuide,
+  onGuideComplete,
   logoutConfirmOpen,
   setLogoutConfirmOpen,
   pendingRequestsCount,
@@ -452,7 +453,7 @@ export const Layout: React.FC<LayoutProps> = ({
       <GachaDrawer isOpen={isGachaOpen} onClose={closeGacha} onSuccess={fetchCurrency} />
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
-      {showGuide && <OnboardingGuide onComplete={() => setShowGuide(false)} />}
+      {showGuide && <OnboardingGuide onComplete={onGuideComplete} />}
 
       {logoutConfirmOpen && (
         <div className="confirm-dialog-overlay">

@@ -1681,21 +1681,130 @@
 /* Container — fixed bottom-right, flex column */
 .toast-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  left: auto;
-  top: auto;
-  transform: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10000;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   gap: 12px;
   width: min(460px, calc(100vw - 32px));
   max-width: 460px;
   pointer-events: none;
   padding: 0 4px;
+}
+
+/* ============ Onboarding Guide ============ */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.onboarding-card {
+  background: linear-gradient(135deg, #1a0a2e 0%, #0c0c1f 100%);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 20px;
+  padding: 40px 48px;
+  max-width: 420px;
+  width: calc(100vw - 48px);
+  text-align: center;
+  box-shadow: 0 0 60px rgba(255, 107, 157, 0.2), 0 0 120px rgba(0, 204, 255, 0.1);
+  animation: slideUp 0.4s ease;
+}
+
+.onboarding-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.onboarding-dot.active {
+  background: #ff6b9d;
+  box-shadow: 0 0 12px rgba(255, 107, 157, 0.8);
+  transform: scale(1.2);
+}
+
+.onboarding-card h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+}
+
+.onboarding-card p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.onboarding-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.onboarding-btn {
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.onboarding-btn.primary {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+}
+
+.onboarding-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.6);
+}
+
+.onboarding-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.onboarding-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============ Mobile Daily Items ============ */

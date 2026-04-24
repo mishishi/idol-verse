@@ -50,9 +50,35 @@ import RhythmPage from './components/RhythmPage'
 
 function App() {
   const { token, authLoaded } = useAuth()
-  const [showGuide, setShowGuide] = useState(false)
+  const [showGuide, setShowGuide] = useState(() => {
+    // Show guide on first visit (hasSeenGuide not set)
+    return localStorage.getItem('hasSeenGuide') !== '1'
+  })
+
+  const handleGuideComplete = () => {
+    localStorage.setItem('hasSeenGuide', '1')
+    setShowGuide(false)
+  }
+
+  const handleShowGuide = () => {
+    localStorage.removeItem('hasSeenGuide')
+    setShowGuide(true)
+  }
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
+
+  // Check for guide reset flag on mount (set by Settings page)
+  useEffect(() => {
+    if (sessionStorage.getItem('showGuideReset') === '1') {
+      sessionStorage.removeItem('showGuideReset')
+      setShowGuide(true)
+    }
+  }, [])
+
+  // Expose guide reset for other components via window
+  useEffect(() => {
+    (window as any).__resetGuide = handleShowGuide
+  }, [])
 
   if (!authLoaded) {
     return (
@@ -67,6 +93,7 @@ function App() {
       <Layout
         showGuide={showGuide}
         setShowGuide={setShowGuide}
+        onGuideComplete={handleGuideComplete}
         logoutConfirmOpen={logoutConfirmOpen}
         setLogoutConfirmOpen={setLogoutConfirmOpen}
         pendingRequestsCount={pendingRequestsCount}
@@ -75,6 +102,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/gallery" element={<ProtectedRoute><GalleryPage /></ProtectedRoute>} />
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
