@@ -34,7 +34,6 @@ import './styles/neon.css'
 const LoginPage = React.lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage').then(m => ({ default: m.RegisterPage })))
 const HomePage = React.lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
-const GachaPage = React.lazy(() => import('./pages/GachaPage').then(m => ({ default: m.GachaPage })))
 const GalleryPage = React.lazy(() => import('./pages/GalleryPage').then(m => ({ default: m.GalleryPage })))
 const InventoryPage = React.lazy(() => import('./pages/InventoryPage').then(m => ({ default: m.InventoryPage })))
 const SupportHallPage = React.lazy(() => import('./pages/SupportHallPage').then(m => ({ default: m.SupportHallPage })))
@@ -77,7 +76,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-            <Route path="/gacha" element={<ProtectedRoute><GachaPage /></ProtectedRoute>} />
             <Route path="/gallery" element={<ProtectedRoute><GalleryPage /></ProtectedRoute>} />
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
             <Route path="/support" element={<ProtectedRoute><SupportHallPage /></ProtectedRoute>} />

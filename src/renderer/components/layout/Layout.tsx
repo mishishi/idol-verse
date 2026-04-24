@@ -359,7 +359,7 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({ onComplete }) => {
         </div>
         <div className="bottom-nav-item" ref={cmdRef as any}>
           <div className={`bottom-nav-cmd-wrapper ${cmdOpen ? 'open' : ''}`}>
-            <button className="bottom-nav-cmd-btn" onClick={() => { audio.playUIClick(); setCmdOpen(o => !o) }} aria-label="菜单">
+            <button className="bottom-nav-cmd-btn" onClick={() => { audio.playUIClick(); setCmdOpen(o => !o) }} aria-label="音频设置">
               <Icon name="menu" size={22} />
             </button>
             {cmdOpen && (
@@ -386,15 +386,11 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({ onComplete }) => {
                   </button>
                   <button className="nav-cmd-item" onClick={() => { try { audio.playUIClick() } catch(e) {}; navigate('/daily'); setCmdOpen(false) }}>
                     <Icon name="clipboard" size={16} />
-                    <span>任务</span>
+                    <span>每日任务</span>
                   </button>
                   <button className="nav-cmd-item" onClick={() => { try { audio.playUIClick() } catch(e) {}; navigate('/ranking'); setCmdOpen(false) }}>
                     <Icon name="chart" size={16} />
                     <span>应援榜</span>
-                  </button>
-                  <button className="nav-cmd-item" onClick={() => { try { audio.playUIClick() } catch(e) {}; navigate('/avatar-test'); setCmdOpen(false) }}>
-                    <Icon name="avatar" size={16} />
-                    <span>动画测试</span>
                   </button>
                 </div>
                 <div className="nav-cmd-divider"/>
